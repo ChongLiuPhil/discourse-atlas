@@ -8,6 +8,7 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
+from .evaluation import compare_annotations, evaluate_documents
 from .validation import validate_references
 
 
@@ -139,6 +140,20 @@ def _write_or_print(text: str, output: str | None) -> None:
         sys.stdout.write(text)
 
 
+def _validated_pair(left_path: str, right_path: str) -> tuple[dict, dict] | None:
+    left = _load_json(Path(left_path))
+    right = _load_json(Path(right_path))
+    left_errors = validate_document(left)
+    right_errors = validate_document(right)
+    if left_errors or right_errors:
+        for error in left_errors:
+            print(f"ERROR left/gold: {error}", file=sys.stderr)
+        for error in right_errors:
+            print(f"ERROR right/candidate: {error}", file=sys.stderr)
+        return None
+    return left, right
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="discourse-atlas")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -154,7 +169,34 @@ def main(argv: list[str] | None = None) -> int:
     dot_parser.add_argument("input")
     dot_parser.add_argument("-o", "--output")
 
+    evaluate_parser = sub.add_parser(
+        "evaluate", help="Evaluate a candidate graph against aligned benchmark gold"
+    )
+    evaluate_parser.add_argument("gold")
+    evaluate_parser.add_argument("candidate")
+
+    agreement_parser = sub.add_parser(
+        "agreement", help="Compare two aligned annotations symmetrically"
+    )
+    agreement_parser.add_argument("left")
+    agreement_parser.add_argument("right")
+
     args = parser.parse_args(argv)
+
+    if args.command == "evaluate":
+        pair = _validated_pair(args.gold, args.candidate)
+        if pair is None:
+            return 1
+        print(json.dumps(evaluate_documents(*pair), indent=2, sort_keys=True))
+        return 0
+
+    if args.command == "agreement":
+        pair = _validated_pair(args.left, args.right)
+        if pair is None:
+            return 1
+        print(json.dumps(compare_annotations(*pair), indent=2, sort_keys=True))
+        return 0
+
     document = _load_json(Path(args.input))
     errors = validate_document(document)
     if errors:
