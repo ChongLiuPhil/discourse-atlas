@@ -4,7 +4,7 @@
 
 It is designed for essays, philosophy, academic papers, theoretical books, legal reasoning, policy reports, and other texts where understanding **how the parts depend on one another** matters as much as understanding what each part says.
 
-> Status: functional v0.3 reader + specification-first analysis format.
+> Status: functional v0.4 research preview: analysis skill, validator, interactive reader, and evaluation toolkit.
 
 ## Core idea
 
@@ -57,6 +57,8 @@ python -m pip install -e '.[dev]'  # development checkout
 discourse-atlas validate examples/mini-essay/analysis.json
 discourse-atlas mermaid examples/mini-essay/analysis.json
 discourse-atlas dot examples/mini-essay/analysis.json
+discourse-atlas evaluate benchmark/cases/mini-essay/gold.json candidate.json
+discourse-atlas agreement annotation-a.json annotation-b.json
 ```
 
 Validation also checks unique IDs, parent references, containment cycles, edge endpoints, evidence anchors, and anchor ranges. The JSON graph remains canonical; Mermaid and Graphviz DOT are convenience exports.
@@ -123,10 +125,20 @@ The example demonstrates the difference between an inferred hierarchy and a logi
 - [x] Human correction workflow + JSON export
 
 ### v0.4 — evaluation
-- [ ] Benchmark corpus
-- [ ] Human inter-annotator comparison
-- [ ] Structural fidelity metrics
-- [ ] Relation precision / recall studies
+- [x] Benchmark protocol + synthetic smoke-test corpus
+- [x] Human inter-annotator comparison command
+- [x] Structural fidelity metrics
+- [x] Relation and evidence precision / recall metrics
+
+### Beyond v0.4
+- [ ] Larger reviewed public-domain / permission-compatible benchmark corpus
+- [ ] Semantic unit alignment for unconstrained model outputs
+- [ ] Multi-reference scoring for alternative defensible reconstructions
+- [ ] Optional hosted demo / GitHub Pages deployment
+
+## Evaluation
+
+The evaluation layer is intentionally explicit about interpretive plurality. Exact-ID metrics are used only after textual units have been aligned; the CLI reports hierarchy accuracy, relation precision/recall/F1, node-anchor grounding, edge-evidence grounding, and symmetric inter-annotator agreement. See `benchmark/README.md` and `docs/evaluation.md`.
 
 ## Non-goals
 

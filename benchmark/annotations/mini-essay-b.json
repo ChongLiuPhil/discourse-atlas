@@ -1,0 +1,28 @@
+{
+  "schema_version": "0.1.0",
+  "document": {
+    "title": "Why Definitions Matter in Disagreement",
+    "author": null,
+    "language": "en",
+    "source_id": "examples/mini-essay/source.md",
+    "structure_policy": {
+      "authorial_structure_preserved": true,
+      "notes": "The source has a work title but no internal section headings; the three section nodes are inferred from paragraph-level discourse shifts."
+    }
+  },
+  "anchors": [
+    {"id": "a-p1", "section_label": null, "paragraph_start": 1, "paragraph_end": 1, "line_start": null, "line_end": null, "note": "Problem framing"},
+    {"id": "a-p2", "section_label": null, "paragraph_start": 2, "paragraph_end": 2, "line_start": null, "line_end": null, "note": "Conceptual distinction"},
+    {"id": "a-p3", "section_label": null, "paragraph_start": 3, "paragraph_end": 3, "line_start": null, "line_end": null, "note": "Practical argumentative consequence"}
+  ],
+  "nodes": [
+    {"id": "work", "parent_id": null, "kind": "work", "title": "Why Definitions Matter in Disagreement", "structure_origin": "author", "summary": "The essay argues that conceptual clarification can be a prerequisite for evaluating reasons in some disputes.", "function": ["argues"], "role_in_parent": null, "anchor_ids": ["a-p1", "a-p2", "a-p3"], "confidence": 0.99, "notes": null},
+    {"id": "sec-1", "parent_id": "work", "kind": "section", "title": "Problem: apparent disagreement may conceal different questions", "structure_origin": "inferred", "summary": "The opening motivates the need to distinguish kinds of disagreement.", "function": ["motivates", "problem_formulation"], "role_in_parent": "Creates the problem that the conceptual distinction will solve.", "anchor_ids": ["a-p1"], "confidence": 0.95, "notes": null},
+    {"id": "sec-2", "parent_id": "work", "kind": "section", "title": "Distinction: verbal versus substantive disagreement", "structure_origin": "inferred", "summary": "The essay defines a distinction that diagnoses whether disagreement persists after clarification.", "function": ["defines", "distinguishes"], "role_in_parent": "Supplies the conceptual tool needed to resolve the opening problem.", "anchor_ids": ["a-p2"], "confidence": 0.98, "notes": null},
+    {"id": "sec-3", "parent_id": "work", "kind": "section", "title": "Consequence: clarification can precede evaluation of reasons", "structure_origin": "inferred", "summary": "The final paragraph derives a methodological consequence for the order of argument.", "function": ["derives_consequence", "concludes"], "role_in_parent": "Turns the distinction into the essay's practical thesis about argumentative order.", "anchor_ids": ["a-p3"], "confidence": 0.97, "notes": null}
+  ],
+  "edges": [
+    {"id": "e-1-2", "source": "sec-1", "target": "sec-2", "relation": "requires", "explanation": "The diagnostic distinction in section 2 is introduced to answer the problem identified in section 1.", "evidence_anchor_ids": ["a-p1", "a-p2"], "confidence": 0.90, "assertion_level": "strongly_inferred", "notes": null},
+    {"id": "e-2-3", "source": "sec-2", "target": "sec-3", "relation": "requires", "explanation": "The methodological conclusion in section 3 depends on the verbal/substantive distinction established in section 2.", "evidence_anchor_ids": ["a-p2", "a-p3"], "confidence": 0.96, "assertion_level": "strongly_inferred", "notes": null}
+  ]
+}

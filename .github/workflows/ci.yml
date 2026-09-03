@@ -34,6 +34,8 @@ jobs:
           cd /tmp
           discourse-atlas validate "$GITHUB_WORKSPACE/examples/mini-essay/analysis.json"
           python -m discourse_atlas validate "$GITHUB_WORKSPACE/examples/mini-essay/analysis.json"
+          discourse-atlas evaluate "$GITHUB_WORKSPACE/benchmark/cases/mini-essay/gold.json" "$GITHUB_WORKSPACE/benchmark/annotations/mini-essay-b.json" > /tmp/evaluation.json
+          discourse-atlas agreement "$GITHUB_WORKSPACE/benchmark/annotations/mini-essay-a.json" "$GITHUB_WORKSPACE/benchmark/annotations/mini-essay-b.json" > /tmp/agreement.json
 
   web:
     runs-on: ubuntu-latest
