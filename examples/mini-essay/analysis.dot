@@ -1,0 +1,15 @@
+digraph discourse_atlas {
+  rankdir=TB;
+  compound=true;
+  node [shape=box];
+  subgraph "cluster_work" {
+    label="Why Definitions Matter in Disagreement";
+    "work" [shape=point, width=0.01, label=""];
+    "sec-1" [label="Problem: apparent disagreement may conceal different questions"];
+    "sec-2" [label="Distinction: verbal versus substantive disagreement"];
+    "sec-3" [label="Consequence: clarification can precede evaluation of reasons"];
+  }
+  "sec-1" -> "sec-2" [label="requires"];
+  "sec-2" -> "sec-3" [label="requires"];
+  "sec-2" -> "sec-3" [label="supports"];
+}
