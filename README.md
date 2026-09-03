@@ -1,10 +1,12 @@
 # Discourse Atlas
 
+[![CI](https://github.com/ChongLiuPhil/discourse-atlas/actions/workflows/ci.yml/badge.svg)](https://github.com/ChongLiuPhil/discourse-atlas/actions/workflows/ci.yml)
+
 **Discourse Atlas** is an open-source, agent-skill-first toolkit for reconstructing the hierarchical structure and logical dependencies of argumentative and expository texts.
 
 It is designed for essays, philosophy, academic papers, theoretical books, legal reasoning, policy reports, and other texts where understanding **how the parts depend on one another** matters as much as understanding what each part says.
 
-> Status: functional v0.4 research preview: analysis skill, validator, interactive reader, and evaluation toolkit.
+> Status: **v0.4.0 research preview — current milestone complete.** The repository includes the analysis skill, canonical graph format, validator/exporters, interactive synchronized reader, and evaluation toolkit.
 
 ## Core idea
 
@@ -30,11 +32,11 @@ The canonical representation is JSON. Visualizations are derived views, not the 
 discourse-atlas/
 ├── skills/discourse-structure/   # Portable Agent Skill
 ├── schemas/                      # Canonical JSON Schema
-├── src/discourse_atlas/          # Validation + render CLI
+├── src/discourse_atlas/          # Validation, export, and evaluation CLI
 ├── apps/web/                     # Interactive React Flow + ELK reader
 ├── examples/mini-essay/          # Small end-to-end example
 ├── benchmark/                    # Evaluation protocol + cross-genre synthetic cases
-├── tests/                        # Schema / renderer / evaluation tests
+├── tests/                        # Schema, renderer, and evaluation tests
 ├── docs/                         # Architecture and evaluation notes
 └── .github/workflows/            # CI
 ```
@@ -84,7 +86,7 @@ It supports collapse/expand, source ↔ graph evidence tracing, paragraph and li
 
 See `skills/discourse-structure/references/relation-ontology.md` and `docs/ontology-review-v0.4.md`.
 
-## Roadmap
+## Completed milestones
 
 ### v0.1 — specification-first MVP
 - [x] Portable `SKILL.md`
@@ -106,19 +108,22 @@ See `skills/discourse-structure/references/relation-ontology.md` and `docs/ontol
 
 ### v0.4 — evaluation
 - [x] Benchmark protocol + four-case cross-genre synthetic corpus
-- [x] Human inter-annotator comparison command
+- [x] Inter-annotation comparison command
 - [x] Structural fidelity metrics
 - [x] Relation and evidence precision / recall metrics
 
-### Beyond v0.4
-- [ ] Larger reviewed public-domain / permission-compatible benchmark corpus
-- [ ] Semantic unit alignment for unconstrained model outputs
-- [ ] Multi-reference scoring for alternative defensible reconstructions
-- [ ] Optional hosted demo / GitHub Pages deployment
+## Post-v0.4 research directions
+
+These are optional future research directions, not unfinished v0.4 requirements:
+
+- larger reviewed public-domain / permission-compatible benchmark corpora;
+- semantic unit alignment for unconstrained model outputs;
+- multi-reference scoring for alternative defensible reconstructions;
+- optional hosted demo / GitHub Pages deployment.
 
 ## Evaluation
 
-The evaluation layer is explicit about interpretive plurality. Exact-ID metrics are applied after textual units are aligned; the CLI reports hierarchy accuracy, relation precision/recall/F1, node-anchor grounding, edge-evidence grounding, and symmetric inter-annotator agreement. See `benchmark/README.md` and `docs/evaluation.md`.
+The evaluation layer is explicit about interpretive plurality. Exact-ID metrics are applied after textual units are aligned; the CLI reports hierarchy accuracy, relation precision/recall/F1, node-anchor grounding, edge-evidence grounding, and symmetric inter-annotation agreement. See `benchmark/README.md` and `docs/evaluation.md`.
 
 ## Non-goals
 
@@ -126,7 +131,7 @@ Discourse Atlas is not intended to replace close reading, claim one uniquely cor
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md). Release history is recorded in [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
