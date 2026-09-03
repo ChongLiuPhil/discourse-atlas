@@ -33,27 +33,20 @@ discourse-atlas/
 ├── src/discourse_atlas/          # Validation + render CLI
 ├── apps/web/                     # Interactive React Flow + ELK reader
 ├── examples/mini-essay/          # Small end-to-end example
-├── tests/                        # Schema / renderer tests
-├── docs/                         # Architecture notes
+├── benchmark/                    # Evaluation protocol + cross-genre synthetic cases
+├── tests/                        # Schema / renderer / evaluation tests
+├── docs/                         # Architecture and evaluation notes
 └── .github/workflows/            # CI
 ```
 
 ## Use as an Agent Skill
 
-Copy `skills/discourse-structure/` into a client that supports the Agent Skills `SKILL.md` format. Ask the agent to analyze a text's discourse structure and produce:
-
-- `analysis.json` — machine-readable graph
-- `analysis.md` — human-readable reconstruction
-
-The skill is intentionally model- and vendor-neutral.
+Copy `skills/discourse-structure/` into a client that supports the Agent Skills `SKILL.md` format. Ask the agent to analyze a text's discourse structure and produce `analysis.json` and `analysis.md`. The skill is intentionally model- and vendor-neutral.
 
 ## CLI
 
-The small Python package validates analysis files at both the JSON-Schema and graph-reference levels, then exports lightweight diagram formats.
-
 ```bash
-python -m pip install -e '.[dev]'  # development checkout
-
+python -m pip install -e '.[dev]'
 discourse-atlas validate examples/mini-essay/analysis.json
 discourse-atlas mermaid examples/mini-essay/analysis.json
 discourse-atlas dot examples/mini-essay/analysis.json
@@ -61,11 +54,11 @@ discourse-atlas evaluate benchmark/cases/mini-essay/gold.json candidate.json
 discourse-atlas agreement annotation-a.json annotation-b.json
 ```
 
-Validation also checks unique IDs, parent references, containment cycles, edge endpoints, evidence anchors, and anchor ranges. The JSON graph remains canonical; Mermaid and Graphviz DOT are convenience exports.
+Validation checks JSON shape plus unique IDs, parent references, containment cycles, edge endpoints, evidence anchors, and anchor ranges.
 
 ## Interactive reader
 
-The web app in `apps/web/` turns the canonical JSON graph into a synchronized reading environment. It uses nested React Flow nodes for containment and ELK layered layout for directional dependencies, while keeping renderer state outside the canonical schema.
+The web app in `apps/web/` turns the canonical graph into a synchronized reading environment with nested React Flow nodes and ELK layout.
 
 ```bash
 cd apps/web
@@ -73,7 +66,7 @@ npm install
 npm run dev
 ```
 
-Open a Discourse Atlas `analysis.json`, optionally load its source Markdown/text, inspect evidence by clicking graph relations, click source passages to trace which structural claims use them, edit the reconstruction in the inspector, and export a corrected JSON file.
+It supports collapse/expand, source ↔ graph evidence tracing, paragraph and line anchors, node/edge inspection, human correction, local file loading, and corrected-JSON export.
 
 ## Relation ontology (MVP)
 
@@ -83,49 +76,36 @@ Open a Discourse Atlas `analysis.json`, optionally load its source Markdown/text
 | `supports` | source gives reasons/evidence for target |
 | `derives` | target is developed or derived from source |
 | `refines` | source makes target more precise, qualified, restricted, or articulated |
-| `contrasts` | source and target are deliberately contrasted |
+| `contrasts` | source and target are deliberately contrasted (semantically symmetric) |
 | `objects_to` | source raises an objection to target |
 | `responds_to` | source answers a problem or objection in target |
 | `illustrates` | source exemplifies or applies target |
 | `sequence` | textual/organizational order only; not logical dependence |
 
-See `skills/discourse-structure/references/relation-ontology.md` for direction rules.
-
-## Example
-
-The bundled mini essay has three inferred sections:
-
-```text
-Problem framing → Conceptual distinction → Conclusion
-                         └──────── supports ────────→
-```
-
-The example demonstrates the difference between an inferred hierarchy and a logical edge.
+See `skills/discourse-structure/references/relation-ontology.md` and `docs/ontology-review-v0.4.md`.
 
 ## Roadmap
 
 ### v0.1 — specification-first MVP
 - [x] Portable `SKILL.md`
 - [x] JSON Schema
-- [x] Relation ontology
-- [x] Segmentation rules
-- [x] Example analysis
+- [x] Relation ontology and segmentation rules
 - [x] Validator + Mermaid/DOT exporters
 
 ### v0.2 — interactive map
 - [x] React Flow viewer
-- [x] ELK hierarchical layout
+- [x] ELK compound/hierarchical layout
 - [x] Collapsible nested sections
 - [x] Edge evidence inspector
 
 ### v0.3 — synchronized reading
 - [x] Source text + map side-by-side
-- [x] Click graph node → jump to text
-- [x] Select source passage → highlight relevant graph nodes/edges
+- [x] Graph → source navigation
+- [x] Source → graph highlighting
 - [x] Human correction workflow + JSON export
 
 ### v0.4 — evaluation
-- [x] Benchmark protocol + synthetic smoke-test corpus
+- [x] Benchmark protocol + four-case cross-genre synthetic corpus
 - [x] Human inter-annotator comparison command
 - [x] Structural fidelity metrics
 - [x] Relation and evidence precision / recall metrics
@@ -138,20 +118,15 @@ The example demonstrates the difference between an inferred hierarchy and a logi
 
 ## Evaluation
 
-The evaluation layer is intentionally explicit about interpretive plurality. Exact-ID metrics are used only after textual units have been aligned; the CLI reports hierarchy accuracy, relation precision/recall/F1, node-anchor grounding, edge-evidence grounding, and symmetric inter-annotator agreement. See `benchmark/README.md` and `docs/evaluation.md`.
+The evaluation layer is explicit about interpretive plurality. Exact-ID metrics are applied after textual units are aligned; the CLI reports hierarchy accuracy, relation precision/recall/F1, node-anchor grounding, edge-evidence grounding, and symmetric inter-annotator agreement. See `benchmark/README.md` and `docs/evaluation.md`.
 
 ## Non-goals
 
-Discourse Atlas is not intended to:
-
-- replace close reading;
-- claim that a philosophical text has one uniquely correct formal structure;
-- flatten every relation into premise/conclusion pairs;
-- treat textual order as logical dependence by default.
+Discourse Atlas is not intended to replace close reading, claim one uniquely correct structure for interpretive texts, flatten every relation into premise/conclusion pairs, or treat textual order as logical dependence by default.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Early contributions are especially useful in ontology design, evaluation methodology, visualization, and philosophy / humanities test cases.
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 

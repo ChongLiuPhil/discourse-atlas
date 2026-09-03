@@ -28,29 +28,22 @@ def test_missing_relation_reduces_recall():
 
 
 def test_agreement_is_symmetric_for_edge_jaccard():
-    left = load_example()
-    right = load_example()
-    right["edges"] = right["edges"][:-1]
-    a = compare_annotations(left, right)
-    b = compare_annotations(right, left)
-    assert a["relation_edge_jaccard"] == b["relation_edge_jaccard"]
+    left = load_example(); right = load_example(); right["edges"] = right["edges"][:-1]
+    assert compare_annotations(left, right)["relation_edge_jaccard"] == compare_annotations(right, left)["relation_edge_jaccard"]
 
 
 def test_contrast_is_scored_symmetrically():
-    left = load_example()
-    right = load_example()
-    contrast = {
-        "id": "contrast-test",
-        "source": "sec-1",
-        "target": "sec-2",
-        "relation": "contrasts",
-        "explanation": "Test contrast",
-        "evidence_anchor_ids": ["a-p1", "a-p2"],
-        "confidence": 0.8,
-        "assertion_level": "tentative",
-        "notes": None,
-    }
-    left["edges"] = [contrast]
-    right["edges"] = [{**contrast, "source": "sec-2", "target": "sec-1"}]
-    report = evaluate_documents(left, right)
-    assert report["relation_edges"]["f1"] == 1.0
+    left = load_example(); right = load_example()
+    contrast = {"id":"contrast-test","source":"sec-1","target":"sec-2","relation":"contrasts","explanation":"Test contrast","evidence_anchor_ids":["a-p1","a-p2"],"confidence":0.8,"assertion_level":"tentative","notes":None}
+    left["edges"]=[contrast]; right["edges"]=[{**contrast,"source":"sec-2","target":"sec-1"}]
+    assert evaluate_documents(left, right)["relation_edges"]["f1"] == 1.0
+
+
+def test_all_manifest_gold_cases_validate_and_self_score():
+    from discourse_atlas.cli import validate_document
+    manifest = json.loads((ROOT / "benchmark" / "manifest.json").read_text())
+    assert len(manifest["cases"]) >= 4
+    for case in manifest["cases"]:
+        gold = json.loads((ROOT / case["gold"]).read_text())
+        assert validate_document(gold) == []
+        assert evaluate_documents(gold, gold)["macro_score"] == 1.0

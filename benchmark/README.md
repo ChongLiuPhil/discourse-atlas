@@ -65,6 +65,6 @@ Each benchmark case should include:
 
 ## Current corpus
 
-`cases/mini-essay/` is a synthetic smoke-test case derived from the repository example. It validates the evaluation machinery; it is not yet a representative humanities corpus.
+`manifest.json` currently lists four project-authored synthetic cases spanning a general essay, a philosophical argument, academic methodology, and policy reasoning. They are intended as a small cross-genre regression corpus, not as a representative estimate of humanities-model performance.
 
-Future benchmark additions should prefer public-domain or permission-compatible texts and should be reviewed by at least two annotators where feasible.
+Future benchmark additions should prefer public-domain or permission-compatible real texts and should be reviewed by at least two annotators where feasible.
