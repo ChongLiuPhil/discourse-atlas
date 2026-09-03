@@ -4,7 +4,7 @@
 
 It is designed for essays, philosophy, academic papers, theoretical books, legal reasoning, policy reports, and other texts where understanding **how the parts depend on one another** matters as much as understanding what each part says.
 
-> Status: early MVP / specification-first.
+> Status: functional v0.3 reader + specification-first analysis format.
 
 ## Core idea
 
@@ -31,6 +31,7 @@ discourse-atlas/
 ├── skills/discourse-structure/   # Portable Agent Skill
 ├── schemas/                      # Canonical JSON Schema
 ├── src/discourse_atlas/          # Validation + render CLI
+├── apps/web/                     # Interactive React Flow + ELK reader
 ├── examples/mini-essay/          # Small end-to-end example
 ├── tests/                        # Schema / renderer tests
 ├── docs/                         # Architecture notes
@@ -59,6 +60,18 @@ discourse-atlas dot examples/mini-essay/analysis.json
 ```
 
 Validation also checks unique IDs, parent references, containment cycles, edge endpoints, evidence anchors, and anchor ranges. The JSON graph remains canonical; Mermaid and Graphviz DOT are convenience exports.
+
+## Interactive reader
+
+The web app in `apps/web/` turns the canonical JSON graph into a synchronized reading environment. It uses nested React Flow nodes for containment and ELK layered layout for directional dependencies, while keeping renderer state outside the canonical schema.
+
+```bash
+cd apps/web
+npm install
+npm run dev
+```
+
+Open a Discourse Atlas `analysis.json`, optionally load its source Markdown/text, inspect evidence by clicking graph relations, click source passages to trace which structural claims use them, edit the reconstruction in the inspector, and export a corrected JSON file.
 
 ## Relation ontology (MVP)
 
@@ -98,16 +111,16 @@ The example demonstrates the difference between an inferred hierarchy and a logi
 - [x] Validator + Mermaid/DOT exporters
 
 ### v0.2 — interactive map
-- [ ] React Flow viewer
-- [ ] ELK hierarchical layout
-- [ ] Collapsible nested sections
-- [ ] Edge evidence inspector
+- [x] React Flow viewer
+- [x] ELK hierarchical layout
+- [x] Collapsible nested sections
+- [x] Edge evidence inspector
 
 ### v0.3 — synchronized reading
-- [ ] Source text + map side-by-side
-- [ ] Click graph node → jump to text
-- [ ] Select text → highlight relevant graph nodes/edges
-- [ ] Human correction workflow
+- [x] Source text + map side-by-side
+- [x] Click graph node → jump to text
+- [x] Select source passage → highlight relevant graph nodes/edges
+- [x] Human correction workflow + JSON export
 
 ### v0.4 — evaluation
 - [ ] Benchmark corpus

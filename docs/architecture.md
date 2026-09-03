@@ -48,3 +48,15 @@ React Flow interactive graph
 ```
 
 The viewer should provide at least three zoom levels: work, chapter/part, and local argument map. Important edges should expose their explanation, evidence anchors, confidence, and assertion level.
+
+## Interactive reader architecture
+
+`apps/web` treats the JSON document as the canonical model and derives three transient views:
+
+1. **Visibility projection** — collapsed descendants are removed and dependency endpoints are projected to the nearest visible ancestor.
+2. **ELK layout graph** — the visible containment tree and projected dependency edges are translated into a compound ELK layered graph with `INCLUDE_CHILDREN`.
+3. **React Flow view** — ELK coordinates become nested React Flow nodes. Selection, evidence focus, and editing remain UI state and are not written into the schema unless the user explicitly saves a correction to a canonical field.
+
+The source pane maps both paragraph-based and line-based anchors to visible source blocks. Clicking a source block highlights linked nodes and evidence edges; selecting a node or edge scrolls the source pane to its first evidence anchor.
+
+Human edits change only canonical reconstruction fields (for example title, summary, structure origin, relation, explanation, confidence, and assertion level). Renderer coordinates and collapse state are intentionally excluded from exported JSON.
