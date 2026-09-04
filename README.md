@@ -6,7 +6,7 @@
 
 It is designed for essays, philosophy, academic papers, theoretical books, legal reasoning, policy reports, and other texts where understanding **how the parts depend on one another** matters as much as understanding what each part says.
 
-> Status: **v0.5.0 research preview.** The toolkit now includes explicit split/merge-capable unit alignment, multi-reference evaluation, and a public-domain philosophy benchmark in addition to the analysis skill, graph format, validator/exporters, interactive reader, and evaluation toolkit.
+> Status: **v0.6.0 research preview.** The toolkit now includes an in-browser alignment adjudication workbench on top of explicit split/merge-capable unit alignment, multi-reference evaluation, a public-domain philosophy benchmark, the analysis skill, graph format, validator/exporters, and synchronized reader.
 
 ## Core idea
 
@@ -81,7 +81,7 @@ npm install
 npm run dev
 ```
 
-It supports collapse/expand, source ↔ graph evidence tracing, paragraph and line anchors, node/edge inspection, human correction, local file loading, and corrected-JSON export.
+It supports collapse/expand, source ↔ graph evidence tracing, paragraph and line anchors, node/edge inspection, human correction, local file loading, and corrected-JSON export. Switch the web workspace to **Alignment** to review proposals, accept/reject correspondences, build split/merge units, and export reviewed alignment JSON.
 
 ## Relation ontology (MVP)
 
@@ -132,17 +132,24 @@ See `skills/discourse-structure/references/relation-ontology.md` and `docs/ontol
 - [x] Multi-reference scoring with best/mean/range reporting
 - [x] Public-domain Mill benchmark with two accepted reconstructions
 
-## Post-v0.5 research directions
+### v0.6 — alignment adjudication UI
+- [x] Reader / Alignment workspace switcher
+- [x] Side-by-side reconstruction node selection
+- [x] Accept / reject / retain proposal states
+- [x] Manual one-to-one and split/merge unit creation
+- [x] Coverage, membership validation, rationale capture, and reviewed JSON export
+- [x] Browser proposal logic covered by Node tests
+
+## Post-v0.6 research directions
 
 - expand reviewed public-domain / permission-compatible real-text corpora;
 - add page/character anchor coordinates for scholarly editions and PDFs;
-- add an adjudication UI for editing alignment units side-by-side;
 - add calibrated semantic alignment proposals as an optional, separately auditable layer;
 - optional hosted demo / GitHub Pages deployment.
 
 ## Evaluation
 
-The evaluation layer is explicit about interpretive plurality. Stable-ID mode remains available, but unconstrained outputs can now be aligned through a separate JSON artifact before structural scoring. Multi-reference mode reports compatibility with several accepted reconstructions without collapsing them into a single synthetic gold graph. See `benchmark/README.md`, `docs/alignment.md`, and `docs/evaluation.md`.
+The evaluation layer is explicit about interpretive plurality. Stable-ID mode remains available, but unconstrained outputs can now be aligned through a separate JSON artifact before structural scoring. Multi-reference mode reports compatibility with several accepted reconstructions without collapsing them into a single synthetic gold graph. See `benchmark/README.md`, `docs/alignment.md`, `docs/alignment-workbench.md`, and `docs/evaluation.md`.
 
 ## Non-goals
 

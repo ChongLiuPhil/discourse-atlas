@@ -8,11 +8,13 @@ const repoRoot = path.resolve(appRoot, '..', '..');
 const publicDir = path.join(appRoot, 'public');
 
 await mkdir(publicDir, { recursive: true });
-await copyFile(
-  path.join(repoRoot, 'examples', 'mini-essay', 'analysis.json'),
-  path.join(publicDir, 'example-analysis.json'),
-);
-await copyFile(
-  path.join(repoRoot, 'examples', 'mini-essay', 'source.md'),
-  path.join(publicDir, 'example-source.md'),
-);
+const copies = [
+  ['examples/mini-essay/analysis.json', 'example-analysis.json'],
+  ['examples/mini-essay/source.md', 'example-source.md'],
+  ['benchmark/cases/mill-on-liberty/reference-a.json', 'mill-reference-a.json'],
+  ['benchmark/cases/mill-on-liberty/reference-b.json', 'mill-reference-b.json'],
+  ['benchmark/cases/mill-on-liberty/alignment-a-b.json', 'mill-alignment-a-b.json'],
+];
+for (const [source, target] of copies) {
+  await copyFile(path.join(repoRoot, ...source.split('/')), path.join(publicDir, target));
+}
