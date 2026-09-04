@@ -37,6 +37,15 @@ def _schema() -> dict:
         return json.load(f)
 
 
+def _alignment_schema() -> dict:
+    repo_schema = _repo_root() / "schemas" / "node-alignment.schema.json"
+    if repo_schema.exists():
+        return _load_json(repo_schema)
+    packaged = resources.files("discourse_atlas.resources").joinpath("node-alignment.schema.json")
+    with packaged.open("r", encoding="utf-8") as f:
+        return json.load(f)
+
+
 def validate_document(document: dict) -> list[str]:
     validator = Draft202012Validator(_schema())
     schema_errors = sorted(validator.iter_errors(document), key=lambda e: list(e.path))
@@ -117,6 +126,15 @@ def to_dot(document: dict) -> str:
         lines.append(f'  "{edge["source"]}" -> "{edge["target"]}" [label="{relation}"];')
     lines.append("}")
     return "\n".join(lines) + "\n"
+
+
+def validate_alignment_document(alignment: dict, reference: dict, candidate: dict) -> list[str]:
+    validator = Draft202012Validator(_alignment_schema())
+    schema_errors = sorted(validator.iter_errors(alignment), key=lambda e: list(e.path))
+    errors = [f"{'/'.join(map(str, e.path)) or '<root>'}: {e.message}" for e in schema_errors]
+    if not schema_errors:
+        errors.extend(validate_alignment(alignment, reference, candidate))
+    return errors
 
 
 def _write_or_print(text: str, output: str | None) -> None:
@@ -215,7 +233,7 @@ def main(argv: list[str] | None = None) -> int:
         reference, candidate = pair
         if args.alignment:
             alignment = _load_json(args.alignment)
-            errors = validate_alignment(alignment, reference, candidate)
+            errors = validate_alignment_document(alignment, reference, candidate)
             if errors:
                 for error in errors:
                     print(f"ERROR alignment: {error}", file=sys.stderr)
@@ -246,7 +264,7 @@ def main(argv: list[str] | None = None) -> int:
                 alignments.setdefault(label, propose_alignment(reference, candidate, args.threshold))
         for label, reference in references:
             if label in alignments:
-                errors = validate_alignment(alignments[label], reference, candidate)
+                errors = validate_alignment_document(alignments[label], reference, candidate)
                 if errors:
                     for error in errors:
                         print(f"ERROR alignment {label}: {error}", file=sys.stderr)
@@ -261,7 +279,7 @@ def main(argv: list[str] | None = None) -> int:
         left, right = pair
         if args.alignment:
             alignment = _load_json(args.alignment)
-            errors = validate_alignment(alignment, left, right)
+            errors = validate_alignment_document(alignment, left, right)
             if errors:
                 for error in errors:
                     print(f"ERROR alignment: {error}", file=sys.stderr)
