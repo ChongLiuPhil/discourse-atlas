@@ -6,7 +6,7 @@
 
 It is designed for essays, philosophy, academic papers, theoretical books, legal reasoning, policy reports, and other texts where understanding **how the parts depend on one another** matters as much as understanding what each part says.
 
-> Status: **v0.4.0 research preview — current milestone complete.** The repository includes the analysis skill, canonical graph format, validator/exporters, interactive synchronized reader, and evaluation toolkit.
+> Status: **v0.5.0 research preview.** The toolkit now includes explicit split/merge-capable unit alignment, multi-reference evaluation, and a public-domain philosophy benchmark in addition to the analysis skill, graph format, validator/exporters, interactive reader, and evaluation toolkit.
 
 ## Core idea
 
@@ -24,6 +24,7 @@ The canonical representation is JSON. Visualizations are derived views, not the 
 - **Mark inferred structure explicitly.** AI-generated sections must never be presented as authorial headings.
 - **Separate hierarchy from dependency.** Containment is not the same as logical dependence.
 - **Evidence for important edges.** Major inferred relations should point back to source anchors.
+- **Alignment before comparison.** Different node IDs or segmentation must be aligned explicitly before structural differences are scored.
 - **Reconstruction, not revelation.** The output is a criticizable interpretation, not a claim to the single true structure of a text.
 
 ## Repository layout
@@ -31,13 +32,13 @@ The canonical representation is JSON. Visualizations are derived views, not the 
 ```text
 discourse-atlas/
 ├── skills/discourse-structure/   # Portable Agent Skill
-├── schemas/                      # Canonical JSON Schema
-├── src/discourse_atlas/          # Validation, export, and evaluation CLI
+├── schemas/                      # Graph + unit-alignment schemas
+├── src/discourse_atlas/          # Validation, alignment, export, evaluation CLI
 ├── apps/web/                     # Interactive React Flow + ELK reader
 ├── examples/mini-essay/          # Small end-to-end example
-├── benchmark/                    # Evaluation protocol + cross-genre synthetic cases
-├── tests/                        # Schema, renderer, and evaluation tests
-├── docs/                         # Architecture and evaluation notes
+├── benchmark/                    # Synthetic + public-domain evaluation cases
+├── tests/                        # Schema, renderer, alignment, evaluation tests
+├── docs/                         # Architecture, ontology, alignment, evaluation notes
 └── .github/workflows/            # CI
 ```
 
@@ -49,14 +50,26 @@ Copy `skills/discourse-structure/` into a client that supports the Agent Skills 
 
 ```bash
 python -m pip install -e '.[dev]'
+
 discourse-atlas validate examples/mini-essay/analysis.json
 discourse-atlas mermaid examples/mini-essay/analysis.json
 discourse-atlas dot examples/mini-essay/analysis.json
-discourse-atlas evaluate benchmark/cases/mini-essay/gold.json candidate.json
-discourse-atlas agreement annotation-a.json annotation-b.json
+
+# Stable-ID evaluation
+discourse-atlas evaluate reference.json candidate.json
+
+# Propose and review unit alignment
+discourse-atlas align reference.json candidate.json -o alignment.json
+discourse-atlas evaluate reference.json candidate.json --alignment alignment.json
+
+# Preserve several defensible references
+discourse-atlas multi-evaluate candidate.json ref-a.json ref-b.json --auto-align
+
+# Symmetric annotation agreement
+discourse-atlas agreement ref-a.json ref-b.json --alignment alignment.json
 ```
 
-Validation checks JSON shape plus unique IDs, parent references, containment cycles, edge endpoints, evidence anchors, and anchor ranges.
+Validation checks JSON shape plus unique IDs, parent references, containment cycles, edge endpoints, evidence anchors, and anchor ranges. Alignment validation checks unknown nodes, duplicate membership, and ambiguous repeated mappings.
 
 ## Interactive reader
 
@@ -112,18 +125,24 @@ See `skills/discourse-structure/references/relation-ontology.md` and `docs/ontol
 - [x] Structural fidelity metrics
 - [x] Relation and evidence precision / recall metrics
 
-## Post-v0.4 research directions
+### v0.5 — alignment and interpretive plurality
+- [x] Explicit one-to-one / split / merge unit-alignment format
+- [x] Deterministic source-anchor alignment proposals
+- [x] Alignment-aware hierarchy/relation/evidence scoring
+- [x] Multi-reference scoring with best/mean/range reporting
+- [x] Public-domain Mill benchmark with two accepted reconstructions
 
-These are optional future research directions, not unfinished v0.4 requirements:
+## Post-v0.5 research directions
 
-- larger reviewed public-domain / permission-compatible benchmark corpora;
-- semantic unit alignment for unconstrained model outputs;
-- multi-reference scoring for alternative defensible reconstructions;
+- expand reviewed public-domain / permission-compatible real-text corpora;
+- add page/character anchor coordinates for scholarly editions and PDFs;
+- add an adjudication UI for editing alignment units side-by-side;
+- add calibrated semantic alignment proposals as an optional, separately auditable layer;
 - optional hosted demo / GitHub Pages deployment.
 
 ## Evaluation
 
-The evaluation layer is explicit about interpretive plurality. Exact-ID metrics are applied after textual units are aligned; the CLI reports hierarchy accuracy, relation precision/recall/F1, node-anchor grounding, edge-evidence grounding, and symmetric inter-annotation agreement. See `benchmark/README.md` and `docs/evaluation.md`.
+The evaluation layer is explicit about interpretive plurality. Stable-ID mode remains available, but unconstrained outputs can now be aligned through a separate JSON artifact before structural scoring. Multi-reference mode reports compatibility with several accepted reconstructions without collapsing them into a single synthetic gold graph. See `benchmark/README.md`, `docs/alignment.md`, and `docs/evaluation.md`.
 
 ## Non-goals
 
