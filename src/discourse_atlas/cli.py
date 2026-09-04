@@ -8,7 +8,14 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
-from .evaluation import compare_annotations, evaluate_documents
+from .alignment import propose_alignment, validate_alignment
+from .evaluation import (
+    compare_annotations,
+    compare_annotations_with_alignment,
+    evaluate_against_references,
+    evaluate_documents,
+    evaluate_with_alignment,
+)
 from .validation import validate_references
 
 
@@ -16,21 +23,16 @@ def _repo_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
-def _load_json(path: Path) -> dict:
-    with path.open("r", encoding="utf-8") as f:
+def _load_json(path: str | Path) -> dict:
+    with Path(path).open("r", encoding="utf-8") as f:
         return json.load(f)
 
 
 def _schema() -> dict:
-    # Prefer the repository copy during development so schema edits are picked up
-    # immediately; fall back to the packaged resource for normal installations.
     repo_schema = _repo_root() / "schemas" / "discourse-graph.schema.json"
     if repo_schema.exists():
         return _load_json(repo_schema)
-
-    packaged = resources.files("discourse_atlas.resources").joinpath(
-        "discourse-graph.schema.json"
-    )
+    packaged = resources.files("discourse_atlas.resources").joinpath("discourse-graph.schema.json")
     with packaged.open("r", encoding="utf-8") as f:
         return json.load(f)
 
@@ -38,11 +40,7 @@ def _schema() -> dict:
 def validate_document(document: dict) -> list[str]:
     validator = Draft202012Validator(_schema())
     schema_errors = sorted(validator.iter_errors(document), key=lambda e: list(e.path))
-    errors = [
-        f"{'/'.join(map(str, e.path)) or '<root>'}: {e.message}"
-        for e in schema_errors
-    ]
-    # Semantic validation assumes the basic arrays/objects have schema-valid shapes.
+    errors = [f"{'/'.join(map(str, e.path)) or '<root>'}: {e.message}" for e in schema_errors]
     if not schema_errors:
         errors.extend(validate_references(document))
     return errors
@@ -56,7 +54,6 @@ def to_mermaid(document: dict) -> str:
     children: dict[str | None, list[dict]] = {}
     for node in document["nodes"]:
         children.setdefault(node.get("parent_id"), []).append(node)
-
     lines = ["flowchart TB"]
 
     def emit_group(parent_id: str | None, indent: int = 1) -> None:
@@ -73,17 +70,10 @@ def to_mermaid(document: dict) -> str:
                 lines.append(f'{pad}{node_id}["{label}"]')
 
     emit_group(None)
-
     relation_labels = {
-        "requires": "requires",
-        "supports": "supports",
-        "derives": "derives",
-        "refines": "refines",
-        "contrasts": "contrasts",
-        "objects_to": "objects to",
-        "responds_to": "responds to",
-        "illustrates": "illustrates",
-        "sequence": "sequence",
+        "requires": "requires", "supports": "supports", "derives": "derives",
+        "refines": "refines", "contrasts": "contrasts", "objects_to": "objects to",
+        "responds_to": "responds to", "illustrates": "illustrates", "sequence": "sequence",
     }
 
     def endpoint(node_id: str) -> str:
@@ -94,7 +84,6 @@ def to_mermaid(document: dict) -> str:
         target = endpoint(edge["target"])
         label = relation_labels.get(edge["relation"], edge["relation"])
         lines.append(f'    {source} -->|"{label}"| {target}')
-
     return "\n".join(lines) + "\n"
 
 
@@ -106,7 +95,6 @@ def to_dot(document: dict) -> str:
     children: dict[str | None, list[dict]] = {}
     for node in document["nodes"]:
         children.setdefault(node.get("parent_id"), []).append(node)
-
     lines = ["digraph discourse_atlas {", "  rankdir=TB;", "  compound=true;", '  node [shape=box];']
 
     def emit(parent_id: str | None, indent: int = 1) -> None:
@@ -124,11 +112,9 @@ def to_dot(document: dict) -> str:
                 lines.append(f'{pad}"{node_id}" [label="{title}"];')
 
     emit(None)
-
     for edge in document.get("edges", []):
         relation = _dot_escape(edge["relation"])
         lines.append(f'  "{edge["source"]}" -> "{edge["target"]}" [label="{relation}"];')
-
     lines.append("}")
     return "\n".join(lines) + "\n"
 
@@ -140,18 +126,34 @@ def _write_or_print(text: str, output: str | None) -> None:
         sys.stdout.write(text)
 
 
-def _validated_pair(left_path: str, right_path: str) -> tuple[dict, dict] | None:
-    left = _load_json(Path(left_path))
-    right = _load_json(Path(right_path))
-    left_errors = validate_document(left)
-    right_errors = validate_document(right)
-    if left_errors or right_errors:
-        for error in left_errors:
-            print(f"ERROR left/gold: {error}", file=sys.stderr)
-        for error in right_errors:
-            print(f"ERROR right/candidate: {error}", file=sys.stderr)
+def _write_json(value: dict, output: str | None = None) -> None:
+    _write_or_print(json.dumps(value, indent=2, sort_keys=True) + "\n", output)
+
+
+def _validated_document(path: str, label: str) -> dict | None:
+    document = _load_json(path)
+    errors = validate_document(document)
+    if errors:
+        for error in errors:
+            print(f"ERROR {label}: {error}", file=sys.stderr)
         return None
-    return left, right
+    return document
+
+
+def _validated_pair(left_path: str, right_path: str) -> tuple[dict, dict] | None:
+    left = _validated_document(left_path, "left/reference")
+    right = _validated_document(right_path, "right/candidate")
+    return (left, right) if left is not None and right is not None else None
+
+
+def _parse_alignment_specs(values: list[str] | None) -> dict[str, dict]:
+    result: dict[str, dict] = {}
+    for value in values or []:
+        if "=" not in value:
+            raise ValueError("--alignment-map entries must use REFERENCE=ALIGNMENT_JSON")
+        reference, path = value.split("=", 1)
+        result[reference] = _load_json(path)
+    return result
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -169,41 +171,113 @@ def main(argv: list[str] | None = None) -> int:
     dot_parser.add_argument("input")
     dot_parser.add_argument("-o", "--output")
 
-    evaluate_parser = sub.add_parser(
-        "evaluate", help="Evaluate a candidate graph against aligned benchmark gold"
-    )
-    evaluate_parser.add_argument("gold")
-    evaluate_parser.add_argument("candidate")
+    align_parser = sub.add_parser("align", help="Propose an inspectable source-anchor unit alignment")
+    align_parser.add_argument("reference")
+    align_parser.add_argument("candidate")
+    align_parser.add_argument("--threshold", type=float, default=0.5)
+    align_parser.add_argument("-o", "--output")
 
-    agreement_parser = sub.add_parser(
-        "agreement", help="Compare two aligned annotations symmetrically"
-    )
+    evaluate_parser = sub.add_parser("evaluate", help="Evaluate candidate against one reference")
+    evaluate_parser.add_argument("reference")
+    evaluate_parser.add_argument("candidate")
+    evaluate_parser.add_argument("--alignment", help="Explicit split/merge-capable unit alignment JSON")
+
+    multi_parser = sub.add_parser("multi-evaluate", help="Evaluate candidate against multiple defensible references")
+    multi_parser.add_argument("candidate")
+    multi_parser.add_argument("references", nargs="+")
+    multi_parser.add_argument("--auto-align", action="store_true", help="Generate deterministic anchor-overlap proposals per reference")
+    multi_parser.add_argument("--threshold", type=float, default=0.5)
+    multi_parser.add_argument("--alignment-map", action="append", metavar="REFERENCE=ALIGNMENT_JSON", help="Explicit alignment for one reference; repeat as needed")
+
+    agreement_parser = sub.add_parser("agreement", help="Compare two reconstructions symmetrically")
     agreement_parser.add_argument("left")
     agreement_parser.add_argument("right")
+    agreement_parser.add_argument("--alignment", help="Explicit split/merge-capable unit alignment JSON")
 
     args = parser.parse_args(argv)
 
-    if args.command == "evaluate":
-        pair = _validated_pair(args.gold, args.candidate)
+    if args.command == "align":
+        pair = _validated_pair(args.reference, args.candidate)
         if pair is None:
             return 1
-        print(json.dumps(evaluate_documents(*pair), indent=2, sort_keys=True))
+        try:
+            alignment = propose_alignment(*pair, threshold=args.threshold)
+        except ValueError as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            return 2
+        _write_json(alignment, args.output)
+        return 0
+
+    if args.command == "evaluate":
+        pair = _validated_pair(args.reference, args.candidate)
+        if pair is None:
+            return 1
+        reference, candidate = pair
+        if args.alignment:
+            alignment = _load_json(args.alignment)
+            errors = validate_alignment(alignment, reference, candidate)
+            if errors:
+                for error in errors:
+                    print(f"ERROR alignment: {error}", file=sys.stderr)
+                return 1
+            report = evaluate_with_alignment(reference, candidate, alignment)
+        else:
+            report = evaluate_documents(reference, candidate)
+        _write_json(report)
+        return 0
+
+    if args.command == "multi-evaluate":
+        candidate = _validated_document(args.candidate, "candidate")
+        if candidate is None:
+            return 1
+        references: list[tuple[str, dict]] = []
+        for path in args.references:
+            reference = _validated_document(path, f"reference {path}")
+            if reference is None:
+                return 1
+            references.append((path, reference))
+        try:
+            alignments = _parse_alignment_specs(args.alignment_map)
+        except ValueError as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            return 2
+        if args.auto_align:
+            for label, reference in references:
+                alignments.setdefault(label, propose_alignment(reference, candidate, args.threshold))
+        for label, reference in references:
+            if label in alignments:
+                errors = validate_alignment(alignments[label], reference, candidate)
+                if errors:
+                    for error in errors:
+                        print(f"ERROR alignment {label}: {error}", file=sys.stderr)
+                    return 1
+        _write_json(evaluate_against_references(references, candidate, alignments))
         return 0
 
     if args.command == "agreement":
         pair = _validated_pair(args.left, args.right)
         if pair is None:
             return 1
-        print(json.dumps(compare_annotations(*pair), indent=2, sort_keys=True))
+        left, right = pair
+        if args.alignment:
+            alignment = _load_json(args.alignment)
+            errors = validate_alignment(alignment, left, right)
+            if errors:
+                for error in errors:
+                    print(f"ERROR alignment: {error}", file=sys.stderr)
+                return 1
+            report = compare_annotations_with_alignment(left, right, alignment)
+        else:
+            report = compare_annotations(left, right)
+        _write_json(report)
         return 0
 
-    document = _load_json(Path(args.input))
+    document = _load_json(args.input)
     errors = validate_document(document)
     if errors:
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)
         return 1
-
     if args.command == "validate":
         print("valid")
         return 0
