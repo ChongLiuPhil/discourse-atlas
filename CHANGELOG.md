@@ -1,6 +1,21 @@
 # Changelog
 
-All notable project changes are recorded here. Discourse Atlas is currently an alpha/research-preview project; the canonical graph schema remains at `0.1.0` while the toolkit release is `0.5.0`.
+All notable project changes are recorded here. Discourse Atlas is currently an alpha/research-preview project; the canonical graph schema remains at `0.1.0` while the toolkit release is `0.6.0`.
+
+## 0.6.0 — 2026-09-05
+
+### Added
+- Browser-based alignment adjudication workbench alongside the synchronized reader.
+- Side-by-side node selection for reference and candidate reconstructions.
+- Accept/propose/reject state editing with unmatched-node recovery after rejection.
+- Manual one-to-one and split/merge reviewed-unit creation with rationale capture.
+- Alignment coverage indicators, duplicate/unknown membership checks, and reviewed JSON export.
+- Browser implementation of the deterministic anchor-overlap proposal algorithm plus Node regression tests.
+- Bundled Mill multi-reference alignment example in the web build.
+
+### Changed
+- The web root now switches between Reader and Alignment workspaces without changing the existing reader state machine.
+- Python and web package versions advance to `0.6.0`.
 
 ## 0.5.0 — 2026-09-05
 
