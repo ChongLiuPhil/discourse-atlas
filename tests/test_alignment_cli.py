@@ -35,3 +35,16 @@ def test_multi_evaluate_keeps_reference_distribution(capsys):
     assert report["reference_count"] == 2
     assert report["best_reference"].endswith("reference-b.json")
     assert report["best_macro_score"] == 1.0
+
+
+def test_cli_rejects_alignment_that_violates_alignment_schema(tmp_path, capsys):
+    bad = tmp_path / "bad-alignment.json"
+    bad.write_text(json.dumps({"alignment_version": "9.9.9", "units": []}), encoding="utf-8")
+    assert main([
+        "evaluate",
+        str(CASE / "reference-a.json"),
+        str(CASE / "reference-b.json"),
+        "--alignment",
+        str(bad),
+    ]) == 1
+    assert "alignment_version" in capsys.readouterr().err
