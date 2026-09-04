@@ -1,0 +1,32 @@
+{
+  "schema_version": "0.1.0",
+  "document": {
+    "title": "On Liberty, Chapter II (excerpt)",
+    "author": "John Stuart Mill",
+    "language": "en",
+    "source_id": "benchmark/cases/mill-on-liberty/source.md",
+    "structure_policy": {
+      "authorial_structure_preserved": true,
+      "notes": "The authorial Chapter II location is preserved; analytical units inside this excerpt are reconstructed."
+    }
+  },
+  "anchors": [
+    {"id":"p1","section_label":"Chapter II","paragraph_start":1,"paragraph_end":1,"line_start":null,"line_end":null,"note":"Two-hypothesis framing"},
+    {"id":"p2","section_label":"Chapter II","paragraph_start":2,"paragraph_end":2,"line_start":null,"line_end":null,"note":"Fallibility argument"},
+    {"id":"p3","section_label":"Chapter II","paragraph_start":3,"paragraph_end":3,"line_start":null,"line_end":null,"note":"Objection from fallible practical judgment and utility"},
+    {"id":"p4","section_label":"Chapter II","paragraph_start":4,"paragraph_end":4,"line_start":null,"line_end":null,"note":"Reply: utility judgment also requires contestability"}
+  ],
+  "nodes": [
+    {"id":"work","parent_id":null,"kind":"work","title":"On Liberty, Chapter II (excerpt)","structure_origin":"author","summary":"Mill develops a fallibility-based defense of open discussion and answers an objection that practical judgment can justify suppressing harmful error.","function":["argues"],"role_in_parent":null,"anchor_ids":["p1","p2","p3","p4"],"confidence":0.99,"notes":null},
+    {"id":"frame","parent_id":"work","kind":"section","title":"Two hypotheses require separate branches","structure_origin":"inferred","summary":"Mill announces that suppression must be tested under two hypotheses and begins with the possibility that the suppressed opinion is true.","function":["organizes","frames"],"role_in_parent":"Sets the branch structure for the excerpt.","anchor_ids":["p1"],"confidence":0.95,"notes":null},
+    {"id":"fallibility","parent_id":"work","kind":"section","title":"Silencing assumes infallibility","structure_origin":"inferred","summary":"Suppressors cannot convert their certainty into absolute certainty for everyone; denying a hearing therefore assumes infallibility.","function":["argues","supports_thesis"],"role_in_parent":"States the first branch of the anti-suppression argument.","anchor_ids":["p2"],"confidence":0.95,"notes":null},
+    {"id":"objection","parent_id":"work","kind":"section","title":"Objection: fallible agents still must act","structure_origin":"inferred","summary":"An objector argues that acting on fallible judgment is unavoidable and that governments may sometimes uphold beliefs judged necessary or useful.","function":["objects","develops_objection"],"role_in_parent":"Challenges the inference from fallibility to a prohibition on suppression.","anchor_ids":["p3"],"confidence":0.95,"notes":null},
+    {"id":"reply","parent_id":"work","kind":"section","title":"Reply: utility judgments are equally disputable","structure_origin":"inferred","summary":"Mill replies that appealing to usefulness only relocates the infallibility problem because usefulness itself is contestable and connected to truth.","function":["responds","supports_thesis"],"role_in_parent":"Answers the objection and restores the case for open discussion.","anchor_ids":["p4"],"confidence":0.95,"notes":null}
+  ],
+  "edges": [
+    {"id":"e-frame-first","source":"frame","target":"fallibility","relation":"sequence","explanation":"The framing paragraph explicitly announces separate branches and the next paragraph begins the first branch.","evidence_anchor_ids":["p1","p2"],"confidence":0.99,"assertion_level":"explicit","notes":null},
+    {"id":"e-objection","source":"objection","target":"fallibility","relation":"objects_to","explanation":"The objection denies that acknowledged fallibility prevents authorities from acting on conscientious judgments about error or utility.","evidence_anchor_ids":["p2","p3"],"confidence":0.96,"assertion_level":"explicit","notes":null},
+    {"id":"e-reply","source":"reply","target":"objection","relation":"responds_to","explanation":"The reply directly answers the utility-based escape proposed by the objection.","evidence_anchor_ids":["p3","p4"],"confidence":0.97,"assertion_level":"explicit","notes":null},
+    {"id":"e-reply-support","source":"reply","target":"fallibility","relation":"supports","explanation":"By showing that utility judgments also remain disputable, the reply reinforces the broader claim that suppression cannot escape the infallibility problem.","evidence_anchor_ids":["p2","p4"],"confidence":0.9,"assertion_level":"strongly_inferred","notes":null}
+  ]
+}
