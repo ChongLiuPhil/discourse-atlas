@@ -1,6 +1,21 @@
 # Changelog
 
-All notable project changes are recorded here. Discourse Atlas is currently an alpha/research-preview project; the canonical graph schema remains at `0.1.0` while the toolkit release is `0.4.0`.
+All notable project changes are recorded here. Discourse Atlas is currently an alpha/research-preview project; the canonical graph schema remains at `0.1.0` while the toolkit release is `0.5.0`.
+
+## 0.5.0 — 2026-09-05
+
+### Added
+- Explicit unit-alignment JSON format supporting one-to-one, split, merge, and many-to-many reviewed correspondences.
+- `align` command for deterministic, inspectable source-anchor overlap proposals.
+- Alignment-aware `evaluate` and `agreement` modes that compare evidence by source coordinates instead of anchor IDs.
+- `multi-evaluate` for scoring a candidate against several defensible references while preserving per-reference results.
+- Public-domain John Stuart Mill *On Liberty* benchmark excerpt with two accepted reconstructions and a reviewed split/merge alignment.
+- Alignment schema, alignment methodology documentation, library tests, and installed-package CLI smoke coverage.
+
+### Changed
+- Evaluation now explicitly separates segmentation/alignment error from hierarchy/relation/evidence error.
+- Benchmark manifest supports multiple reference graphs per case while retaining a backward-compatible primary `gold` entry.
+- Python and web package versions advance to `0.5.0`.
 
 ## 0.4.0 — 2026-09-03
 
