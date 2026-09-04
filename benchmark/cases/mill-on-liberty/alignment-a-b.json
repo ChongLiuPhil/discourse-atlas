@@ -1,0 +1,12 @@
+{
+  "alignment_version":"0.1.0",
+  "method":"manual-reviewed",
+  "units":[
+    {"unit_id":"u-work","reference_node_ids":["work"],"candidate_node_ids":["work"],"method":"manual","confidence":1.0,"status":"accepted","rationale":"Same excerpt-level work node."},
+    {"unit_id":"u-fallibility","reference_node_ids":["frame","fallibility"],"candidate_node_ids":["fallibility-case"],"method":"manual-split-merge","confidence":0.98,"status":"accepted","rationale":"Reference A separates framing from the first branch; reference B treats them as one discourse unit."},
+    {"unit_id":"u-objection","reference_node_ids":["objection"],"candidate_node_ids":["utility-objection"],"method":"manual","confidence":1.0,"status":"accepted","rationale":"Same objection paragraph."},
+    {"unit_id":"u-reply","reference_node_ids":["reply"],"candidate_node_ids":["utility-reply"],"method":"manual","confidence":1.0,"status":"accepted","rationale":"Same reply paragraph."}
+  ],
+  "unmatched_reference_node_ids":[],
+  "unmatched_candidate_node_ids":[]
+}

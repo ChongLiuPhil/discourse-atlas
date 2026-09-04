@@ -1,0 +1,21 @@
+{
+  "schema_version":"0.1.0",
+  "document":{"title":"On Liberty, Chapter II (excerpt)","author":"John Stuart Mill","language":"en","source_id":"benchmark/cases/mill-on-liberty/source.md","structure_policy":{"authorial_structure_preserved":true,"notes":"The authorial Chapter II location is preserved; analytical units inside this excerpt are reconstructed."}},
+  "anchors":[
+    {"id":"p1","section_label":"Chapter II","paragraph_start":1,"paragraph_end":1,"line_start":null,"line_end":null,"note":"Two-hypothesis framing"},
+    {"id":"p2","section_label":"Chapter II","paragraph_start":2,"paragraph_end":2,"line_start":null,"line_end":null,"note":"Fallibility argument"},
+    {"id":"p3","section_label":"Chapter II","paragraph_start":3,"paragraph_end":3,"line_start":null,"line_end":null,"note":"Objection from fallible practical judgment and utility"},
+    {"id":"p4","section_label":"Chapter II","paragraph_start":4,"paragraph_end":4,"line_start":null,"line_end":null,"note":"Reply: utility judgment also requires contestability"}
+  ],
+  "nodes":[
+    {"id":"work","parent_id":null,"kind":"work","title":"On Liberty, Chapter II (excerpt)","structure_origin":"author","summary":"Mill develops a fallibility-based defense of open discussion and answers an objection that practical judgment can justify suppressing harmful error.","function":["argues"],"role_in_parent":null,"anchor_ids":["p1","p2","p3","p4"],"confidence":0.99,"notes":null},
+    {"id":"fallibility-case","parent_id":"work","kind":"section","title":"First branch: suppression presumes infallibility","structure_origin":"inferred","summary":"The branch framing and first argument are treated as one unit: because suppressors are fallible, denying a hearing substitutes private certainty for absolute certainty.","function":["frames","argues"],"role_in_parent":"Combines the branch announcement with its first substantive argument.","anchor_ids":["p1","p2"],"confidence":0.95,"notes":null},
+    {"id":"utility-objection","parent_id":"work","kind":"section","title":"Practical-duty objection","structure_origin":"inferred","summary":"A critic argues that fallible agents must nevertheless act and that socially useful beliefs may warrant protection.","function":["objects","develops_objection"],"role_in_parent":"Challenges the fallibility argument by appealing to practical responsibility.","anchor_ids":["p3"],"confidence":0.95,"notes":null},
+    {"id":"utility-reply","parent_id":"work","kind":"section","title":"Utility does not escape contestability","structure_origin":"inferred","summary":"Mill argues that deciding usefulness is itself a disputable judgment and cannot bypass the need for open discussion.","function":["responds","supports_thesis"],"role_in_parent":"Answers the practical-duty and utility objection.","anchor_ids":["p4"],"confidence":0.95,"notes":null}
+  ],
+  "edges":[
+    {"id":"e-objection","source":"utility-objection","target":"fallibility-case","relation":"objects_to","explanation":"The objection contests the inference from fallibility to a ban on suppressive action.","evidence_anchor_ids":["p2","p3"],"confidence":0.96,"assertion_level":"explicit","notes":null},
+    {"id":"e-reply","source":"utility-reply","target":"utility-objection","relation":"responds_to","explanation":"Mill directly answers the objection by showing that utility judgments do not avoid contestability.","evidence_anchor_ids":["p3","p4"],"confidence":0.97,"assertion_level":"explicit","notes":null},
+    {"id":"e-support","source":"utility-reply","target":"fallibility-case","relation":"supports","explanation":"The utility reply strengthens the fallibility-based case for allowing discussion.","evidence_anchor_ids":["p2","p4"],"confidence":0.9,"assertion_level":"strongly_inferred","notes":null}
+  ]
+}
