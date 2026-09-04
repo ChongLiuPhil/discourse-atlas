@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ChongLiuPhil/discourse-atlas/blob/main/schemas/node-alignment.schema.json",
+  "title": "Discourse Atlas Unit Alignment",
+  "type": "object",
+  "required": ["alignment_version", "units"],
+  "properties": {
+    "alignment_version": {"const": "0.1.0"},
+    "method": {"type": "string"},
+    "threshold": {"type": "number", "minimum": 0, "maximum": 1},
+    "units": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["unit_id", "reference_node_ids", "candidate_node_ids"],
+        "properties": {
+          "unit_id": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"},
+          "reference_node_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+          "candidate_node_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+          "method": {"type": "string"},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "status": {"enum": ["proposed", "accepted", "rejected"]},
+          "rationale": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "unmatched_reference_node_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "unmatched_candidate_node_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}
