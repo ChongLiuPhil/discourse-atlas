@@ -1,8 +1,9 @@
 {
   "cases": [
-    {"id":"mini-essay","source":"examples/mini-essay/source.md","gold":"benchmark/cases/mini-essay/gold.json","synthetic":true},
-    {"id":"philosophy-counterexample","source":"benchmark/cases/philosophy-counterexample/source.md","gold":"benchmark/cases/philosophy-counterexample/gold.json","synthetic":true},
-    {"id":"academic-mechanism","source":"benchmark/cases/academic-mechanism/source.md","gold":"benchmark/cases/academic-mechanism/gold.json","synthetic":true},
-    {"id":"policy-library","source":"benchmark/cases/policy-library/source.md","gold":"benchmark/cases/policy-library/gold.json","synthetic":true}
+    {"id":"mini-essay","source":"examples/mini-essay/source.md","gold":"benchmark/cases/mini-essay/gold.json","references":["benchmark/cases/mini-essay/gold.json"],"synthetic":true},
+    {"id":"philosophy-counterexample","source":"benchmark/cases/philosophy-counterexample/source.md","gold":"benchmark/cases/philosophy-counterexample/gold.json","references":["benchmark/cases/philosophy-counterexample/gold.json"],"synthetic":true},
+    {"id":"academic-mechanism","source":"benchmark/cases/academic-mechanism/source.md","gold":"benchmark/cases/academic-mechanism/gold.json","references":["benchmark/cases/academic-mechanism/gold.json"],"synthetic":true},
+    {"id":"policy-library","source":"benchmark/cases/policy-library/source.md","gold":"benchmark/cases/policy-library/gold.json","references":["benchmark/cases/policy-library/gold.json"],"synthetic":true},
+    {"id":"mill-on-liberty","source":"benchmark/cases/mill-on-liberty/source.md","gold":"benchmark/cases/mill-on-liberty/reference-a.json","references":["benchmark/cases/mill-on-liberty/reference-a.json","benchmark/cases/mill-on-liberty/reference-b.json"],"alignment":"benchmark/cases/mill-on-liberty/alignment-a-b.json","synthetic":false,"public_domain":true}
   ]
 }
