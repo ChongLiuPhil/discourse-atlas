@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { RELATIONS } from '../model.js';
+import { anchorLocationLabel, RELATIONS } from '../model.js';
 
 function Confidence({ value }) {
   return <span className="confidence-chip">{Math.round(value * 100)}%</span>;
@@ -62,7 +62,11 @@ export default function Inspector({ document, selection, onDocumentChange, onFoc
       <div className="evidence-section">
         <div className="section-label">Source anchors</div>
         <div className="evidence-buttons">
-          {anchorIds.length ? anchorIds.map((id) => <button key={id} onClick={() => onFocusAnchor(id)}>{id}</button>) : <span>No anchors</span>}
+          {anchorIds.length ? anchorIds.map((id) => {
+            const anchor = document.anchors.find((item) => item.id === id);
+            const location = anchorLocationLabel(anchor);
+            return <button key={id} onClick={() => onFocusAnchor(id)}>{id}{location ? ` · ${location}` : ''}</button>;
+          }) : <span>No anchors</span>}
         </div>
       </div>
       {!isNode && selected.notes ? <div className="inspector-note">{selected.notes}</div> : null}
