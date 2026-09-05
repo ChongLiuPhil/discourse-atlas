@@ -73,3 +73,13 @@ def test_ingest_pdf_cli_rejects_same_text_and_manifest_path(tmp_path, capsys):
 
     assert main(["ingest-pdf", str(pdf), "-o", str(same), "--manifest", str(same)]) == 2
     assert "must be different" in capsys.readouterr().err
+
+
+def test_malformed_pdf_returns_controlled_cli_error_without_outputs(tmp_path, capsys):
+    pdf = tmp_path / "broken.pdf"
+    pdf.write_bytes(b"not a pdf")
+
+    assert main(["ingest-pdf", str(pdf)]) == 1
+    assert "PDF ingestion failed" in capsys.readouterr().err
+    assert not (tmp_path / "broken.txt").exists()
+    assert not (tmp_path / "broken.pages.json").exists()
