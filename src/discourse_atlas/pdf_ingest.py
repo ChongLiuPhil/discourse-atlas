@@ -11,6 +11,10 @@ class PdfDependencyError(RuntimeError):
     """Raised when the optional PDF dependency is unavailable."""
 
 
+class PdfIngestionError(RuntimeError):
+    """Raised when a PDF cannot be parsed or its text layer cannot be extracted."""
+
+
 def _normalize_page_text(text: str | None) -> str:
     if not text:
         return ""
@@ -70,16 +74,31 @@ def extract_pdf_pages(path: str | Path) -> list[str]:
         ) from exc
 
     pdf_path = Path(path)
-    reader = PdfReader(str(pdf_path))
-    if reader.is_encrypted:
-        try:
-            result = reader.decrypt("")
-        except Exception as exc:  # pypdf exposes several encryption-specific exceptions
-            raise ValueError("encrypted PDF could not be opened without a password") from exc
-        if result == 0:
-            raise ValueError("encrypted PDF requires a password; password-based ingestion is not supported")
+    try:
+        reader = PdfReader(str(pdf_path))
+        if reader.is_encrypted:
+            try:
+                result = reader.decrypt("")
+            except Exception as exc:
+                raise PdfIngestionError("encrypted PDF could not be opened without a password") from exc
+            if result == 0:
+                raise PdfIngestionError(
+                    "encrypted PDF requires a password; password-based ingestion is not supported"
+                )
 
-    return [(page.extract_text() or "") for page in reader.pages]
+        pages: list[str] = []
+        for page_number, page in enumerate(reader.pages, start=1):
+            try:
+                pages.append(page.extract_text() or "")
+            except Exception as exc:
+                raise PdfIngestionError(
+                    f"text extraction failed on page {page_number}: {exc}"
+                ) from exc
+        return pages
+    except PdfIngestionError:
+        raise
+    except Exception as exc:
+        raise PdfIngestionError(f"PDF ingestion failed: {exc}") from exc
 
 
 def ingest_pdf(path: str | Path) -> tuple[str, dict]:
