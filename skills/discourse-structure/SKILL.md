@@ -39,6 +39,14 @@ If file output is unavailable, emit the JSON and Markdown in clearly separated s
 
 ## Workflow
 
+### Pass 0 — prepare the accessible source
+
+Use the most reproducible source representation actually available.
+
+- If the supplied source is already stable text/Markdown, analyze it directly.
+- If the supplied source is a PDF and Discourse Atlas PDF ingestion tooling is available, follow `references/pdf-ingestion.md` to extract its text layer into page-delimited Unicode text before analysis.
+- Never silently substitute OCR for text-layer extraction. If scanned/image-only pages are unavailable as text, preserve that limitation rather than inventing content.
+
 ### Pass 1 — recover textual hierarchy
 
 Read the whole available structure before inferring relations.
@@ -147,6 +155,7 @@ Before finishing, verify:
 - authorial and inferred structures are visibly distinguishable;
 - every node except the root has a valid parent if a parent is claimed;
 - edge endpoints exist;
+- source preparation is explicit and does not conceal OCR or extraction gaps;
 - source anchors use only coordinates supported by the supplied source and obey `references/source-anchors.md`;
 - `requires` direction means prerequisite → dependent;
 - `supports` direction means supporting unit → supported unit;
