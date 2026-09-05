@@ -6,7 +6,7 @@
 
 It is designed for essays, philosophy, academic papers, theoretical books, legal reasoning, policy reports, and other texts where understanding **how the parts depend on one another** matters as much as understanding what each part says.
 
-> Status: **v0.6.0 research preview.** The toolkit now includes an in-browser alignment adjudication workbench on top of explicit split/merge-capable unit alignment, multi-reference evaluation, a public-domain philosophy benchmark, the analysis skill, graph format, validator/exporters, and synchronized reader.
+> Status: **v0.7.0 research preview.** The toolkit now supports scholarly page and Unicode code-point character anchors in addition to paragraph/line grounding, explicit split/merge alignment, multi-reference evaluation, an in-browser alignment adjudication workbench, a public-domain philosophy benchmark, the analysis skill, validator/exporters, and synchronized reader.
 
 ## Core idea
 
@@ -34,17 +34,19 @@ discourse-atlas/
 ├── skills/discourse-structure/   # Portable Agent Skill
 ├── schemas/                      # Graph + unit-alignment schemas
 ├── src/discourse_atlas/          # Validation, alignment, export, evaluation CLI
-├── apps/web/                     # Interactive React Flow + ELK reader
+├── apps/web/                     # Interactive reader + alignment workbench
 ├── examples/mini-essay/          # Small end-to-end example
 ├── benchmark/                    # Synthetic + public-domain evaluation cases
-├── tests/                        # Schema, renderer, alignment, evaluation tests
-├── docs/                         # Architecture, ontology, alignment, evaluation notes
+├── tests/                        # Schema, anchor, alignment, evaluation tests
+├── docs/                         # Architecture, ontology, anchors, alignment, evaluation
 └── .github/workflows/            # CI
 ```
 
 ## Use as an Agent Skill
 
 Copy `skills/discourse-structure/` into a client that supports the Agent Skills `SKILL.md` format. Ask the agent to analyze a text's discourse structure and produce `analysis.json` and `analysis.md`. The skill is intentionally model- and vendor-neutral.
+
+Source anchors can use paragraph, line, page, and exact Unicode code-point character coordinates. See `skills/discourse-structure/references/source-anchors.md`.
 
 ## CLI
 
@@ -69,7 +71,19 @@ discourse-atlas multi-evaluate candidate.json ref-a.json ref-b.json --auto-align
 discourse-atlas agreement ref-a.json ref-b.json --alignment alignment.json
 ```
 
-Validation checks JSON shape plus unique IDs, parent references, containment cycles, edge endpoints, evidence anchors, and anchor ranges. Alignment validation checks unknown nodes, duplicate membership, and ambiguous repeated mappings.
+Validation checks JSON shape plus unique IDs, parent references, containment cycles, edge endpoints, evidence anchors, and paragraph/line/page/character coordinate ranges. Alignment validation checks unknown nodes, duplicate membership, and ambiguous repeated mappings.
+
+## Scholarly source anchors
+
+The canonical graph supports:
+
+- paragraph ranges: 1-based, inclusive;
+- line ranges: 1-based, inclusive;
+- page ranges: 1-based, inclusive;
+- `char_start`: 0-based, inclusive Unicode code-point offset;
+- `char_end`: 0-based, exclusive Unicode code-point offset.
+
+Character offsets are Unicode code points rather than UTF-8 bytes or JavaScript UTF-16 code units, so Python and browser behavior remains consistent for multilingual text. Deterministic alignment keeps paragraph/line coordinates first, then character spans, then page ranges, then section labels. See `docs/scholarly-anchors.md`.
 
 ## Interactive reader
 
@@ -81,7 +95,9 @@ npm install
 npm run dev
 ```
 
-It supports collapse/expand, source ↔ graph evidence tracing, paragraph and line anchors, node/edge inspection, human correction, local file loading, and corrected-JSON export. Switch the web workspace to **Alignment** to review proposals, accept/reject correspondences, build split/merge units, and export reviewed alignment JSON.
+It supports collapse/expand, source ↔ graph evidence tracing, paragraph/line/page/character anchors, node/edge inspection, human correction, local file loading, and corrected-JSON export. Character anchors scroll ordinary text/Markdown sources by Unicode code-point span. Page-only navigation works when extracted text preserves page breaks as form-feed (`\f`) separators.
+
+Switch the web workspace to **Alignment** to review proposals, accept/reject correspondences, build split/merge units, and export reviewed alignment JSON.
 
 ## Relation ontology (MVP)
 
@@ -140,20 +156,28 @@ See `skills/discourse-structure/references/relation-ontology.md` and `docs/ontol
 - [x] Coverage, membership validation, rationale capture, and reviewed JSON export
 - [x] Browser proposal logic covered by Node tests
 
-## Post-v0.6 research directions
+### v0.7 — scholarly source anchors
+- [x] Page coordinates for fixed editions and PDF-derived text
+- [x] Exact Unicode code-point character spans
+- [x] Semantic validation for new coordinate ranges
+- [x] Page/character-aware alignment and evidence evaluation
+- [x] Browser evidence tracing and coordinate labels
+- [x] Python/Node regression tests for multilingual character offsets and page fallbacks
+
+## Post-v0.7 research directions
 
 - expand reviewed public-domain / permission-compatible real-text corpora;
-- add page/character anchor coordinates for scholarly editions and PDFs;
+- add an explicit PDF text-ingestion layer that emits page-aware source text without making OCR a hidden dependency;
 - add calibrated semantic alignment proposals as an optional, separately auditable layer;
 - optional hosted demo / GitHub Pages deployment.
 
 ## Evaluation
 
-The evaluation layer is explicit about interpretive plurality. Stable-ID mode remains available, but unconstrained outputs can now be aligned through a separate JSON artifact before structural scoring. Multi-reference mode reports compatibility with several accepted reconstructions without collapsing them into a single synthetic gold graph. See `benchmark/README.md`, `docs/alignment.md`, `docs/alignment-workbench.md`, and `docs/evaluation.md`.
+The evaluation layer is explicit about interpretive plurality. Stable-ID mode remains available, but unconstrained outputs can be aligned through a separate JSON artifact before structural scoring. Multi-reference mode reports compatibility with several accepted reconstructions without collapsing them into a single synthetic gold graph. Source-coordinate overlap can use paragraph/line anchors or, when those are absent, character/page anchors. See `benchmark/README.md`, `docs/alignment.md`, `docs/alignment-workbench.md`, `docs/scholarly-anchors.md`, and `docs/evaluation.md`.
 
 ## Non-goals
 
-Discourse Atlas is not intended to replace close reading, claim one uniquely correct structure for interpretive texts, flatten every relation into premise/conclusion pairs, or treat textual order as logical dependence by default.
+Discourse Atlas is not intended to replace close reading, claim one uniquely correct structure for interpretive texts, flatten every relation into premise/conclusion pairs, treat textual order as logical dependence by default, or pretend that coordinate support itself is PDF extraction/OCR.
 
 ## Contributing
 
