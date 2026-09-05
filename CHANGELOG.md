@@ -1,6 +1,25 @@
 # Changelog
 
-All notable project changes are recorded here. Discourse Atlas is currently an alpha/research-preview project; the canonical graph schema remains at `0.1.0` while the toolkit release is `0.7.0`.
+All notable project changes are recorded here. Discourse Atlas is currently an alpha/research-preview project; the canonical graph schema remains at `0.1.0` while the toolkit release is `0.8.0`.
+
+## 0.8.0 — 2026-09-05
+
+### Added
+- Optional `pdf` installation extra using `pypdf` 6.x while keeping the core installation PDF-library-free.
+- `ingest-pdf` CLI command for deterministic PDF text-layer extraction.
+- Fixed `\n\f\n` page separators compatible with the v0.7 page-aware web reader.
+- Page manifest with PDF SHA-256, page count, empty-page count, Unicode code-point offset unit, total character count, and exact character span for every page.
+- Output overwrite protection with explicit `--force` opt-in.
+- Controlled errors for malformed PDFs, unsupported password-protected PDFs, and page-level extraction failures.
+- Explicit empty-page warnings; OCR is not performed silently.
+- PDF ingestion documentation and Agent Skill source-preparation guidance.
+- Python regression tests for multilingual offsets, empty pages, provenance hashes, CLI output behavior, overwrite protection, and malformed PDFs.
+- Installed-package CI smoke coverage for the PDF extra and `ingest-pdf` command.
+
+### Changed
+- The Skill now begins with an explicit source-preparation pass before structural reconstruction.
+- Development installs include the optional PDF dependency so ingestion is tested across Python 3.10–3.13.
+- Python and web package versions advance to `0.8.0`.
 
 ## 0.7.0 — 2026-09-05
 

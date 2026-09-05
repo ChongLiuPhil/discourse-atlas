@@ -16,6 +16,7 @@ from .evaluation import (
     evaluate_documents,
     evaluate_with_alignment,
 )
+from .pdf_ingest import PdfDependencyError, ingest_pdf
 from .validation import validate_references
 
 
@@ -174,6 +175,14 @@ def _parse_alignment_specs(values: list[str] | None) -> dict[str, dict]:
     return result
 
 
+def _pdf_output_paths(input_path: str, output: str | None, manifest: str | None) -> tuple[Path, Path]:
+    source = Path(input_path)
+    return (
+        Path(output) if output else source.with_suffix(".txt"),
+        Path(manifest) if manifest else source.with_suffix(".pages.json"),
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="discourse-atlas")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -188,6 +197,12 @@ def main(argv: list[str] | None = None) -> int:
     dot_parser = sub.add_parser("dot", help="Export Graphviz DOT")
     dot_parser.add_argument("input")
     dot_parser.add_argument("-o", "--output")
+
+    pdf_parser = sub.add_parser("ingest-pdf", help="Extract PDF text with page and Unicode character coordinates")
+    pdf_parser.add_argument("input")
+    pdf_parser.add_argument("-o", "--output", help="Output text path; defaults to INPUT.txt")
+    pdf_parser.add_argument("--manifest", help="Page manifest JSON path; defaults to INPUT.pages.json")
+    pdf_parser.add_argument("--force", action="store_true", help="Overwrite existing output files")
 
     align_parser = sub.add_parser("align", help="Propose an inspectable source-anchor unit alignment")
     align_parser.add_argument("reference")
@@ -213,6 +228,32 @@ def main(argv: list[str] | None = None) -> int:
     agreement_parser.add_argument("--alignment", help="Explicit split/merge-capable unit alignment JSON")
 
     args = parser.parse_args(argv)
+
+    if args.command == "ingest-pdf":
+        output_path, manifest_path = _pdf_output_paths(args.input, args.output, args.manifest)
+        if output_path.resolve() == manifest_path.resolve():
+            print("ERROR: text output and manifest paths must be different", file=sys.stderr)
+            return 2
+        existing = [path for path in (output_path, manifest_path) if path.exists()]
+        if existing and not args.force:
+            print(f"ERROR: output already exists: {', '.join(str(path) for path in existing)}; use --force to overwrite", file=sys.stderr)
+            return 2
+        try:
+            source_text, manifest = ingest_pdf(args.input)
+        except (PdfDependencyError, ValueError, OSError) as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+            return 1
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        manifest_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(source_text, encoding="utf-8")
+        manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        print(f"wrote {output_path} and {manifest_path}")
+        if manifest["empty_page_count"]:
+            print(
+                f"WARNING: {manifest['empty_page_count']} of {manifest['page_count']} pages yielded no text; OCR is not performed",
+                file=sys.stderr,
+            )
+        return 0
 
     if args.command == "align":
         pair = _validated_pair(args.reference, args.candidate)

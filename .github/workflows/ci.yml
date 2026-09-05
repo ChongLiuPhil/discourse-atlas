@@ -30,8 +30,8 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install --upgrade pip
-      - run: python -m pip install .
-      - name: Validate alignment and multi-reference commands outside repository checkout
+      - run: python -m pip install '.[pdf]'
+      - name: Validate installed CLI outside repository checkout
         run: |
           cd /tmp
           discourse-atlas validate "$GITHUB_WORKSPACE/examples/mini-essay/analysis.json"
@@ -42,6 +42,24 @@ jobs:
           discourse-atlas evaluate "$GITHUB_WORKSPACE/benchmark/cases/mill-on-liberty/reference-a.json" "$GITHUB_WORKSPACE/benchmark/cases/mill-on-liberty/reference-b.json" --alignment "$GITHUB_WORKSPACE/benchmark/cases/mill-on-liberty/alignment-a-b.json" > /tmp/aligned-evaluation.json
           discourse-atlas agreement "$GITHUB_WORKSPACE/benchmark/cases/mill-on-liberty/reference-a.json" "$GITHUB_WORKSPACE/benchmark/cases/mill-on-liberty/reference-b.json" --alignment "$GITHUB_WORKSPACE/benchmark/cases/mill-on-liberty/alignment-a-b.json" > /tmp/aligned-agreement.json
           discourse-atlas multi-evaluate "$GITHUB_WORKSPACE/benchmark/cases/mill-on-liberty/reference-b.json" "$GITHUB_WORKSPACE/benchmark/cases/mill-on-liberty/reference-a.json" "$GITHUB_WORKSPACE/benchmark/cases/mill-on-liberty/reference-b.json" --auto-align > /tmp/multi-evaluation.json
+          python - <<'PY'
+          from pathlib import Path
+          from pypdf import PdfWriter
+          writer = PdfWriter()
+          writer.add_blank_page(width=72, height=72)
+          writer.add_blank_page(width=72, height=72)
+          with Path('/tmp/smoke.pdf').open('wb') as handle:
+              writer.write(handle)
+          PY
+          discourse-atlas ingest-pdf /tmp/smoke.pdf -o /tmp/smoke.txt --manifest /tmp/smoke.pages.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path('/tmp/smoke.pages.json').read_text(encoding='utf-8'))
+          assert manifest['page_count'] == 2
+          assert manifest['empty_page_count'] == 2
+          assert Path('/tmp/smoke.txt').read_text(encoding='utf-8') == '\n\f\n'
+          PY
 
   web:
     runs-on: ubuntu-latest
