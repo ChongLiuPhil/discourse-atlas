@@ -3,21 +3,44 @@ from __future__ import annotations
 from collections import defaultdict
 
 
+CHAR_CELL_SIZE = 32
+
+
+def _inclusive_tokens(prefix: str, start: object, end: object) -> set[tuple[str, object]]:
+    if not isinstance(start, int):
+        return set()
+    finish = end if isinstance(end, int) else start
+    return {(prefix, value) for value in range(start, finish + 1)}
+
+
+def _character_tokens(start: object, end: object) -> set[tuple[str, object]]:
+    """Return scalable overlap cells for 0-based, end-exclusive Unicode code-point spans."""
+    if not isinstance(start, int) or not isinstance(end, int) or end <= start:
+        return set()
+    first = start // CHAR_CELL_SIZE
+    last = (end - 1) // CHAR_CELL_SIZE
+    return {("c32", value) for value in range(first, last + 1)}
+
+
 def _anchor_tokens(anchor: dict) -> set[tuple[str, object]]:
-    tokens: set[tuple[str, object]] = set()
-    p_start = anchor.get("paragraph_start")
-    p_end = anchor.get("paragraph_end")
-    if isinstance(p_start, int):
-        p_end = p_end if isinstance(p_end, int) else p_start
-        tokens.update(("p", value) for value in range(p_start, p_end + 1))
-    l_start = anchor.get("line_start")
-    l_end = anchor.get("line_end")
-    if isinstance(l_start, int):
-        l_end = l_end if isinstance(l_end, int) else l_start
-        tokens.update(("l", value) for value in range(l_start, l_end + 1))
-    if not tokens and anchor.get("section_label"):
-        tokens.add(("s", str(anchor["section_label"])))
-    return tokens
+    # Preserve v0.5 behavior when paragraph/line coordinates are available.
+    tokens = _inclusive_tokens("p", anchor.get("paragraph_start"), anchor.get("paragraph_end"))
+    tokens.update(_inclusive_tokens("l", anchor.get("line_start"), anchor.get("line_end")))
+    if tokens:
+        return tokens
+
+    # Character offsets are more precise than page numbers and remain edition-specific.
+    tokens = _character_tokens(anchor.get("char_start"), anchor.get("char_end"))
+    if tokens:
+        return tokens
+
+    tokens = _inclusive_tokens("pg", anchor.get("page_start"), anchor.get("page_end"))
+    if tokens:
+        return tokens
+
+    if anchor.get("section_label"):
+        return {("s", str(anchor["section_label"]))}
+    return set()
 
 
 def anchor_map(document: dict) -> dict[str, dict]:
