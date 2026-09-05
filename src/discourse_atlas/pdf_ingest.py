@@ -11,7 +11,7 @@ class PdfDependencyError(RuntimeError):
     """Raised when the optional PDF dependency is unavailable."""
 
 
-class PdfIngestionError(RuntimeError):
+class PdfIngestionError(ValueError):
     """Raised when a PDF cannot be parsed or its text layer cannot be extracted."""
 
 
