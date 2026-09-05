@@ -8,11 +8,23 @@ def _duplicates(values: list[str]) -> list[str]:
     return sorted(value for value, count in counts.items() if count > 1)
 
 
-def _check_range(item: dict, start_key: str, end_key: str, label: str) -> list[str]:
+def _check_range(item: dict, start_key: str, end_key: str, label: str, *, strict: bool = False) -> list[str]:
     start = item.get(start_key)
     end = item.get(end_key)
-    if start is not None and end is not None and start > end:
-        return [f"{label}: {start_key} must be <= {end_key}"]
+    if start is None or end is None:
+        return []
+    invalid = start >= end if strict else start > end
+    if invalid:
+        operator = "<" if strict else "<="
+        return [f"{label}: {start_key} must be {operator} {end_key}"]
+    return []
+
+
+def _check_pair(item: dict, start_key: str, end_key: str, label: str) -> list[str]:
+    start = item.get(start_key)
+    end = item.get(end_key)
+    if start is None and end is not None:
+        return [f"{label}: {end_key} requires {start_key}"]
     return []
 
 
@@ -57,7 +69,6 @@ def validate_references(document: dict) -> list[str]:
             if anchor_id not in anchor_set:
                 errors.append(f"node {node_id}: unknown anchor_id {anchor_id}")
 
-    # Parent links must form an acyclic hierarchy.
     for node_id in node_ids:
         seen: set[str] = set()
         current: str | None = node_id
@@ -84,7 +95,15 @@ def validate_references(document: dict) -> list[str]:
 
     for anchor in anchors:
         anchor_id = anchor.get("id", "<unknown>")
-        errors.extend(_check_range(anchor, "paragraph_start", "paragraph_end", f"anchor {anchor_id}"))
-        errors.extend(_check_range(anchor, "line_start", "line_end", f"anchor {anchor_id}"))
+        label = f"anchor {anchor_id}"
+        for start_key, end_key in (
+            ("paragraph_start", "paragraph_end"),
+            ("line_start", "line_end"),
+            ("page_start", "page_end"),
+        ):
+            errors.extend(_check_range(anchor, start_key, end_key, label))
+            errors.extend(_check_pair(anchor, start_key, end_key, label))
+        errors.extend(_check_range(anchor, "char_start", "char_end", label, strict=True))
+        errors.extend(_check_pair(anchor, "char_start", "char_end", label))
 
     return sorted(set(errors))
