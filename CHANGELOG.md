@@ -1,6 +1,24 @@
 # Changelog
 
-All notable project changes are recorded here. Discourse Atlas is currently an alpha/research-preview project; the canonical graph schema remains at `0.1.0` while the toolkit release is `0.6.0`.
+All notable project changes are recorded here. Discourse Atlas is currently an alpha/research-preview project; the canonical graph schema remains at `0.1.0` while the toolkit release is `0.7.0`.
+
+## 0.7.0 — 2026-09-05
+
+### Added
+- Optional `page_start` / `page_end` anchors for fixed editions and PDF-derived text.
+- Optional exact `char_start` / `char_end` anchors using 0-based Unicode code-point offsets with an exclusive end.
+- Semantic validation for page and character ranges, including missing-start and empty/reversed character spans.
+- Page/character fallback support in deterministic alignment and alignment-aware evidence scoring.
+- Unicode-aware browser source-block coordinates and character-anchor navigation.
+- Form-feed (`\f`) page-boundary support for page-only evidence navigation in extracted text.
+- Inspector labels for page, paragraph, line, and character coordinates.
+- Skill and software documentation for scholarly source-anchor conventions.
+- Python and Node regression coverage for page fallback, character overlap, multilingual code-point offsets, and coordinate priority.
+
+### Changed
+- Automatic anchor matching keeps paragraph/line coordinates first, then character spans, then page ranges, then section labels.
+- Character overlap metrics use fixed 32-code-point cells for scalability while stored coordinates remain exact.
+- Python and web package versions advance to `0.7.0`; the canonical graph schema version remains `0.1.0` because the new fields are optional and backward compatible.
 
 ## 0.6.0 — 2026-09-05
 
