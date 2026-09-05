@@ -58,6 +58,8 @@ For every leaf section or smallest useful unit, record:
 - source anchors;
 - confidence.
 
+For source anchors, follow `references/source-anchors.md`. Preserve paragraph/line coordinates when available; add page coordinates only for the supplied page-bearing source or edition; add exact Unicode code-point character ranges only when they are genuinely available. Never invent page numbers or exact offsets.
+
 Do not use function labels as logical edges automatically.
 
 ### Pass 3 — infer sibling relations
@@ -99,7 +101,7 @@ For every major edge:
 - set confidence in `[0,1]`;
 - label assertion level as `explicit`, `strongly_inferred`, or `tentative`.
 
-Delete weak decorative edges. Before finalizing JSON, also verify that every referenced node and anchor exists, node/edge/anchor IDs are unique, and the containment hierarchy has exactly one `work` root with no containment cycles.
+Delete weak decorative edges. Before finalizing JSON, also verify that every referenced node and anchor exists, node/edge/anchor IDs are unique, source anchor ranges are internally consistent, and the containment hierarchy has exactly one `work` root with no containment cycles.
 
 ### Pass 7 — global reconstruction
 
@@ -145,6 +147,7 @@ Before finishing, verify:
 - authorial and inferred structures are visibly distinguishable;
 - every node except the root has a valid parent if a parent is claimed;
 - edge endpoints exist;
+- source anchors use only coordinates supported by the supplied source and obey `references/source-anchors.md`;
 - `requires` direction means prerequisite → dependent;
 - `supports` direction means supporting unit → supported unit;
 - `objects_to` direction means objection → target;
