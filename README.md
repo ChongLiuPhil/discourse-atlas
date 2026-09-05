@@ -6,7 +6,7 @@
 
 It is designed for essays, philosophy, academic papers, theoretical books, legal reasoning, policy reports, and other texts where understanding **how the parts depend on one another** matters as much as understanding what each part says.
 
-> Status: **v0.7.0 research preview.** The toolkit now supports scholarly page and Unicode code-point character anchors in addition to paragraph/line grounding, explicit split/merge alignment, multi-reference evaluation, an in-browser alignment adjudication workbench, a public-domain philosophy benchmark, the analysis skill, validator/exporters, and synchronized reader.
+> Status: **v0.8.0 research preview.** The toolkit now includes deterministic PDF text-layer ingestion, scholarly page and Unicode code-point anchors, explicit split/merge alignment, multi-reference evaluation, an in-browser alignment adjudication workbench, a public-domain philosophy benchmark, the analysis skill, validator/exporters, and synchronized reader.
 
 ## Core idea
 
@@ -25,6 +25,7 @@ The canonical representation is JSON. Visualizations are derived views, not the 
 - **Separate hierarchy from dependency.** Containment is not the same as logical dependence.
 - **Evidence for important edges.** Major inferred relations should point back to source anchors.
 - **Alignment before comparison.** Different node IDs or segmentation must be aligned explicitly before structural differences are scored.
+- **Explicit source preparation.** PDF extraction, OCR, cleanup, and interpretation must not be silently conflated.
 - **Reconstruction, not revelation.** The output is a criticizable interpretation, not a claim to the single true structure of a text.
 
 ## Repository layout
@@ -33,12 +34,12 @@ The canonical representation is JSON. Visualizations are derived views, not the 
 discourse-atlas/
 ├── skills/discourse-structure/   # Portable Agent Skill
 ├── schemas/                      # Graph + unit-alignment schemas
-├── src/discourse_atlas/          # Validation, alignment, export, evaluation CLI
+├── src/discourse_atlas/          # Validation, PDF ingestion, alignment, evaluation CLI
 ├── apps/web/                     # Interactive reader + alignment workbench
 ├── examples/mini-essay/          # Small end-to-end example
 ├── benchmark/                    # Synthetic + public-domain evaluation cases
-├── tests/                        # Schema, anchor, alignment, evaluation tests
-├── docs/                         # Architecture, ontology, anchors, alignment, evaluation
+├── tests/                        # Schema, ingestion, anchor, alignment, evaluation tests
+├── docs/                         # Architecture, ingestion, anchors, alignment, evaluation
 └── .github/workflows/            # CI
 ```
 
@@ -46,16 +47,37 @@ discourse-atlas/
 
 Copy `skills/discourse-structure/` into a client that supports the Agent Skills `SKILL.md` format. Ask the agent to analyze a text's discourse structure and produce `analysis.json` and `analysis.md`. The skill is intentionally model- and vendor-neutral.
 
-Source anchors can use paragraph, line, page, and exact Unicode code-point character coordinates. See `skills/discourse-structure/references/source-anchors.md`.
+Source anchors can use paragraph, line, page, and exact Unicode code-point character coordinates. PDF sources can first be converted to a reproducible page-delimited text representation with the optional PDF ingestion command. See `skills/discourse-structure/references/source-anchors.md` and `skills/discourse-structure/references/pdf-ingestion.md`.
 
-## CLI
+## Installation and CLI
+
+Core installation does not require a PDF library:
+
+```bash
+python -m pip install .
+```
+
+Install the optional PDF extra when text-layer ingestion is needed:
+
+```bash
+python -m pip install '.[pdf]'
+```
+
+Development installation includes PDF support and tests:
 
 ```bash
 python -m pip install -e '.[dev]'
+```
 
+Core commands:
+
+```bash
 discourse-atlas validate examples/mini-essay/analysis.json
 discourse-atlas mermaid examples/mini-essay/analysis.json
 discourse-atlas dot examples/mini-essay/analysis.json
+
+# Extract a PDF text layer into page-aware Unicode text + manifest
+discourse-atlas ingest-pdf book.pdf
 
 # Stable-ID evaluation
 discourse-atlas evaluate reference.json candidate.json
@@ -72,6 +94,17 @@ discourse-atlas agreement ref-a.json ref-b.json --alignment alignment.json
 ```
 
 Validation checks JSON shape plus unique IDs, parent references, containment cycles, edge endpoints, evidence anchors, and paragraph/line/page/character coordinate ranges. Alignment validation checks unknown nodes, duplicate membership, and ambiguous repeated mappings.
+
+## PDF text ingestion
+
+`discourse-atlas ingest-pdf book.pdf` writes two files by default:
+
+- `book.txt`: normalized Unicode text with `\n\f\n` between PDF pages;
+- `book.pages.json`: a page manifest containing the source PDF SHA-256, page count, empty-page count, Unicode code-point offsets, and exact character span for every page.
+
+Existing outputs are protected unless `--force` is supplied. Password-protected PDFs that cannot be opened without a password are rejected.
+
+The command reads the PDF **text layer only**. It does not perform OCR, layout repair, dehyphenation, or semantic cleanup. Image-only/scanned pages normally become empty page spans and trigger a warning. This is deliberate: source extraction remains auditable rather than being silently transformed. See `docs/pdf-ingestion.md`.
 
 ## Scholarly source anchors
 
@@ -95,7 +128,7 @@ npm install
 npm run dev
 ```
 
-It supports collapse/expand, source ↔ graph evidence tracing, paragraph/line/page/character anchors, node/edge inspection, human correction, local file loading, and corrected-JSON export. Character anchors scroll ordinary text/Markdown sources by Unicode code-point span. Page-only navigation works when extracted text preserves page breaks as form-feed (`\f`) separators.
+It supports collapse/expand, source ↔ graph evidence tracing, paragraph/line/page/character anchors, node/edge inspection, human correction, local file loading, and corrected-JSON export. Character anchors scroll ordinary text/Markdown sources by Unicode code-point span. Page-only navigation works with the form-feed page boundaries emitted by `ingest-pdf`.
 
 Switch the web workspace to **Alignment** to review proposals, accept/reject correspondences, build split/merge units, and export reviewed alignment JSON.
 
@@ -164,10 +197,20 @@ See `skills/discourse-structure/references/relation-ontology.md` and `docs/ontol
 - [x] Browser evidence tracing and coordinate labels
 - [x] Python/Node regression tests for multilingual character offsets and page fallbacks
 
-## Post-v0.7 research directions
+### v0.8 — deterministic PDF text ingestion
+- [x] Optional `pdf` package extra rather than a mandatory PDF dependency
+- [x] Text-layer extraction with fixed form-feed page boundaries
+- [x] SHA-256 + per-page Unicode character-span manifest
+- [x] Empty-page reporting without hidden OCR
+- [x] Controlled malformed/encrypted PDF failures and overwrite protection
+- [x] CLI, unit tests, cross-Python CI, and installed-package smoke coverage
+
+## Post-v0.8 research directions
+
+The v0.8 research-preview core is feature-complete for the current project scope. Further work is research/extension rather than unfinished baseline functionality:
 
 - expand reviewed public-domain / permission-compatible real-text corpora;
-- add an explicit PDF text-ingestion layer that emits page-aware source text without making OCR a hidden dependency;
+- add OCR only as an explicit provenance-preserving adapter, not a hidden fallback;
 - add calibrated semantic alignment proposals as an optional, separately auditable layer;
 - optional hosted demo / GitHub Pages deployment.
 
@@ -177,7 +220,7 @@ The evaluation layer is explicit about interpretive plurality. Stable-ID mode re
 
 ## Non-goals
 
-Discourse Atlas is not intended to replace close reading, claim one uniquely correct structure for interpretive texts, flatten every relation into premise/conclusion pairs, treat textual order as logical dependence by default, or pretend that coordinate support itself is PDF extraction/OCR.
+Discourse Atlas is not intended to replace close reading, claim one uniquely correct structure for interpretive texts, flatten every relation into premise/conclusion pairs, treat textual order as logical dependence by default, or silently treat text extraction/OCR as interpretation-neutral operations.
 
 ## Contributing
 
