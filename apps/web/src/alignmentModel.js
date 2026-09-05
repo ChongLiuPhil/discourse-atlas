@@ -1,18 +1,41 @@
+export const CHAR_CELL_SIZE = 32;
+
 export function indexNodes(document) {
   return new Map((document?.nodes ?? []).map((node) => [node.id, node]));
 }
 
-export function anchorTokens(anchor) {
+function inclusiveRangeTokens(prefix, start, end) {
   const tokens = new Set();
-  const addRange = (prefix, start, end) => {
-    if (!Number.isInteger(start)) return;
-    const finish = Number.isInteger(end) ? end : start;
-    for (let value = start; value <= finish; value += 1) tokens.add(`${prefix}:${value}`);
-  };
-  addRange('p', anchor?.paragraph_start, anchor?.paragraph_end);
-  addRange('l', anchor?.line_start, anchor?.line_end);
-  if (!tokens.size && anchor?.section_label) tokens.add(`s:${anchor.section_label}`);
+  if (!Number.isInteger(start)) return tokens;
+  const finish = Number.isInteger(end) ? end : start;
+  for (let value = start; value <= finish; value += 1) tokens.add(`${prefix}:${value}`);
   return tokens;
+}
+
+function characterTokens(start, end) {
+  const tokens = new Set();
+  if (!Number.isInteger(start) || !Number.isInteger(end) || end <= start) return tokens;
+  const first = Math.floor(start / CHAR_CELL_SIZE);
+  const last = Math.floor((end - 1) / CHAR_CELL_SIZE);
+  for (let value = first; value <= last; value += 1) tokens.add(`c32:${value}`);
+  return tokens;
+}
+
+export function anchorTokens(anchor) {
+  const paragraphLine = new Set([
+    ...inclusiveRangeTokens('p', anchor?.paragraph_start, anchor?.paragraph_end),
+    ...inclusiveRangeTokens('l', anchor?.line_start, anchor?.line_end),
+  ]);
+  if (paragraphLine.size) return paragraphLine;
+
+  const chars = characterTokens(anchor?.char_start, anchor?.char_end);
+  if (chars.size) return chars;
+
+  const pages = inclusiveRangeTokens('pg', anchor?.page_start, anchor?.page_end);
+  if (pages.size) return pages;
+
+  if (anchor?.section_label) return new Set([`s:${anchor.section_label}`]);
+  return new Set();
 }
 
 function anchorIndex(document) {
