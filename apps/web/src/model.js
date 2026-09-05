@@ -109,33 +109,90 @@ export function anchorsForSelection(document, selection) {
   return [];
 }
 
+function logicalLines(source) {
+  const codePoints = Array.from(source);
+  const lines = [];
+  let start = 0;
+  let lineNumber = 1;
+  for (let i = 0; i <= codePoints.length; i += 1) {
+    const current = codePoints[i];
+    if (i !== codePoints.length && current !== '\n' && current !== '\r') continue;
+    lines.push({ text: codePoints.slice(start, i).join(''), lineStart: lineNumber, charStart: start, charEnd: i });
+    if (current === '\r' && codePoints[i + 1] === '\n') i += 1;
+    start = i + 1;
+    lineNumber += 1;
+  }
+  return lines;
+}
+
 export function sourceBlocksFromText(source) {
-  const lines = source.split(/\r?\n/);
+  const lines = logicalLines(source);
   const blocks = [];
   let current = [];
-  let startLine = null;
+  let page = 1;
 
-  function flush(endLine) {
+  function flush() {
     if (!current.length) return;
-    const text = current.join('\n').trim();
+    const text = current.map((item) => item.text).join('\n').trim();
     if (text && !/^#{1,6}\s/.test(text)) {
-      blocks.push({ text, lineStart: startLine, lineEnd: endLine });
+      blocks.push({
+        text,
+        lineStart: current[0].lineStart,
+        lineEnd: current[current.length - 1].lineStart,
+        charStart: current[0].charStart,
+        charEnd: current[current.length - 1].charEnd,
+        pageStart: current[0].page,
+        pageEnd: current[current.length - 1].page,
+      });
     }
     current = [];
-    startLine = null;
   }
 
-  lines.forEach((line, index) => {
-    const lineNumber = index + 1;
-    if (!line.trim()) {
-      flush(lineNumber - 1);
-      return;
+  for (const line of lines) {
+    const pageBreaks = (line.text.match(/\f/g) ?? []).length;
+    if (pageBreaks) {
+      flush();
+      page += pageBreaks;
     }
-    if (startLine === null) startLine = lineNumber;
-    current.push(line);
-  });
-  flush(lines.length);
+    const text = line.text.replaceAll('\f', '');
+    if (!text.trim()) {
+      flush();
+      continue;
+    }
+    current.push({ ...line, text, page });
+  }
+  flush();
   return blocks;
+}
+
+export function blockNumbersForAnchor(anchor, blocks) {
+  if (!anchor) return [];
+  if (Number.isInteger(anchor.paragraph_start)) {
+    const end = Number.isInteger(anchor.paragraph_end) ? anchor.paragraph_end : anchor.paragraph_start;
+    return blocks.map((_, index) => index + 1).filter((number) => number >= anchor.paragraph_start && number <= end);
+  }
+  if (Number.isInteger(anchor.line_start)) {
+    const end = Number.isInteger(anchor.line_end) ? anchor.line_end : anchor.line_start;
+    return blocks.map((block, index) => ({ block, number: index + 1 })).filter(({ block }) => block.lineStart <= end && block.lineEnd >= anchor.line_start).map(({ number }) => number);
+  }
+  if (Number.isInteger(anchor.char_start) && Number.isInteger(anchor.char_end) && anchor.char_end > anchor.char_start) {
+    return blocks.map((block, index) => ({ block, number: index + 1 })).filter(({ block }) => block.charStart < anchor.char_end && block.charEnd > anchor.char_start).map(({ number }) => number);
+  }
+  if (Number.isInteger(anchor.page_start)) {
+    const end = Number.isInteger(anchor.page_end) ? anchor.page_end : anchor.page_start;
+    return blocks.map((block, index) => ({ block, number: index + 1 })).filter(({ block }) => block.pageStart <= end && block.pageEnd >= anchor.page_start).map(({ number }) => number);
+  }
+  return [];
+}
+
+export function anchorLocationLabel(anchor) {
+  if (!anchor) return '';
+  const parts = [];
+  if (Number.isInteger(anchor.page_start)) parts.push(`p.${anchor.page_start}${Number.isInteger(anchor.page_end) && anchor.page_end !== anchor.page_start ? `–${anchor.page_end}` : ''}`);
+  if (Number.isInteger(anchor.paragraph_start)) parts.push(`¶${anchor.paragraph_start}${Number.isInteger(anchor.paragraph_end) && anchor.paragraph_end !== anchor.paragraph_start ? `–${anchor.paragraph_end}` : ''}`);
+  if (Number.isInteger(anchor.line_start)) parts.push(`lines ${anchor.line_start}${Number.isInteger(anchor.line_end) && anchor.line_end !== anchor.line_start ? `–${anchor.line_end}` : ''}`);
+  if (Number.isInteger(anchor.char_start) && Number.isInteger(anchor.char_end)) parts.push(`chars ${anchor.char_start}–${anchor.char_end}`);
+  return parts.join(' · ');
 }
 
 export function paragraphsFromSource(source) {
@@ -172,6 +229,14 @@ export function validateClientDocument(document) {
       errors.push(`Edge ${edge.id} references a missing endpoint.`);
     }
     if (!RELATIONS.includes(edge.relation)) errors.push(`Edge ${edge.id} uses unknown relation ${edge.relation}.`);
+  }
+  for (const anchor of document.anchors) {
+    for (const [startKey, endKey] of [['paragraph_start', 'paragraph_end'], ['line_start', 'line_end'], ['page_start', 'page_end']]) {
+      if (anchor[startKey] != null && anchor[endKey] != null && anchor[startKey] > anchor[endKey]) errors.push(`Anchor ${anchor.id} has invalid ${startKey}/${endKey} range.`);
+      if (anchor[startKey] == null && anchor[endKey] != null) errors.push(`Anchor ${anchor.id}: ${endKey} requires ${startKey}.`);
+    }
+    if (anchor.char_start != null && anchor.char_end != null && anchor.char_start >= anchor.char_end) errors.push(`Anchor ${anchor.id} has invalid char_start/char_end range.`);
+    if (anchor.char_start == null && anchor.char_end != null) errors.push(`Anchor ${anchor.id}: char_end requires char_start.`);
   }
   return [...new Set(errors)];
 }

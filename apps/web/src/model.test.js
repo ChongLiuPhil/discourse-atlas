@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   anchorsForSelection,
+  blockNumbersForAnchor,
   paragraphsFromSource,
   projectEdges,
   relatedToAnchor,
@@ -43,11 +44,29 @@ test('source paragraph numbering ignores markdown headings', () => {
   assert.deepEqual(paragraphsFromSource('# Title\n\nFirst.\n\nSecond.'), ['First.', 'Second.']);
 });
 
-
-test('source blocks retain line ranges for line-based anchors', () => {
+test('source blocks retain line, code-point character, and page ranges', () => {
   const blocks = sourceBlocksFromText('# Title\n\nFirst line.\ncontinued.\n\nSecond.');
   assert.deepEqual(blocks, [
-    { text: 'First line.\ncontinued.', lineStart: 3, lineEnd: 4 },
-    { text: 'Second.', lineStart: 6, lineEnd: 6 },
+    { text: 'First line.\ncontinued.', lineStart: 3, lineEnd: 4, charStart: 9, charEnd: 31, pageStart: 1, pageEnd: 1 },
+    { text: 'Second.', lineStart: 6, lineEnd: 6, charStart: 33, charEnd: 40, pageStart: 1, pageEnd: 1 },
   ]);
+});
+
+test('character coordinates count Unicode code points rather than UTF-16 units', () => {
+  const [block] = sourceBlocksFromText('A🙂中B');
+  assert.equal(block.charStart, 0);
+  assert.equal(block.charEnd, 4);
+  assert.deepEqual(blockNumbersForAnchor({ char_start: 1, char_end: 3 }, [block]), [1]);
+});
+
+test('form-feed boundaries make page-only anchors traceable', () => {
+  const blocks = sourceBlocksFromText('First.\n\f\nSecond.');
+  assert.equal(blocks[0].pageStart, 1);
+  assert.equal(blocks[1].pageStart, 2);
+  assert.deepEqual(blockNumbersForAnchor({ page_start: 2, page_end: 2 }, blocks), [2]);
+});
+
+test('paragraph and line anchors retain navigation priority over character coordinates', () => {
+  const blocks = sourceBlocksFromText('First.\n\nSecond.');
+  assert.deepEqual(blockNumbersForAnchor({ paragraph_start: 2, char_start: 0, char_end: 3 }, blocks), [2]);
 });

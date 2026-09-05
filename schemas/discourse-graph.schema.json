@@ -3,299 +3,87 @@
   "$id": "https://github.com/ChongLiuPhil/discourse-atlas/blob/main/schemas/discourse-graph.schema.json",
   "title": "Discourse Atlas Graph",
   "type": "object",
-  "required": [
-    "schema_version",
-    "document",
-    "nodes",
-    "edges",
-    "anchors"
-  ],
+  "required": ["schema_version", "document", "nodes", "edges", "anchors"],
   "properties": {
-    "schema_version": {
-      "const": "0.1.0"
-    },
+    "schema_version": {"const": "0.1.0"},
     "document": {
       "type": "object",
-      "required": [
-        "title",
-        "structure_policy"
-      ],
+      "required": ["title", "structure_policy"],
       "properties": {
-        "title": {
-          "type": "string",
-          "minLength": 1
-        },
-        "author": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "language": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "source_id": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
+        "title": {"type": "string", "minLength": 1},
+        "author": {"type": ["string", "null"]},
+        "language": {"type": ["string", "null"]},
+        "source_id": {"type": ["string", "null"]},
         "structure_policy": {
           "type": "object",
-          "required": [
-            "authorial_structure_preserved"
-          ],
+          "required": ["authorial_structure_preserved"],
           "properties": {
-            "authorial_structure_preserved": {
-              "type": "boolean"
-            },
-            "notes": {
-              "type": [
-                "string",
-                "null"
-              ]
-            }
+            "authorial_structure_preserved": {"type": "boolean"},
+            "notes": {"type": ["string", "null"]}
           },
           "additionalProperties": false
         }
       },
       "additionalProperties": false
     },
-    "anchors": {
-      "type": "array",
-      "items": {
-        "$ref": "#/$defs/anchor"
-      }
-    },
-    "nodes": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "$ref": "#/$defs/node"
-      }
-    },
-    "edges": {
-      "type": "array",
-      "items": {
-        "$ref": "#/$defs/edge"
-      }
-    }
+    "anchors": {"type": "array", "items": {"$ref": "#/$defs/anchor"}},
+    "nodes": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/node"}},
+    "edges": {"type": "array", "items": {"$ref": "#/$defs/edge"}}
   },
   "additionalProperties": false,
   "$defs": {
     "anchor": {
       "type": "object",
-      "required": [
-        "id"
-      ],
+      "required": ["id"],
       "properties": {
-        "id": {
-          "$ref": "#/$defs/identifier"
-        },
-        "section_label": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "paragraph_start": {
-          "type": [
-            "integer",
-            "null"
-          ],
-          "minimum": 1
-        },
-        "paragraph_end": {
-          "type": [
-            "integer",
-            "null"
-          ],
-          "minimum": 1
-        },
-        "line_start": {
-          "type": [
-            "integer",
-            "null"
-          ],
-          "minimum": 1
-        },
-        "line_end": {
-          "type": [
-            "integer",
-            "null"
-          ],
-          "minimum": 1
-        },
-        "note": {
-          "type": [
-            "string",
-            "null"
-          ]
-        }
+        "id": {"$ref": "#/$defs/identifier"},
+        "section_label": {"type": ["string", "null"]},
+        "paragraph_start": {"type": ["integer", "null"], "minimum": 1},
+        "paragraph_end": {"type": ["integer", "null"], "minimum": 1},
+        "line_start": {"type": ["integer", "null"], "minimum": 1},
+        "line_end": {"type": ["integer", "null"], "minimum": 1},
+        "page_start": {"type": ["integer", "null"], "minimum": 1},
+        "page_end": {"type": ["integer", "null"], "minimum": 1},
+        "char_start": {"type": ["integer", "null"], "minimum": 0},
+        "char_end": {"type": ["integer", "null"], "minimum": 0},
+        "note": {"type": ["string", "null"]}
       },
       "additionalProperties": false
     },
     "node": {
       "type": "object",
-      "required": [
-        "id",
-        "kind",
-        "title",
-        "structure_origin",
-        "summary",
-        "function",
-        "anchor_ids",
-        "confidence"
-      ],
+      "required": ["id", "kind", "title", "structure_origin", "summary", "function", "anchor_ids", "confidence"],
       "properties": {
-        "id": {
-          "$ref": "#/$defs/identifier"
-        },
-        "parent_id": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/identifier"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "kind": {
-          "enum": [
-            "work",
-            "part",
-            "chapter",
-            "section",
-            "subsection",
-            "paragraph",
-            "argument_unit"
-          ]
-        },
-        "title": {
-          "type": "string",
-          "minLength": 1
-        },
-        "structure_origin": {
-          "enum": [
-            "author",
-            "inferred"
-          ]
-        },
-        "summary": {
-          "type": "string",
-          "minLength": 1
-        },
-        "function": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "type": "string",
-            "minLength": 1
-          },
-          "uniqueItems": true
-        },
-        "role_in_parent": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "anchor_ids": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/identifier"
-          },
-          "uniqueItems": true
-        },
-        "confidence": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 1
-        },
-        "notes": {
-          "type": [
-            "string",
-            "null"
-          ]
-        }
+        "id": {"$ref": "#/$defs/identifier"},
+        "parent_id": {"anyOf": [{"$ref": "#/$defs/identifier"}, {"type": "null"}]},
+        "kind": {"enum": ["work", "part", "chapter", "section", "subsection", "paragraph", "argument_unit"]},
+        "title": {"type": "string", "minLength": 1},
+        "structure_origin": {"enum": ["author", "inferred"]},
+        "summary": {"type": "string", "minLength": 1},
+        "function": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "role_in_parent": {"type": ["string", "null"]},
+        "anchor_ids": {"type": "array", "items": {"$ref": "#/$defs/identifier"}, "uniqueItems": true},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "notes": {"type": ["string", "null"]}
       },
       "additionalProperties": false
     },
     "edge": {
       "type": "object",
-      "required": [
-        "id",
-        "source",
-        "target",
-        "relation",
-        "explanation",
-        "evidence_anchor_ids",
-        "confidence",
-        "assertion_level"
-      ],
+      "required": ["id", "source", "target", "relation", "explanation", "evidence_anchor_ids", "confidence", "assertion_level"],
       "properties": {
-        "id": {
-          "$ref": "#/$defs/identifier"
-        },
-        "source": {
-          "$ref": "#/$defs/identifier"
-        },
-        "target": {
-          "$ref": "#/$defs/identifier"
-        },
-        "relation": {
-          "enum": [
-            "requires",
-            "supports",
-            "derives",
-            "refines",
-            "contrasts",
-            "objects_to",
-            "responds_to",
-            "illustrates",
-            "sequence"
-          ]
-        },
-        "explanation": {
-          "type": "string",
-          "minLength": 1
-        },
-        "evidence_anchor_ids": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/identifier"
-          },
-          "uniqueItems": true
-        },
-        "confidence": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 1
-        },
-        "assertion_level": {
-          "enum": [
-            "explicit",
-            "strongly_inferred",
-            "tentative"
-          ]
-        },
-        "notes": {
-          "type": [
-            "string",
-            "null"
-          ]
-        }
+        "id": {"$ref": "#/$defs/identifier"},
+        "source": {"$ref": "#/$defs/identifier"},
+        "target": {"$ref": "#/$defs/identifier"},
+        "relation": {"enum": ["requires", "supports", "derives", "refines", "contrasts", "objects_to", "responds_to", "illustrates", "sequence"]},
+        "explanation": {"type": "string", "minLength": 1},
+        "evidence_anchor_ids": {"type": "array", "items": {"$ref": "#/$defs/identifier"}, "uniqueItems": true},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "assertion_level": {"enum": ["explicit", "strongly_inferred", "tentative"]},
+        "notes": {"type": ["string", "null"]}
       },
       "additionalProperties": false
     },
-    "identifier": {
-      "type": "string",
-      "pattern": "^[A-Za-z][A-Za-z0-9_-]*$",
-      "minLength": 1
-    }
+    "identifier": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]*$", "minLength": 1}
   }
 }

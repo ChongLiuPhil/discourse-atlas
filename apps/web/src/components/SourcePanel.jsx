@@ -1,30 +1,15 @@
 import { useEffect, useMemo } from 'react';
-import { sourceBlocksFromText } from '../model.js';
+import { anchorLocationLabel, blockNumbersForAnchor, sourceBlocksFromText } from '../model.js';
 
 export default function SourcePanel({ source, anchors, activeAnchorIds, focusAnchorId, onAnchorFocus }) {
   const blocks = useMemo(() => sourceBlocksFromText(source), [source]);
-  const paragraphToAnchors = useMemo(() => {
+  const blockToAnchors = useMemo(() => {
     const map = new Map();
     for (const anchor of anchors) {
-      if (anchor.paragraph_start) {
-        const end = anchor.paragraph_end ?? anchor.paragraph_start;
-        for (let paragraph = anchor.paragraph_start; paragraph <= end; paragraph += 1) {
-          const ids = map.get(paragraph) ?? [];
-          ids.push(anchor.id);
-          map.set(paragraph, ids);
-        }
-        continue;
-      }
-      if (anchor.line_start) {
-        const lineEnd = anchor.line_end ?? anchor.line_start;
-        blocks.forEach((block, index) => {
-          if (block.lineStart <= lineEnd && block.lineEnd >= anchor.line_start) {
-            const paragraph = index + 1;
-            const ids = map.get(paragraph) ?? [];
-            ids.push(anchor.id);
-            map.set(paragraph, ids);
-          }
-        });
+      for (const blockNumber of blockNumbersForAnchor(anchor, blocks)) {
+        const ids = map.get(blockNumber) ?? [];
+        ids.push(anchor.id);
+        map.set(blockNumber, ids);
       }
     }
     return map;
@@ -33,13 +18,9 @@ export default function SourcePanel({ source, anchors, activeAnchorIds, focusAnc
   useEffect(() => {
     if (!focusAnchorId) return;
     const anchor = anchors.find((item) => item.id === focusAnchorId);
-    let paragraph = anchor?.paragraph_start ?? null;
-    if (!paragraph && anchor?.line_start) {
-      const index = blocks.findIndex((block) => block.lineStart <= anchor.line_start && block.lineEnd >= anchor.line_start);
-      if (index >= 0) paragraph = index + 1;
-    }
-    if (!paragraph) return;
-    document.getElementById(`source-paragraph-${paragraph}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const [blockNumber] = blockNumbersForAnchor(anchor, blocks);
+    if (!blockNumber) return;
+    document.getElementById(`source-paragraph-${blockNumber}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [focusAnchorId, anchors, blocks]);
 
   if (!source.trim()) {
@@ -50,8 +31,13 @@ export default function SourcePanel({ source, anchors, activeAnchorIds, focusAnc
     <div className="source-document">
       {blocks.map((block, index) => {
         const number = index + 1;
-        const anchorIds = paragraphToAnchors.get(number) ?? [];
+        const anchorIds = blockToAnchors.get(number) ?? [];
         const active = anchorIds.some((id) => activeAnchorIds.has(id));
+        const anchorLabels = anchorIds.map((id) => {
+          const anchor = anchors.find((item) => item.id === id);
+          const location = anchorLocationLabel(anchor);
+          return location ? `${id} (${location})` : id;
+        });
         return (
           <article
             id={`source-paragraph-${number}`}
@@ -61,8 +47,11 @@ export default function SourcePanel({ source, anchors, activeAnchorIds, focusAnc
           >
             <div className="paragraph-number">¶{number}</div>
             <p>{block.text.replace(/\s+/g, ' ')}</p>
-            <div className="line-range">lines {block.lineStart}–{block.lineEnd}</div>
-            {anchorIds.length ? <div className="anchor-list">{anchorIds.join(' · ')}</div> : null}
+            <div className="line-range">
+              lines {block.lineStart}–{block.lineEnd} · chars {block.charStart}–{block.charEnd}
+              {block.pageStart ? ` · page ${block.pageStart}${block.pageEnd !== block.pageStart ? `–${block.pageEnd}` : ''}` : ''}
+            </div>
+            {anchorLabels.length ? <div className="anchor-list">{anchorLabels.join(' · ')}</div> : null}
           </article>
         );
       })}

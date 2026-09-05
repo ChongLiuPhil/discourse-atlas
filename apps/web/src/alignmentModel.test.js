@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { addReviewedUnit, alignmentCoverage, proposeAlignment, refreshUnmatched, updateUnit, validateWorkbenchAlignment } from './alignmentModel.js';
+import { addReviewedUnit, alignmentCoverage, anchorTokens, proposeAlignment, refreshUnmatched, updateUnit, validateWorkbenchAlignment } from './alignmentModel.js';
 
 function doc(ids = ['work', 'a', 'b']) {
   const [work, a, b] = ids;
@@ -51,4 +51,16 @@ test('workbench validation detects duplicate membership', () => {
     { unit_id: 'u2', reference_node_ids: ['a'], candidate_node_ids: ['beta'], status: 'accepted' },
   ] };
   assert.ok(validateWorkbenchAlignment(reference, candidate, alignment).some((error) => error.includes('mapped more than once')));
+});
+
+test('character anchors use 32-code-point overlap cells when paragraph and line coordinates are absent', () => {
+  assert.deepEqual([...anchorTokens({ char_start: 31, char_end: 65 })], ['c32:0', 'c32:1', 'c32:2']);
+});
+
+test('page anchors are the final numeric fallback before section labels', () => {
+  assert.deepEqual([...anchorTokens({ page_start: 4, page_end: 5 })], ['pg:4', 'pg:5']);
+});
+
+test('paragraph coordinates override conflicting character coordinates', () => {
+  assert.deepEqual([...anchorTokens({ paragraph_start: 2, paragraph_end: 2, char_start: 0, char_end: 100 })], ['p:2']);
 });
