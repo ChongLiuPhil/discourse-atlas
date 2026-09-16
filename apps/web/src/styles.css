@@ -54,13 +54,19 @@ button { cursor: pointer; }
 .origin-author { background: #e7eef5; color: #243b53; }
 .origin-inferred { background: #fbefdf; color: #89511b; }
 .node-title { margin-top: 9px; font-size: 14px; font-weight: 750; line-height: 1.28; }
-.node-summary { flex: 1; margin-top: 7px; overflow: hidden; color: #606a76; font-size: 11px; line-height: 1.42; }
-.node-footer { margin-top: 10px; color: #818a95; font-size: 10px; }
+.node-claim { flex: 1; min-height: 0; margin-top: 8px; overflow: hidden; border-left: 3px solid #6c8196; padding: 7px 8px; background: #f4f7fa; color: #26394d; font-size: 11.5px; line-height: 1.42; }
+.node-claim.is-summary-fallback { border-left-color: #c7ced6; background: #f8f9fa; color: #606a76; }
+.node-claim-label { display: block; margin-bottom: 3px; color: #7b8491; font-size: 8.5px; font-weight: 850; letter-spacing: .09em; text-transform: uppercase; }
+.node-summary { margin-top: 6px; max-height: 31px; overflow: hidden; color: #737c87; font-size: 10px; line-height: 1.4; }
+.node-footer { margin-top: 9px; color: #818a95; font-size: 10px; }
 .node-button { border: 1px solid #ccd3da; background: #f9fafb; color: #48515d; border-radius: 6px; padding: 4px 7px; font-size: 10px; }
 .container-node { border: 2px solid #aeb8c3; border-radius: 13px; background: rgba(255,255,255,.5); }
-.container-heading { height: 62px; padding: 10px 12px; border-bottom: 1px solid rgba(174,184,195,.72); background: rgba(255,255,255,.88); border-radius: 11px 11px 0 0; }
+.container-heading { height: 98px; align-items: flex-start; padding: 10px 12px; border-bottom: 1px solid rgba(174,184,195,.72); background: rgba(255,255,255,.9); border-radius: 11px 11px 0 0; }
+.container-copy { min-width: 0; padding-right: 10px; }
 .container-title { margin-top: 3px; font-size: 14px; font-weight: 800; }
-.container-actions { display: flex; align-items: center; gap: 6px; }
+.container-claim { margin-top: 5px; max-width: 620px; overflow: hidden; color: #34475a; font-size: 10.5px; line-height: 1.35; }
+.container-claim span { margin-right: 6px; color: #7b8491; font-size: 8px; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+.container-actions { flex: 0 0 auto; display: flex; align-items: center; gap: 6px; }
 .react-flow__edge-textbg { fill: rgba(255,255,255,.92); }
 .react-flow__edge-text { fill: #354052; }
 .react-flow__handle { width: 7px; height: 7px; background: #6f7c8c; border: 1px solid white; }
