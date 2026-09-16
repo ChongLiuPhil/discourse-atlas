@@ -1,6 +1,26 @@
 # Changelog
 
-All notable project changes are recorded here. Discourse Atlas is currently an alpha/research-preview project; the canonical graph schema remains at `0.1.0` while the toolkit release is `0.8.0`.
+All notable project changes are recorded here. Discourse Atlas is currently an alpha/research-preview project; the canonical graph schema remains at `0.1.0` while the toolkit release is `0.9.0`.
+
+## 0.9.0 — 2026-09-16
+
+### Added
+- Root-level `AGENT.md` as a self-contained zero-install protocol that can be sent directly to any AI agent with public URL and source-reading access.
+- Human-facing `docs/zero-install-agent.md` with a copy/paste prompt and source-access boundaries.
+- Optional `main_claim` field on discourse nodes, preserving backward compatibility with earlier graphs.
+- Macro-to-micro reconstruction guidance: work map → chapter map → section map → local argument map.
+- Viewer rendering and Inspector editing for node main claims, with summary fallback for legacy graphs.
+- Regression coverage for the remote protocol links and `main_claim` schema compatibility.
+
+### Changed
+- The formal Agent Skill now distinguishes `main_claim`, `summary`, `function`, and `role_in_parent` and builds the work-level map before expanding local arguments.
+- The bundled mini-essay example now includes explicit main claims at work and section levels.
+- Graph node layout allocates more space for claim-first reading at both container and leaf levels.
+- Python and web package versions advance to `0.9.0`.
+
+### Compatibility
+- A URL is not presented as an installed Agent Skill. The formal `SKILL.md` directory remains standards-compatible; `AGENT.md` is a portable remote instruction entry point for browsing agents.
+- The canonical graph schema version remains `0.1.0` because `main_claim` is optional and existing v0.1–v0.8 graph files remain valid.
 
 ## 0.8.0 — 2026-09-05
 
