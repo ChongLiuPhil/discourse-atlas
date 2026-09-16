@@ -4,6 +4,17 @@ function OriginBadge({ origin }) {
   return <span className={`origin-badge origin-${origin}`}>{origin === 'author' ? 'authorial' : 'AI inferred'}</span>;
 }
 
+function MainClaim({ claim, fallback }) {
+  const text = claim || fallback;
+  if (!text) return null;
+  return (
+    <div className={`node-claim ${claim ? '' : 'is-summary-fallback'}`}>
+      <span className="node-claim-label">{claim ? 'Main claim' : 'Summary'}</span>
+      <span>{text}</span>
+    </div>
+  );
+}
+
 export function DiscourseNode({ data, selected }) {
   return (
     <div className={`discourse-node ${selected ? 'is-selected' : ''} ${data.dimmed ? 'is-dimmed' : ''} ${data.highlighted ? 'is-highlighted' : ''}`}>
@@ -13,7 +24,8 @@ export function DiscourseNode({ data, selected }) {
         <OriginBadge origin={data.structure_origin} />
       </div>
       <div className="node-title">{data.title}</div>
-      <div className="node-summary">{data.summary}</div>
+      <MainClaim claim={data.main_claim} fallback={data.summary} />
+      {data.main_claim ? <div className="node-summary">{data.summary}</div> : null}
       <div className="node-footer">
         <span>{Math.round(data.confidence * 100)}% confidence</span>
         {data.collapsible ? (
@@ -32,9 +44,10 @@ export function ContainerNode({ data, selected }) {
     <div className={`container-node ${selected ? 'is-selected' : ''} ${data.dimmed ? 'is-dimmed' : ''} ${data.highlighted ? 'is-highlighted' : ''}`}>
       <Handle type="target" position={Position.Top} />
       <div className="container-heading">
-        <div>
+        <div className="container-copy">
           <div className="node-kind">{data.kind}</div>
           <div className="container-title">{data.title}</div>
+          {data.main_claim ? <div className="container-claim"><span>Main claim</span>{data.main_claim}</div> : null}
         </div>
         <div className="container-actions">
           <OriginBadge origin={data.structure_origin} />

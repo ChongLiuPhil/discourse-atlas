@@ -59,6 +59,7 @@
         "kind": {"enum": ["work", "part", "chapter", "section", "subsection", "paragraph", "argument_unit"]},
         "title": {"type": "string", "minLength": 1},
         "structure_origin": {"enum": ["author", "inferred"]},
+        "main_claim": {"type": ["string", "null"], "minLength": 1},
         "summary": {"type": "string", "minLength": 1},
         "function": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
         "role_in_parent": {"type": ["string", "null"]},

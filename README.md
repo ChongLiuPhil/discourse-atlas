@@ -2,125 +2,125 @@
 
 [![CI](https://github.com/ChongLiuPhil/discourse-atlas/actions/workflows/ci.yml/badge.svg)](https://github.com/ChongLiuPhil/discourse-atlas/actions/workflows/ci.yml)
 
-**Discourse Atlas** is an open-source, agent-skill-first toolkit for reconstructing the hierarchical structure and logical dependencies of argumentative and expository texts.
+**Discourse Atlas** is an open-source protocol and toolkit for reconstructing the hierarchical argumentative structure of complex texts — from whole-work architecture down to local arguments.
 
-It is designed for essays, philosophy, academic papers, theoretical books, legal reasoning, policy reports, and other texts where understanding **how the parts depend on one another** matters as much as understanding what each part says.
+It is designed for philosophy, essays, academic papers, theoretical books, legal reasoning, policy reports, and other texts where understanding **which parts support, require, refine, challenge, or respond to which other parts** matters as much as understanding what each part says.
 
-> Status: **v0.8.0 research preview.** The toolkit now includes deterministic PDF text-layer ingestion, scholarly page and Unicode code-point anchors, explicit split/merge alignment, multi-reference evaluation, an in-browser alignment adjudication workbench, a public-domain philosophy benchmark, the analysis skill, validator/exporters, and synchronized reader.
+> Status: **v0.9.0 research preview.** The primary entry point is now zero-install: give an AI agent one public Discourse Atlas protocol URL plus the source document. The repository also contains the formal Agent Skill, canonical JSON schema, validator/evaluation CLI, deterministic PDF text ingestion, interactive reader, and alignment workbench.
 
-## Core idea
+## Zero-install: give this URL to an AI agent
 
-Discourse Atlas models a text as two related structures:
+If your AI agent can read public URLs and can access the source document, **you do not need to install Discourse Atlas**.
 
-1. **Containment hierarchy** — work → part → chapter → section → paragraph / argument unit.
-2. **Discourse dependency graph** — relations such as `requires`, `supports`, `derives`, `refines`, `objects_to`, and `responds_to`.
+Give the agent this protocol:
 
-The canonical representation is JSON. Visualizations are derived views, not the source of truth.
+```text
+https://raw.githubusercontent.com/ChongLiuPhil/discourse-atlas/main/AGENT.md
+```
+
+Then use a prompt such as:
+
+```text
+Read and follow the Discourse Atlas protocol:
+https://raw.githubusercontent.com/ChongLiuPhil/discourse-atlas/main/AGENT.md
+
+Analyze this source:
+<SOURCE URL OR ATTACHED DOCUMENT>
+
+Start with a readable work-level argument map. Identify the main claim and argumentative role of each major part/chapter, then recursively expand to section and local-argument level only where useful. Preserve authorial headings, mark inferred structure, ground major relations in evidence, and return canonical Discourse Atlas JSON when possible.
+```
+
+The remote protocol is intentionally self-contained. It tells the agent how to recover hierarchy, distinguish claims from summaries, infer relation directions, preserve uncertainty, attach evidence, and present a macro-to-micro map.
+
+A remote URL is **not** the same as an installed Agent Skill. The standards-compatible Skill remains in `skills/discourse-structure/`; `AGENT.md` is a portable instruction entry point for browsing agents. See `docs/zero-install-agent.md`.
+
+## What the resulting map represents
+
+Discourse Atlas separates two structures:
+
+1. **Containment hierarchy** — work → part → chapter → section → subsection → paragraph / argument unit.
+2. **Discourse dependency graph** — relations such as `requires`, `supports`, `derives`, `refines`, `contrasts`, `objects_to`, and `responds_to`.
+
+A node can distinguish:
+
+- `title` — what the textual unit is called;
+- `main_claim` — the proposition it advances, when it advances one;
+- `summary` — what it discusses or does;
+- `function` — its discourse function(s);
+- `role_in_parent` — why it is needed inside the next higher level.
+
+`main_claim` is intentionally optional: definitions, problem statements, examples, or surveys should not be forced into artificial theses.
+
+The default visualization strategy is progressive disclosure:
+
+```text
+Work Map -> Part / Chapter Map -> Section Map -> Local Argument Map
+```
+
+A long book should therefore begin with a readable map of its central problem, central thesis, major chapters, chapter-level claims, and the most important relations between them — not hundreds of sentence-level nodes.
 
 ## Design principles
 
-- **Structure before summary.** Recover the architecture of the text before summarizing it.
-- **Preserve authorial structure.** If the author provides chapters or sections, retain them.
-- **Mark inferred structure explicitly.** AI-generated sections must never be presented as authorial headings.
-- **Separate hierarchy from dependency.** Containment is not the same as logical dependence.
-- **Evidence for important edges.** Major inferred relations should point back to source anchors.
-- **Alignment before comparison.** Different node IDs or segmentation must be aligned explicitly before structural differences are scored.
+- **Structure before summary.** Recover architecture before writing global conclusions.
+- **Macro before micro.** Make the whole composition intelligible before expanding local arguments.
+- **Preserve authorial structure.** Existing chapters/sections outrank inferred segmentation.
+- **Mark inferred structure explicitly.** AI-generated sections must never masquerade as authorial headings.
+- **Separate hierarchy from dependency.** Containment is not logical support.
+- **Separate claim from summary and role.** These answer different analytical questions.
+- **Evidence important edges.** Major inferred relations should point back to the source.
+- **Alignment before comparison.** Different segmentations must be aligned before structural differences are scored.
 - **Explicit source preparation.** PDF extraction, OCR, cleanup, and interpretation must not be silently conflated.
-- **Reconstruction, not revelation.** The output is a criticizable interpretation, not a claim to the single true structure of a text.
+- **Reconstruction, not revelation.** The output is a criticizable interpretation, not a claim to the single true structure.
 
 ## Repository layout
 
 ```text
 discourse-atlas/
-├── skills/discourse-structure/   # Portable Agent Skill
-├── schemas/                      # Graph + unit-alignment schemas
-├── src/discourse_atlas/          # Validation, PDF ingestion, alignment, evaluation CLI
-├── apps/web/                     # Interactive reader + alignment workbench
-├── examples/mini-essay/          # Small end-to-end example
-├── benchmark/                    # Synthetic + public-domain evaluation cases
-├── tests/                        # Schema, ingestion, anchor, alignment, evaluation tests
-├── docs/                         # Architecture, ingestion, anchors, alignment, evaluation
-└── .github/workflows/            # CI
+├── AGENT.md                       # Zero-install remote agent protocol
+├── skills/discourse-structure/    # Portable standards-compatible Agent Skill
+├── schemas/                       # Graph + unit-alignment schemas
+├── src/discourse_atlas/           # Validation, PDF ingestion, alignment, evaluation CLI
+├── apps/web/                      # Interactive reader + alignment workbench
+├── examples/mini-essay/           # Small end-to-end example
+├── benchmark/                     # Synthetic + public-domain evaluation cases
+├── tests/                         # Schema, ingestion, anchor, alignment, evaluation tests
+├── docs/                          # Zero-install, architecture, ingestion, anchors, alignment, evaluation
+└── .github/workflows/             # CI
 ```
 
-## Use as an Agent Skill
+## Formal Agent Skill
 
-Copy `skills/discourse-structure/` into a client that supports the Agent Skills `SKILL.md` format. Ask the agent to analyze a text's discourse structure and produce `analysis.json` and `analysis.md`. The skill is intentionally model- and vendor-neutral.
+For clients that support the Agent Skills `SKILL.md` format, load or copy `skills/discourse-structure/` into the client's skill directory. The Skill is model- and vendor-neutral and follows the same methodology as `AGENT.md`, with additional references loaded as needed.
 
-Source anchors can use paragraph, line, page, and exact Unicode code-point character coordinates. PDF sources can first be converted to a reproducible page-delimited text representation with the optional PDF ingestion command. See `skills/discourse-structure/references/source-anchors.md` and `skills/discourse-structure/references/pdf-ingestion.md`.
+The Skill now analyzes each useful unit in terms of `main_claim`, `summary`, `function`, `role_in_parent`, source evidence, and confidence, and explicitly builds the work-level map before drilling down.
 
-## Installation and CLI
+## Canonical representation
 
-Core installation does not require a PDF library:
+The canonical representation is JSON. Visualizations are derived views, not the source of truth.
 
-```bash
-python -m pip install .
+Canonical schema:
+
+```text
+https://raw.githubusercontent.com/ChongLiuPhil/discourse-atlas/main/schemas/discourse-graph.schema.json
 ```
 
-Install the optional PDF extra when text-layer ingestion is needed:
-
-```bash
-python -m pip install '.[pdf]'
-```
-
-Development installation includes PDF support and tests:
-
-```bash
-python -m pip install -e '.[dev]'
-```
-
-Core commands:
-
-```bash
-discourse-atlas validate examples/mini-essay/analysis.json
-discourse-atlas mermaid examples/mini-essay/analysis.json
-discourse-atlas dot examples/mini-essay/analysis.json
-
-# Extract a PDF text layer into page-aware Unicode text + manifest
-discourse-atlas ingest-pdf book.pdf
-
-# Stable-ID evaluation
-discourse-atlas evaluate reference.json candidate.json
-
-# Propose and review unit alignment
-discourse-atlas align reference.json candidate.json -o alignment.json
-discourse-atlas evaluate reference.json candidate.json --alignment alignment.json
-
-# Preserve several defensible references
-discourse-atlas multi-evaluate candidate.json ref-a.json ref-b.json --auto-align
-
-# Symmetric annotation agreement
-discourse-atlas agreement ref-a.json ref-b.json --alignment alignment.json
-```
-
-Validation checks JSON shape plus unique IDs, parent references, containment cycles, edge endpoints, evidence anchors, and paragraph/line/page/character coordinate ranges. Alignment validation checks unknown nodes, duplicate membership, and ambiguous repeated mappings.
-
-## PDF text ingestion
-
-`discourse-atlas ingest-pdf book.pdf` writes two files by default:
-
-- `book.txt`: normalized Unicode text with `\n\f\n` between PDF pages;
-- `book.pages.json`: a page manifest containing the source PDF SHA-256, page count, empty-page count, Unicode code-point offsets, and exact character span for every page.
-
-Existing outputs are protected unless `--force` is supplied. Password-protected PDFs that cannot be opened without a password are rejected.
-
-The command reads the PDF **text layer only**. It does not perform OCR, layout repair, dehyphenation, or semantic cleanup. Image-only/scanned pages normally become empty page spans and trigger a warning. This is deliberate: source extraction remains auditable rather than being silently transformed. See `docs/pdf-ingestion.md`.
-
-## Scholarly source anchors
-
-The canonical graph supports:
-
-- paragraph ranges: 1-based, inclusive;
-- line ranges: 1-based, inclusive;
-- page ranges: 1-based, inclusive;
-- `char_start`: 0-based, inclusive Unicode code-point offset;
-- `char_end`: 0-based, exclusive Unicode code-point offset.
-
-Character offsets are Unicode code points rather than UTF-8 bytes or JavaScript UTF-16 code units, so Python and browser behavior remains consistent for multilingual text. Deterministic alignment keeps paragraph/line coordinates first, then character spans, then page ranges, then section labels. See `docs/scholarly-anchors.md`.
+The optional `main_claim` field is backward compatible; the graph schema remains at `0.1.0`, so existing v0.1–v0.8 analysis files remain valid.
 
 ## Interactive reader
 
 The web app in `apps/web/` turns the canonical graph into a synchronized reading environment with nested React Flow nodes and ELK layout.
+
+It supports:
+
+- nested/collapsible work → chapter → section structure;
+- cross-hierarchy logical arrows;
+- claim-first node cards with legacy summary fallback;
+- authorial vs AI-inferred provenance;
+- source ↔ graph evidence tracing;
+- paragraph/line/page/Unicode-character anchors;
+- node/edge inspection and human correction;
+- corrected JSON export;
+- an Alignment workspace for reviewing one-to-one and split/merge correspondences.
 
 ```bash
 cd apps/web
@@ -128,11 +128,44 @@ npm install
 npm run dev
 ```
 
-It supports collapse/expand, source ↔ graph evidence tracing, paragraph/line/page/character anchors, node/edge inspection, human correction, local file loading, and corrected-JSON export. Character anchors scroll ordinary text/Markdown sources by Unicode code-point span. Page-only navigation works with the form-feed page boundaries emitted by `ingest-pdf`.
+## Optional installation and CLI
 
-Switch the web workspace to **Alignment** to review proposals, accept/reject correspondences, build split/merge units, and export reviewed alignment JSON.
+Installation is **not required** for the zero-install agent workflow. Install the Python package when you want local validation, export, evaluation, alignment, or deterministic PDF text-layer ingestion.
 
-## Relation ontology (MVP)
+Core installation:
+
+```bash
+python -m pip install .
+```
+
+Optional PDF extra:
+
+```bash
+python -m pip install '.[pdf]'
+```
+
+Development installation:
+
+```bash
+python -m pip install -e '.[dev]'
+```
+
+Commands:
+
+```bash
+discourse-atlas validate examples/mini-essay/analysis.json
+discourse-atlas mermaid examples/mini-essay/analysis.json
+discourse-atlas dot examples/mini-essay/analysis.json
+
+discourse-atlas ingest-pdf book.pdf
+
+discourse-atlas align reference.json candidate.json -o alignment.json
+discourse-atlas evaluate reference.json candidate.json --alignment alignment.json
+discourse-atlas multi-evaluate candidate.json ref-a.json ref-b.json --auto-align
+discourse-atlas agreement ref-a.json ref-b.json --alignment alignment.json
+```
+
+## Relation ontology
 
 | Relation | Meaning |
 |---|---|
@@ -146,81 +179,60 @@ Switch the web workspace to **Alignment** to review proposals, accept/reject cor
 | `illustrates` | source exemplifies or applies target |
 | `sequence` | textual/organizational order only; not logical dependence |
 
-See `skills/discourse-structure/references/relation-ontology.md` and `docs/ontology-review-v0.4.md`.
+See `skills/discourse-structure/references/relation-ontology.md`.
+
+## PDF text ingestion and scholarly anchors
+
+`discourse-atlas ingest-pdf book.pdf` produces:
+
+- `book.txt` — normalized Unicode text with `\n\f\n` page separators;
+- `book.pages.json` — PDF SHA-256, page count, empty-page count, and exact Unicode code-point span for every page.
+
+The command reads the PDF text layer only. It does not silently run OCR, repair layout, dehyphenate, or semantically clean the source.
+
+Source anchors can use:
+
+- paragraph ranges: 1-based inclusive;
+- line ranges: 1-based inclusive;
+- page ranges: 1-based inclusive;
+- `char_start`: 0-based inclusive Unicode code-point offset;
+- `char_end`: 0-based exclusive Unicode code-point offset.
+
+See `docs/pdf-ingestion.md` and `docs/scholarly-anchors.md`.
+
+## Evaluation and interpretive plurality
+
+Discourse Atlas does not assume that interpretive texts always have one uniquely correct segmentation. The evaluation layer supports explicit one-to-one, split, merge, and many-to-many unit alignments before structural scoring, and multi-reference evaluation can retain several defensible reconstructions.
+
+The benchmark includes synthetic cross-genre cases and a public-domain John Stuart Mill *On Liberty* example with two accepted reconstructions and a reviewed split/merge alignment.
+
+See `benchmark/README.md`, `docs/alignment.md`, `docs/alignment-workbench.md`, and `docs/evaluation.md`.
 
 ## Completed milestones
 
-### v0.1 — specification-first MVP
-- [x] Portable `SKILL.md`
-- [x] JSON Schema
-- [x] Relation ontology and segmentation rules
-- [x] Validator + Mermaid/DOT exporters
+- **v0.1** — specification-first Skill, schema, ontology, validator, Mermaid/DOT exporters.
+- **v0.2** — React Flow + ELK nested interactive map.
+- **v0.3** — synchronized source reading and human correction.
+- **v0.4** — benchmark and structural/evidence evaluation.
+- **v0.5** — explicit alignment, multi-reference evaluation, public-domain Mill case.
+- **v0.6** — browser alignment adjudication workbench.
+- **v0.7** — scholarly page and Unicode character anchors.
+- **v0.8** — deterministic PDF text-layer ingestion and provenance manifest.
+- **v0.9** — zero-install remote agent protocol, claim-aware schema/Skill, and claim-first macro-to-micro viewer.
 
-### v0.2 — interactive map
-- [x] React Flow viewer
-- [x] ELK compound/hierarchical layout
-- [x] Collapsible nested sections
-- [x] Edge evidence inspector
+## Post-v0.9 research directions
 
-### v0.3 — synchronized reading
-- [x] Source text + map side-by-side
-- [x] Graph → source navigation
-- [x] Source → graph highlighting
-- [x] Human correction workflow + JSON export
+The current research-preview core supports both zero-install AI use and local research tooling. Further work is extension/research rather than required setup:
 
-### v0.4 — evaluation
-- [x] Benchmark protocol + four-case cross-genre synthetic corpus
-- [x] Inter-annotation comparison command
-- [x] Structural fidelity metrics
-- [x] Relation and evidence precision / recall metrics
-
-### v0.5 — alignment and interpretive plurality
-- [x] Explicit one-to-one / split / merge unit-alignment format
-- [x] Deterministic source-anchor alignment proposals
-- [x] Alignment-aware hierarchy/relation/evidence scoring
-- [x] Multi-reference scoring with best/mean/range reporting
-- [x] Public-domain Mill benchmark with two accepted reconstructions
-
-### v0.6 — alignment adjudication UI
-- [x] Reader / Alignment workspace switcher
-- [x] Side-by-side reconstruction node selection
-- [x] Accept / reject / retain proposal states
-- [x] Manual one-to-one and split/merge unit creation
-- [x] Coverage, membership validation, rationale capture, and reviewed JSON export
-- [x] Browser proposal logic covered by Node tests
-
-### v0.7 — scholarly source anchors
-- [x] Page coordinates for fixed editions and PDF-derived text
-- [x] Exact Unicode code-point character spans
-- [x] Semantic validation for new coordinate ranges
-- [x] Page/character-aware alignment and evidence evaluation
-- [x] Browser evidence tracing and coordinate labels
-- [x] Python/Node regression tests for multilingual character offsets and page fallbacks
-
-### v0.8 — deterministic PDF text ingestion
-- [x] Optional `pdf` package extra rather than a mandatory PDF dependency
-- [x] Text-layer extraction with fixed form-feed page boundaries
-- [x] SHA-256 + per-page Unicode character-span manifest
-- [x] Empty-page reporting without hidden OCR
-- [x] Controlled malformed/encrypted PDF failures and overwrite protection
-- [x] CLI, unit tests, cross-Python CI, and installed-package smoke coverage
-
-## Post-v0.8 research directions
-
-The v0.8 research-preview core is feature-complete for the current project scope. Further work is research/extension rather than unfinished baseline functionality:
-
-- expand reviewed public-domain / permission-compatible real-text corpora;
-- add OCR only as an explicit provenance-preserving adapter, not a hidden fallback;
-- add calibrated semantic alignment proposals as an optional, separately auditable layer;
-- optional hosted demo / GitHub Pages deployment.
-
-## Evaluation
-
-The evaluation layer is explicit about interpretive plurality. Stable-ID mode remains available, but unconstrained outputs can be aligned through a separate JSON artifact before structural scoring. Multi-reference mode reports compatibility with several accepted reconstructions without collapsing them into a single synthetic gold graph. Source-coordinate overlap can use paragraph/line anchors or, when those are absent, character/page anchors. See `benchmark/README.md`, `docs/alignment.md`, `docs/alignment-workbench.md`, `docs/scholarly-anchors.md`, and `docs/evaluation.md`.
+- hosted viewer / GitHub Pages deployment so canonical JSON can open directly in a public web app;
+- more reviewed public-domain or permission-compatible long-form philosophy corpora;
+- OCR only as an explicit provenance-preserving adapter;
+- calibrated semantic alignment proposals as an optional, separately auditable layer;
+- agent-to-viewer handoff formats for automatically opening generated maps.
 
 ## Non-goals
 
-Discourse Atlas is not intended to replace close reading, claim one uniquely correct structure for interpretive texts, flatten every relation into premise/conclusion pairs, treat textual order as logical dependence by default, or silently treat text extraction/OCR as interpretation-neutral operations.
+Discourse Atlas is not intended to replace close reading, claim one uniquely correct structure for interpretive texts, flatten every relation into premise/conclusion pairs, treat textual order as logical dependence by default, or silently treat extraction/OCR as interpretation-neutral.
 
 ## Contributing
 

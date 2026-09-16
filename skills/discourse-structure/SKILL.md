@@ -1,6 +1,6 @@
 ---
 name: discourse-structure
-description: Reconstruct the hierarchical structure, section functions, and logical/discourse dependencies of argumentative or expository texts. Use for essays, philosophy, academic papers, theoretical books, legal reasoning, policy reports, and similar works when the user wants more than a summary: chapter/section architecture, inferred segmentation where necessary, dependency relations, argument flow, or an evidence-anchored structural map.
+description: Reconstruct the hierarchical structure, main claims, section functions, and logical/discourse dependencies of argumentative or expository texts. Use for essays, philosophy, academic papers, theoretical books, legal reasoning, policy reports, and similar works when the user wants more than a summary: work/chapter architecture, inferred segmentation where necessary, claims, dependency relations, argument flow, or an evidence-anchored structural map.
 license: MIT
 compatibility: Requires access to the source text. Produces portable JSON and Markdown; no vendor-specific API is required.
 ---
@@ -16,12 +16,14 @@ The output has two distinct structures:
 
 Never collapse these into one tree.
 
+The default presentation is **macro-to-micro**: first make the whole work intelligible, then let the reader drill down into chapters, sections, and local arguments.
+
 ## Required outputs
 
 Produce both:
 
 - `analysis.json`, conforming to `../../schemas/discourse-graph.schema.json` when that schema is available to the agent; and
-- `analysis.md`, a readable reconstruction with hierarchy, functions, major dependencies, evidence, and uncertainty.
+- `analysis.md`, a readable reconstruction with global architecture, hierarchy, main claims, functions, major dependencies, evidence, and uncertainty.
 
 If file output is unavailable, emit the JSON and Markdown in clearly separated sections.
 
@@ -36,6 +38,7 @@ If file output is unavailable, emit the JSON and Markdown in clearly separated s
 7. **Represent uncertainty.** Use confidence and assertion level rather than pretending every reconstruction is certain.
 8. **Allow non-tree logic.** Cross-chapter and cross-level edges are permitted. Do not force the dependency graph to be acyclic.
 9. **Reconstruction, not revelation.** Treat the graph as a reasoned interpretation that a reader may revise.
+10. **Do not confuse claim with summary.** A unit may define, motivate, survey, object, or illustrate without advancing one clean proposition.
 
 ## Workflow
 
@@ -56,21 +59,36 @@ Read the whole available structure before inferring relations.
 - If the source lacks usable segmentation, infer the smallest useful hierarchy following `references/segmentation-rules.md`.
 - If only some regions lack headings, infer structure only in those regions.
 
-### Pass 2 — analyze leaf units
+### Pass 2 — identify claims, functions, and roles
 
-For every leaf section or smallest useful unit, record:
+For every useful unit, record:
 
-- a concise summary;
+- `main_claim`: the proposition or thesis the unit advances, when it advances one; otherwise `null`;
+- a concise `summary` of what the unit discusses or does;
 - one or more discourse functions (for example: `defines`, `distinguishes`, `motivates`, `argues`, `objects`, `responds`, `illustrates`, `synthesizes`, `concludes`);
-- its role within its parent;
+- its `role_in_parent`: why the unit is needed within the next higher level;
 - source anchors;
 - confidence.
+
+`main_claim`, `summary`, and `role_in_parent` answer different questions. Do not copy the same sentence into all three fields.
 
 For source anchors, follow `references/source-anchors.md`. Preserve paragraph/line coordinates when available; add page coordinates only for the supplied page-bearing source or edition; add exact Unicode code-point character ranges only when they are genuinely available. Never invent page numbers or exact offsets.
 
 Do not use function labels as logical edges automatically.
 
-### Pass 3 — infer sibling relations
+### Pass 3 — build the macro work map
+
+Before expanding local arguments, identify:
+
+- the whole work's central problem or task;
+- its central thesis or target conclusion, when there is one;
+- the main claim or function of each major part/chapter;
+- why each major part is needed in the whole;
+- the small set of cross-part relations that best explain the composition.
+
+The work-level map must remain readable for long documents. Do not place hundreds of local nodes in the first view.
+
+### Pass 4 — infer sibling relations
 
 Within each parent, inspect sibling units as a set.
 
@@ -82,13 +100,19 @@ Ask:
 
 Use the ontology in `references/relation-ontology.md`.
 
-### Pass 4 — synthesize parent units
+### Pass 5 — synthesize parent units recursively
 
-After leaf relations are stable, summarize each parent unit by the function of its children.
+After child relations are stable, synthesize the parent from its children.
 
-Infer parent-to-parent relations only when the relation is supported by the functions and content of the children. Do not infer a chapter edge solely because one chapter follows another.
+For each parent, ask:
 
-### Pass 5 — search for cross-hierarchy dependencies
+- What claim, task, or problem unifies these children?
+- How do the children jointly establish, qualify, motivate, challenge, or apply it?
+- Is the parent's main claim directly stated, or reconstructed from the children?
+
+Infer parent-to-parent relations only when supported by the functions and content of their children. Do not infer a chapter edge solely because one chapter follows another.
+
+### Pass 6 — search for cross-hierarchy dependencies
 
 Look for important relations that skip the local hierarchy, for example:
 
@@ -98,7 +122,7 @@ Look for important relations that skip the local hierarchy, for example:
 
 Add only relations that improve understanding of the work's architecture.
 
-### Pass 6 — evidence and uncertainty audit
+### Pass 7 — evidence and uncertainty audit
 
 For every major edge:
 
@@ -111,15 +135,23 @@ For every major edge:
 
 Delete weak decorative edges. Before finalizing JSON, also verify that every referenced node and anchor exists, node/edge/anchor IDs are unique, source anchor ranges are internally consistent, and the containment hierarchy has exactly one `work` root with no containment cycles.
 
-### Pass 7 — global reconstruction
+### Pass 8 — global reconstruction and progressive views
 
 Write a short account of the whole work's architecture:
 
 - What problem or task launches the text?
+- What is the central thesis or intended result?
 - What conceptual prerequisites are established?
 - What are the major transitions?
 - Where do objections, revisions, applications, or conclusions enter?
 - Which dependencies are global rather than local?
+
+Then present the reconstruction progressively:
+
+1. work map;
+2. part/chapter map;
+3. section map;
+4. local argument map where useful.
 
 This should explain the **logic of the composition**, not repeat section summaries.
 
@@ -135,16 +167,25 @@ Use stable node and edge IDs. Prefer readable identifiers such as:
 
 For inferred headings, title them descriptively but conservatively. Do not imitate the author's voice.
 
+For each node, distinguish:
+
+- `title` — unit label;
+- `main_claim` — proposition advanced, or `null`;
+- `summary` — concise content/function summary;
+- `function` — discourse function(s);
+- `role_in_parent` — contribution to the parent unit.
+
 ### `analysis.md`
 
 Use this order:
 
 1. `# Structural Reconstruction`
 2. `## Global Architecture`
-3. `## Hierarchy`
-4. `## Major Logical Dependencies`
-5. `## Cross-Hierarchy Relations`
-6. `## Uncertain or Alternative Readings`
+3. `## Macro Argument Map`
+4. `## Hierarchy and Main Claims`
+5. `## Major Logical Dependencies`
+6. `## Cross-Hierarchy Relations`
+7. `## Uncertain or Alternative Readings`
 
 For each major edge, include source → relation → target, explanation, evidence anchor(s), and confidence.
 
@@ -155,6 +196,7 @@ Before finishing, verify:
 - authorial and inferred structures are visibly distinguishable;
 - every node except the root has a valid parent if a parent is claimed;
 - edge endpoints exist;
+- claim, summary, function, and role are not conflated;
 - source preparation is explicit and does not conceal OCR or extraction gaps;
 - source anchors use only coordinates supported by the supplied source and obey `references/source-anchors.md`;
 - `requires` direction means prerequisite → dependent;
