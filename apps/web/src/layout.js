@@ -2,10 +2,10 @@ import ELK from 'elkjs/lib/elk.bundled.js';
 import { indexDocument } from './model.js';
 
 const elk = new ELK();
-const LEAF_WIDTH = 310;
-const LEAF_HEIGHT = 150;
-const COLLAPSED_WIDTH = 330;
-const COLLAPSED_HEIGHT = 160;
+const LEAF_WIDTH = 330;
+const LEAF_HEIGHT = 190;
+const COLLAPSED_WIDTH = 350;
+const COLLAPSED_HEIGHT = 190;
 
 function elkNode(node, children, visible, collapsed) {
   const childIds = (children.get(node.id) ?? []).filter((id) => visible.has(id));
@@ -14,7 +14,7 @@ function elkNode(node, children, visible, collapsed) {
     id: node.id,
     layoutOptions: hasVisibleChildren
       ? {
-          'elk.padding': '[top=72,left=28,bottom=28,right=28]',
+          'elk.padding': '[top=108,left=28,bottom=28,right=28]',
           'elk.spacing.nodeNode': '48',
         }
       : undefined,
