@@ -49,3 +49,27 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  verify:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - name: Verify hosted atlas
+        shell: bash
+        run: |
+          set -euo pipefail
+          site='https://chongliuphil.github.io/discourse-atlas/'
+          html=''
+          for attempt in {1..12}; do
+            if html="$(curl -fsSL "$site")"; then
+              break
+            fi
+            sleep 5
+          done
+          test -n "$html"
+          printf '%s' "$html" | grep -q '<title>Discourse Atlas</title>'
+          asset="$(printf '%s' "$html" | grep -oE '/discourse-atlas/assets/[^" ]+\.(js|css)' | head -n 1)"
+          test -n "$asset"
+          curl -fsSL "https://chongliuphil.github.io${asset}" >/dev/null
+          curl -fsSL "${site}example-analysis.json" >/dev/null
+          curl -fsSL "${site}example-source.md" >/dev/null
