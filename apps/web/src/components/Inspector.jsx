@@ -16,7 +16,7 @@ export default function Inspector({ document, selection, onDocumentChange, onFoc
   useEffect(() => setDraft(selected), [selected]);
 
   if (!selected || !selection || !draft) {
-    return <div className="empty-state">Select a node or relation to inspect its role, evidence, confidence, and edit the reconstruction.</div>;
+    return <div className="empty-state">Select a node or relation to inspect its claim, role, evidence, confidence, and edit the reconstruction.</div>;
   }
 
   const isNode = selection.kind === 'node';
@@ -46,6 +46,7 @@ export default function Inspector({ document, selection, onDocumentChange, onFoc
       {isNode ? (
         <>
           <label>Title<input value={draft.title} onChange={(e) => update('title', e.target.value)} /></label>
+          <label>Main claim<textarea rows="4" placeholder="The proposition this unit advances; leave empty when the unit has no single assertoric claim." value={draft.main_claim ?? ''} onChange={(e) => update('main_claim', e.target.value || null)} /></label>
           <label>Summary<textarea rows="4" value={draft.summary} onChange={(e) => update('summary', e.target.value)} /></label>
           <label>Role in parent<textarea rows="3" value={draft.role_in_parent ?? ''} onChange={(e) => update('role_in_parent', e.target.value || null)} /></label>
           <label>Structure origin<select value={draft.structure_origin} onChange={(e) => update('structure_origin', e.target.value)}><option value="author">author</option><option value="inferred">inferred</option></select></label>
