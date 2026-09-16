@@ -22,6 +22,27 @@ def test_packaged_schema_matches_repository_schema():
     assert repository_schema.read_text(encoding="utf-8") == packaged_schema.read_text(encoding="utf-8")
 
 
+def test_main_claim_is_optional_but_must_be_nonempty_when_present():
+    doc = load_example()
+    assert validate_document(doc) == []
+
+    legacy = load_example()
+    legacy["nodes"][0].pop("main_claim")
+    assert validate_document(legacy) == []
+
+    invalid = load_example()
+    invalid["nodes"][0]["main_claim"] = ""
+    assert validate_document(invalid)
+
+
+def test_zero_install_protocol_points_to_canonical_resources():
+    protocol = (ROOT / "AGENT.md").read_text(encoding="utf-8")
+    assert "https://raw.githubusercontent.com/ChongLiuPhil/discourse-atlas/main/AGENT.md" in protocol
+    assert "https://raw.githubusercontent.com/ChongLiuPhil/discourse-atlas/main/schemas/discourse-graph.schema.json" in protocol
+    assert "main_claim" in protocol
+    assert "Do not require the user to install Discourse Atlas" in protocol
+
+
 def test_mermaid_contains_edges_and_groups():
     output = to_mermaid(load_example())
     assert "flowchart TB" in output
