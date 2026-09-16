@@ -1,12 +1,17 @@
 # Discourse Atlas
 
 [![CI](https://github.com/ChongLiuPhil/discourse-atlas/actions/workflows/ci.yml/badge.svg)](https://github.com/ChongLiuPhil/discourse-atlas/actions/workflows/ci.yml)
+[![Pages](https://github.com/ChongLiuPhil/discourse-atlas/actions/workflows/pages.yml/badge.svg)](https://github.com/ChongLiuPhil/discourse-atlas/actions/workflows/pages.yml)
 
 **Discourse Atlas** is an open-source protocol and toolkit for reconstructing the hierarchical argumentative structure of complex texts — from whole-work architecture down to local arguments.
 
 It is designed for philosophy, essays, academic papers, theoretical books, legal reasoning, policy reports, and other texts where understanding **which parts support, require, refine, challenge, or respond to which other parts** matters as much as understanding what each part says.
 
-> Status: **v0.9.0 research preview.** The primary entry point is now zero-install: give an AI agent one public Discourse Atlas protocol URL plus the source document. The repository also contains the formal Agent Skill, canonical JSON schema, validator/evaluation CLI, deterministic PDF text ingestion, interactive reader, and alignment workbench.
+> Status: **v1.0.0 hosted research release.** The primary analysis entry point is zero-install: give an AI agent one public Discourse Atlas protocol URL plus the source document. Canonical JSON can then be inspected and corrected in the hosted Interactive Atlas. The repository also contains the formal Agent Skill, canonical JSON schema, validator/evaluation CLI, deterministic PDF text ingestion, interactive reader, and alignment workbench.
+
+Hosted Interactive Atlas:
+
+<https://chongliuphil.github.io/discourse-atlas/>
 
 ## Zero-install: give this URL to an AI agent
 
@@ -84,8 +89,8 @@ discourse-atlas/
 ├── examples/mini-essay/           # Small end-to-end example
 ├── benchmark/                     # Synthetic + public-domain evaluation cases
 ├── tests/                         # Schema, ingestion, anchor, alignment, evaluation tests
-├── docs/                          # Zero-install, architecture, ingestion, anchors, alignment, evaluation
-└── .github/workflows/             # CI
+├── docs/                          # Protocol, architecture, ingestion, evaluation, hosted-atlas docs
+└── .github/workflows/             # CI + GitHub Pages deployment
 ```
 
 ## Formal Agent Skill
@@ -104,9 +109,13 @@ Canonical schema:
 https://raw.githubusercontent.com/ChongLiuPhil/discourse-atlas/main/schemas/discourse-graph.schema.json
 ```
 
-The optional `main_claim` field is backward compatible; the graph schema remains at `0.1.0`, so existing v0.1–v0.8 analysis files remain valid.
+The optional `main_claim` field is backward compatible; the graph schema remains at `0.1.0`, so existing v0.1–v0.9 analysis files remain valid.
 
 ## Interactive reader
+
+Use the hosted Interactive Atlas without installing anything:
+
+<https://chongliuphil.github.io/discourse-atlas/>
 
 The web app in `apps/web/` turns the canonical graph into a synchronized reading environment with nested React Flow nodes and ELK layout.
 
@@ -127,6 +136,8 @@ cd apps/web
 npm install
 npm run dev
 ```
+
+Production deployment and release verification are documented in `docs/hosted-atlas.md`.
 
 ## Optional installation and CLI
 
@@ -219,16 +230,16 @@ See `benchmark/README.md`, `docs/alignment.md`, `docs/alignment-workbench.md`, a
 - **v0.7** — scholarly page and Unicode character anchors.
 - **v0.8** — deterministic PDF text-layer ingestion and provenance manifest.
 - **v0.9** — zero-install remote agent protocol, claim-aware schema/Skill, and claim-first macro-to-micro viewer.
+- **v1.0** — Hosted Interactive Atlas on GitHub Pages with repository-subpath-safe production assets and automated deployment.
 
-## Post-v0.9 research directions
+## Post-v1.0 research directions
 
-The current research-preview core supports both zero-install AI use and local research tooling. Further work is extension/research rather than required setup:
+The v1.0 research core supports zero-install AI use, a hosted browser atlas, and local research tooling. Further work is extension/research rather than required setup:
 
-- hosted viewer / GitHub Pages deployment so canonical JSON can open directly in a public web app;
 - more reviewed public-domain or permission-compatible long-form philosophy corpora;
 - OCR only as an explicit provenance-preserving adapter;
 - calibrated semantic alignment proposals as an optional, separately auditable layer;
-- agent-to-viewer handoff formats for automatically opening generated maps.
+- deep-linkable agent-to-viewer handoff formats for opening generated maps directly in the hosted atlas.
 
 ## Non-goals
 

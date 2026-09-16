@@ -1,14 +1,18 @@
 # Discourse Atlas — Remote Agent Protocol
 
-Protocol version: **0.9.0**
+Protocol version: **1.0.0**
 
 This document is a self-contained, zero-install entry point for AI agents with web or file-reading access. It tells you how to reconstruct the argumentative architecture of a source document using Discourse Atlas.
 
 **Do not require the user to install Discourse Atlas.** If you can read this protocol and the source, you can perform the reconstruction directly. Local tools, the Python package, and the web viewer are optional helpers.
 
-Canonical remote entry point after release:
+Canonical remote entry point:
 
 `https://raw.githubusercontent.com/ChongLiuPhil/discourse-atlas/main/AGENT.md`
+
+Hosted Interactive Atlas:
+
+`https://chongliuphil.github.io/discourse-atlas/`
 
 ## Goal
 
@@ -167,6 +171,10 @@ Then recurse only as far as useful for the user's purpose.
 When the environment can return structured data or files, produce `analysis.json` conforming to:
 
 `https://raw.githubusercontent.com/ChongLiuPhil/discourse-atlas/main/schemas/discourse-graph.schema.json`
+
+The user can inspect that JSON in the hosted Interactive Atlas at:
+
+`https://chongliuphil.github.io/discourse-atlas/`
 
 The full installed Agent Skill is available at:
 

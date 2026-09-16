@@ -1,6 +1,22 @@
 # Changelog
 
-All notable project changes are recorded here. Discourse Atlas is currently an alpha/research-preview project; the canonical graph schema remains at `0.1.0` while the toolkit release is `0.9.0`.
+All notable project changes are recorded here. Discourse Atlas is currently an alpha/research-preview project; the canonical graph schema remains at `0.1.0` while the toolkit release is `1.0.0`.
+
+## 1.0.0 — 2026-09-16
+
+### Added
+- Hosted Interactive Atlas at `https://chongliuphil.github.io/discourse-atlas/`.
+- GitHub Pages deployment workflow using the official Pages artifact/deployment actions.
+- Hosted-atlas deployment and verification documentation.
+
+### Changed
+- Vite production base is now `/discourse-atlas/` for repository-scoped GitHub Pages assets.
+- Root protocol and README now point readers from canonical JSON to the hosted browser atlas.
+- Python and web package versions advance to `1.0.0`.
+
+### Deployment
+- GitHub Pages uses **Source = GitHub Actions** and deploys the static `apps/web/dist/` artifact to the `github-pages` environment.
+- The Pages workflow runs the web tests and production build before deployment.
 
 ## 0.9.0 — 2026-09-16
 

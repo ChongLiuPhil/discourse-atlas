@@ -2,6 +2,8 @@
 
 Interactive reader for Discourse Atlas JSON graphs.
 
+Hosted app: <https://chongliuphil.github.io/discourse-atlas/>
+
 ## Features
 
 - nested work / part / chapter / section containers;
@@ -33,4 +35,6 @@ npm run dev
 npm run build
 ```
 
-The output is a static Vite site in `apps/web/dist/`. `base: './'` keeps the build portable to a subpath such as GitHub Pages.
+The output is a static Vite site in `apps/web/dist/`. Production builds use `base: '/discourse-atlas/'` so generated assets resolve correctly from the repository-scoped GitHub Pages URL.
+
+GitHub Pages deployment is defined in `.github/workflows/pages.yml` and publishes `apps/web/dist/` through the GitHub Pages Actions artifact/deployment flow.
