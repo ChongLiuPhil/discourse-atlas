@@ -4,7 +4,7 @@ Last updated: 2026-09-18
 
 ## Current release
 
-- Toolkit/repository release: **1.1.0**
+- Toolkit/repository release: **1.1.1**
 - Remote Agent protocol: **1.1.0**
 - Current graph schema: **0.2.0**
 - Supported legacy graph profile: **0.1.0**
@@ -13,9 +13,9 @@ Last updated: 2026-09-18
 
 ## Current stage
 
-**v1.1 — Collaboration, Governance & Reproducibility**
+**v1.1.1 — Collaboration Control-Plane Hardening**
 
-The v1.0 product surface is stable enough that the current priority is repository continuity: make canonical authority, version domains, compatibility, decisions, release procedure, and zero-context handoff explicit before another major analysis feature.
+The v1.1 collaboration baseline is now hardened into an executable repository control plane: Manifest-declared state drives consistency checks, task routes control selective retrieval, and operational/decision state is explicit before another major analysis feature.
 
 ## v1.1 implemented
 
@@ -28,7 +28,10 @@ The v1.0 product surface is stable enough that the current priority is repositor
 - migrated maintained graph fixtures to `0.2.0`;
 - expanded contribution, PR, security, and architecture documentation;
 - committed the web npm lockfile and switched CI/Pages to `npm ci`;
-- added automated repository-consistency checks.
+- added automated repository-consistency checks;
+- added `PROJECT_CONTEXT_INTERFACE.yaml` with route-based selective retrieval and revision/cache policy;
+- made `PROJECT_MANIFEST.yaml` the expected-version/path source for governance CI;
+- added operational resume fields, decision-authority states, and bilingual structural parity checks.
 
 ## Operational state
 
@@ -42,11 +45,11 @@ After the v1.1.1 hardening release is verified, select exactly one v1.2 candidat
 
 ### Active work
 
-- v1.1.1 control-plane hardening: manifest-driven consistency, route-based selective retrieval, operational resume state, decision-authority labeling, and bilingual structural parity.
+- No active implementation task after v1.1.1. The control-plane hardening is the current handoff baseline.
 
 ### Blockers
 
-- None for v1.1.1.
+- None.
 
 ### Pending maintainer decisions
 
@@ -55,7 +58,7 @@ After the v1.1.1 hardening release is verified, select exactly one v1.2 candidat
 
 ### Synchronization defects
 
-- None known at the start of v1.1.1; CI is the verification authority for repository consistency.
+- None known. Repository consistency CI is the verification authority for Manifest/context/bilingual synchronization.
 
 ## Known non-blocking debt
 

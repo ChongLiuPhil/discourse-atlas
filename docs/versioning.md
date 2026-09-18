@@ -4,7 +4,7 @@ Discourse Atlas uses separate version domains because software releases, analysi
 
 ## Current versions
 
-- Toolkit / repository release: **1.1.0**
+- Toolkit / repository release: **1.1.1**
 - Remote Agent protocol: **1.1.0**
 - Discourse graph schema: **0.2.0**
 - Node alignment schema: **0.1.0**

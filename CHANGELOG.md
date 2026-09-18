@@ -1,6 +1,19 @@
 # Changelog
 
-All notable project changes are recorded here. Discourse Atlas remains research software; the toolkit release is `1.1.0`, the current graph schema is `0.2.0`, and graph `0.1.0` remains supported through a frozen legacy compatibility profile.
+All notable project changes are recorded here. Discourse Atlas remains research software; the toolkit release is `1.1.1`, the current graph schema is `0.2.0`, and graph `0.1.0` remains supported through a frozen legacy compatibility profile.
+
+## 1.1.1 — 2026-09-18
+
+### Added
+- `PROJECT_CONTEXT_INTERFACE.yaml` for repository-backed task routing, selective retrieval, revision/cache policy, trust boundary, and decision-policy states.
+- Operational resume fields in `PROJECT_STATUS.md` and Decision Record 0005 for the collaboration control plane.
+- Manifest-driven bilingual entry parity checks for heading structure and link targets.
+
+### Changed
+- Repository consistency now derives expected release/protocol/schema versions and resource locations from `PROJECT_MANIFEST.yaml` instead of duplicating those values in Python constants.
+- PR/Issue change classes now use the same route names as the context interface.
+- Governance and the PR template now distinguish routine implementation, documented/explicit maintainer decisions, and `AI-PROPOSED` changes awaiting a decision.
+- Toolkit and web package versions advance to `1.1.1`; remote Agent protocol remains `1.1.0`, graph schema remains `0.2.0`, and alignment schema remains `0.1.0`.
 
 ## 1.1.0 — 2026-09-18
 

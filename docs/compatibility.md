@@ -4,7 +4,7 @@
 
 | Artifact | Current | Supported legacy | Notes |
 |---|---:|---:|---|
-| Toolkit / repository | 1.1.0 | — | Python + web + docs release line |
+| Toolkit / repository | 1.1.1 | — | Python + web + docs release line |
 | Remote Agent protocol | 1.1.0 | Git history | New analyses follow current protocol |
 | Discourse graph schema | 0.2.0 | 0.1.0 | CLI validates current and terminal legacy profile |
 | Node alignment schema | 0.1.0 | — | Independent version domain |

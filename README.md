@@ -10,7 +10,7 @@
 
 It is designed for philosophy, essays, academic papers, theoretical books, legal reasoning, policy reports, and other texts where understanding **which parts support, require, refine, challenge, or respond to which other parts** matters as much as understanding what each part says.
 
-> Status: **v1.1.0 collaboration-and-governance research release.** The v1.0 hosted product surface remains intact; v1.1 adds repository-backed onboarding, explicit canonical authority, immutable schema versioning, compatibility policy, Decision Records, release governance, and automated repository-consistency checks.
+> Status: **v1.1.1 collaboration control-plane release.** The v1.0 hosted product surface remains intact; v1.1.1 hardens repository-backed collaboration with Manifest-driven consistency, task-route selective retrieval, operational resume state, explicit decision authority, and bilingual structural parity checks.
 
 Hosted Interactive Atlas:
 
@@ -88,6 +88,7 @@ discourse-atlas/
 ├── AGENT.md                       # Zero-install product-facing analysis protocol
 ├── AGENTS.md / AGENTS.zh-CN.md    # Repository collaboration contract
 ├── PROJECT_MANIFEST.yaml          # Machine-readable project/version map
+├── PROJECT_CONTEXT_INTERFACE.yaml # Task routing + repository context policy
 ├── PROJECT_STATUS.md              # Current development state
 ├── ROADMAP.md                     # Completed and candidate milestones
 ├── skills/discourse-structure/    # Portable standards-compatible Agent Skill
@@ -240,6 +241,7 @@ See `benchmark/README.md`, `docs/alignment.md`, `docs/alignment-workbench.md`, a
 - **v0.9** — zero-install remote agent protocol, claim-aware schema/Skill, and claim-first macro-to-micro viewer.
 - **v1.0** — Hosted Interactive Atlas on GitHub Pages with repository-subpath-safe production assets and automated deployment.
 - **v1.1** — repository collaboration contract, zero-context onboarding, immutable graph schema `0.2.0`, compatibility/version governance, Decision Records, citation metadata, and repository consistency checks.
+- **v1.1.1** — Manifest-driven collaboration control plane, selective context routing, decision-authority states, operational resume state, and bilingual structural parity checks.
 
 ## Post-v1.1 research directions
 

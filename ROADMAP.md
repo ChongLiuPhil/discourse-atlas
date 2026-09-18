@@ -22,6 +22,16 @@ GitHub Pages deployment with repository-subpath-safe production assets and autom
 - [x] add repository consistency checks;
 - [x] commit the web npm lockfile and use `npm ci` in CI/Pages.
 
+### v1.1.1 — Collaboration Control-Plane Hardening
+
+- [x] make `PROJECT_MANIFEST.yaml` the expected-version/path source for governance checks;
+- [x] add `PROJECT_CONTEXT_INTERFACE.yaml` with task routes and selective retrieval;
+- [x] add stale-cache/revision-conflict policy;
+- [x] add operational resume state to `PROJECT_STATUS.md`;
+- [x] distinguish AI proposals from maintainer decisions in governance/PR flow;
+- [x] add Manifest-driven bilingual structural/link parity checks;
+- [x] record the control-plane architecture in Decision Record 0005.
+
 ## Candidate v1.2 work
 
 - generate self-contained `AGENT.md` from smaller canonical protocol components and verify zero drift;

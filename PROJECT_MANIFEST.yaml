@@ -1,7 +1,7 @@
 project:
   name: "Discourse Atlas"
   repository: "ChongLiuPhil/discourse-atlas"
-  release_version: "1.1.0"
+  release_version: "1.1.1"
   technical_canonical_language: "en"
 
 entry_points:
