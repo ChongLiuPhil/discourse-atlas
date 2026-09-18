@@ -1,15 +1,26 @@
 ## Problem
 
-Describe the text-analysis, schema, ontology, visualization, or evaluation problem.
+Describe the text-analysis, schema, ontology, visualization, evaluation, compatibility, governance, or documentation problem.
+
+## Change class
+
+- [ ] Semantics / protocol
+- [ ] Schema
+- [ ] Python / CLI
+- [ ] Web / viewer
+- [ ] Benchmark / evaluation
+- [ ] Documentation
+- [ ] Release / infrastructure
+- [ ] Governance
 
 ## Proposed change
 
-What should change?
+What should change, and which canonical source should govern it?
 
-## Example
+## Example / evidence
 
-Provide the smallest legally shareable example that demonstrates the issue.
+Provide the smallest legally shareable example.
 
-## Structural impact
+## Structural and compatibility impact
 
-Does this change hierarchy, edge semantics, evidence anchoring, or compatibility?
+Does this change hierarchy, edge semantics, evidence anchoring, persisted JSON shape, version compatibility, or reproducibility?

@@ -1,0 +1,63 @@
+project:
+  name: "Discourse Atlas"
+  repository: "ChongLiuPhil/discourse-atlas"
+  release_version: "1.1.0"
+  technical_canonical_language: "en"
+
+entry_points:
+  human_readme:
+    canonical: "README.md"
+    mirror: "README.zh-CN.md"
+  repository_onboarding:
+    canonical: "START_HERE.md"
+    mirror: "START_HERE.zh-CN.md"
+  repository_agent_contract:
+    canonical: "AGENTS.md"
+    mirror: "AGENTS.zh-CN.md"
+  remote_analysis_protocol: "AGENT.md"
+  installed_skill: "skills/discourse-structure/SKILL.md"
+
+versions:
+  remote_agent_protocol: "1.1.0"
+  discourse_graph_schema:
+    current: "0.2.0"
+    latest_alias: "schemas/discourse-graph.schema.json"
+    versioned: "schemas/discourse-graph/0.2.0.schema.json"
+    legacy_0_1_profile: "schemas/discourse-graph/0.1.0-legacy.schema.json"
+  node_alignment_schema:
+    current: "0.1.0"
+    latest_alias: "schemas/node-alignment.schema.json"
+    versioned: "schemas/node-alignment/0.1.0.schema.json"
+
+canonical:
+  relation_ontology: "skills/discourse-structure/references/relation-ontology.md"
+  segmentation_rules: "skills/discourse-structure/references/segmentation-rules.md"
+  source_anchors: "skills/discourse-structure/references/source-anchors.md"
+  architecture: "docs/architecture.md"
+  versioning: "docs/versioning.md"
+  compatibility: "docs/compatibility.md"
+  governance: "GOVERNANCE.md"
+  project_status: "PROJECT_STATUS.md"
+  roadmap: "ROADMAP.md"
+  decisions: "docs/decisions/"
+
+applications:
+  python_package: "src/discourse_atlas/"
+  web_app: "apps/web/"
+  hosted_atlas: "https://chongliuphil.github.io/discourse-atlas/"
+
+quality:
+  python_tests: "tests/"
+  benchmark: "benchmark/"
+  ci: ".github/workflows/ci.yml"
+  pages: ".github/workflows/pages.yml"
+  repository_consistency_check: "scripts/check_repository_consistency.py"
+
+invariants:
+  - "Repository state outranks chat memory."
+  - "AGENT.md is product-facing; AGENTS.md is repository-facing."
+  - "JSON schemas define data shape; README is explanatory."
+  - "Schema version numbers are not reused for materially different accepted document sets."
+  - "Hierarchy and discourse dependency remain distinct."
+  - "Authorial and inferred structure remain distinguishable."
+  - "Bilingual entry-document pairs are synchronized in the same work cycle."

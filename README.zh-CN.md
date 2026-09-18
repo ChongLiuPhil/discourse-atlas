@@ -9,7 +9,7 @@
 
 它面向哲学、随笔、学术论文、理论著作、法律推理、政策报告以及其他复杂文本。在这些文本中，理解**哪些部分支持、要求、细化、挑战或回应哪些其他部分**，与理解各部分分别说了什么同样重要。
 
-> 状态：**v1.0.0 hosted research release。** 主要分析入口无需安装：只需把一个公开的 Discourse Atlas 协议 URL 和源文档交给 AI Agent。随后即可在托管的 Interactive Atlas 中检查和修正规范 JSON。仓库还包含正式 Agent Skill、规范 JSON schema、验证／评估 CLI、确定性的 PDF 文本摄取、交互式阅读器与对齐工作台。
+> 状态：**v1.1.0 collaboration-and-governance research release。** v1.0 的托管产品能力保持不变；v1.1 新增 repository-backed 接管入口、明确的 canonical authority、不可变 schema 版本、兼容性规则、Decision Records、release governance 与自动 repository consistency checks。
 
 托管版 Interactive Atlas：
 
@@ -85,7 +85,12 @@ Work Map -> Part / Chapter Map -> Section Map -> Local Argument Map
 
 ```text
 discourse-atlas/
-├── AGENT.md                       # 零安装远程 Agent 协议
+├── START_HERE.md / .zh-CN.md      # 零上下文仓库接管入口
+├── AGENT.md                       # 面向使用者的零安装分析协议
+├── AGENTS.md / AGENTS.zh-CN.md    # 仓库协作契约
+├── PROJECT_MANIFEST.yaml          # 项目/版本机器可读映射
+├── PROJECT_STATUS.md              # 当前开发状态
+├── ROADMAP.md                     # 已完成与候选里程碑
 ├── skills/discourse-structure/    # 便携、符合标准的 Agent Skill
 ├── schemas/                       # 图结构 + 单元对齐 schema
 ├── src/discourse_atlas/           # 验证、PDF 摄取、对齐、评估 CLI
@@ -113,7 +118,7 @@ Skill 现在会从 `main_claim`、`summary`、`function`、`role_in_parent`、�
 https://raw.githubusercontent.com/ChongLiuPhil/discourse-atlas/main/schemas/discourse-graph.schema.json
 ```
 
-可选的 `main_claim` 字段向后兼容；图 schema 仍保持在 `0.1.0`，因此已有 v0.1–v0.9 分析文件仍然有效。
+新分析使用 graph schema **`0.2.0`**。CLI 同时支持已有分析使用的终态 legacy **`0.1.0` compatibility profile**。versioned schema 从现在起保持不可变；详见 `docs/versioning.md` 与 `docs/compatibility.md`。
 
 ## 交互阅读器
 
@@ -235,10 +240,11 @@ benchmark 包含跨体裁的合成案例，以及一个公共领域的 John Stua
 - **v0.8** — 确定性 PDF 文本层摄取与来源清单。
 - **v0.9** — 零安装远程 Agent 协议、支持主张字段的 schema/Skill，以及以主张为中心的宏观到微观查看器。
 - **v1.0** — 部署到 GitHub Pages 的 Hosted Interactive Atlas，包含对子路径安全的生产资源与自动部署。
+- **v1.1** — 仓库协作契约、零上下文接管、不可变 graph schema `0.2.0`、兼容性/版本治理、Decision Records、引用元数据与 repository consistency checks。
 
-## v1.0 之后的研究方向
+## v1.1 之后的研究方向
 
-v1.0 研究核心已经支持零安装 AI 使用、托管浏览器 Atlas 与本地研究工具。后续工作属于扩展／研究，而不是基础使用所必需的配置：
+v1.1 在 v1.0 研究核心之上补齐了协作与兼容性治理。后续工作属于扩展／研究，而不是基础使用所必需的配置：
 
 - 更多经过审阅、属于公共领域或获得许可的长篇哲学语料；
 - 仅作为明确、保留来源信息的适配器加入 OCR；
@@ -251,7 +257,7 @@ Discourse Atlas 不旨在取代细读，不宣称解释性文本只有唯一正�
 
 ## 贡献
 
-见 [CONTRIBUTING.md](CONTRIBUTING.md)。版本历史记录在 [CHANGELOG.md](CHANGELOG.md)。
+仓库维护者与 AI Agent 应从 [START_HERE.zh-CN.md](START_HERE.zh-CN.md) 与 [AGENTS.zh-CN.md](AGENTS.zh-CN.md) 开始。贡献规则见 [CONTRIBUTING.md](CONTRIBUTING.md)，治理与路线图见 [GOVERNANCE.md](GOVERNANCE.md) 和 [ROADMAP.md](ROADMAP.md)。版本历史记录在 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 许可证
 

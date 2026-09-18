@@ -1,6 +1,26 @@
 # Changelog
 
-All notable project changes are recorded here. Discourse Atlas is currently an alpha/research-preview project; the canonical graph schema remains at `0.1.0` while the toolkit release is `1.0.0`.
+All notable project changes are recorded here. Discourse Atlas remains research software; the toolkit release is `1.1.0`, the current graph schema is `0.2.0`, and graph `0.1.0` remains supported through a frozen legacy compatibility profile.
+
+## 1.1.0 — 2026-09-18
+
+### Added
+- Repository-facing `AGENTS.md` / `AGENTS.zh-CN.md` collaboration contract, distinct from product-facing `AGENT.md`.
+- Bilingual zero-context `START_HERE` onboarding, project manifest/status/roadmap/governance, citation metadata, release documentation, and Decision Records.
+- Immutable graph schema `0.2.0` plus a terminal legacy `0.1.0` compatibility profile.
+- Automated repository consistency checks.
+
+### Changed
+- Toolkit and web package versions advance to `1.1.0`.
+- Remote Agent protocol advances to `1.1.0` and requires new graph output to use schema `0.2.0`.
+- Maintained examples, Skill example, benchmark annotations, and reference graphs migrate to graph schema `0.2.0`.
+- CLI validation dispatches by declared graph schema version and supports both `0.1.0` and `0.2.0`.
+- Contribution, PR, security, architecture, and hosted-atlas documentation now reflect the v1.x project surface and trust boundary.
+
+### Governance
+- English is the technical canonical language; README, START_HERE, and AGENTS are synchronized bilingual entry pairs.
+- README remains explanatory rather than a normative ontology/schema source.
+- New schema version numbers must not be reused for materially different accepted document sets.
 
 ## 1.0.0 — 2026-09-16
 

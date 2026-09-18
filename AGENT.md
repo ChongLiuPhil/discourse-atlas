@@ -1,6 +1,6 @@
 # Discourse Atlas — Remote Agent Protocol
 
-Protocol version: **1.0.0**
+Protocol version: **1.1.0**
 
 This document is a self-contained, zero-install entry point for AI agents with web or file-reading access. It tells you how to reconstruct the argumentative architecture of a source document using Discourse Atlas.
 
@@ -171,6 +171,8 @@ Then recurse only as far as useful for the user's purpose.
 When the environment can return structured data or files, produce `analysis.json` conforming to:
 
 `https://raw.githubusercontent.com/ChongLiuPhil/discourse-atlas/main/schemas/discourse-graph.schema.json`
+
+New output should declare `schema_version: "0.2.0"`. The validator also supports the terminal legacy `0.1.0` compatibility profile for older analyses; do not emit new analyses as `0.1.0`.
 
 The user can inspect that JSON in the hosted Interactive Atlas at:
 

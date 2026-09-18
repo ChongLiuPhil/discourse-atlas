@@ -77,3 +77,13 @@ jobs:
       - name: Build interactive viewer
         working-directory: apps/web
         run: npm run build
+
+  governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Check repository consistency
+        run: python scripts/check_repository_consistency.py
