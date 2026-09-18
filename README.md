@@ -10,7 +10,7 @@
 
 It is designed for philosophy, essays, academic papers, theoretical books, legal reasoning, policy reports, and other texts where understanding **which parts support, require, refine, challenge, or respond to which other parts** matters as much as understanding what each part says.
 
-> Status: **v1.0.0 hosted research release.** The primary analysis entry point is zero-install: give an AI agent one public Discourse Atlas protocol URL plus the source document. Canonical JSON can then be inspected and corrected in the hosted Interactive Atlas. The repository also contains the formal Agent Skill, canonical JSON schema, validator/evaluation CLI, deterministic PDF text ingestion, interactive reader, and alignment workbench.
+> Status: **v1.1.0 collaboration-and-governance research release.** The v1.0 hosted product surface remains intact; v1.1 adds repository-backed onboarding, explicit canonical authority, immutable schema versioning, compatibility policy, Decision Records, release governance, and automated repository-consistency checks.
 
 Hosted Interactive Atlas:
 
@@ -84,7 +84,12 @@ A long book should therefore begin with a readable map of its central problem, c
 
 ```text
 discourse-atlas/
-├── AGENT.md                       # Zero-install remote agent protocol
+├── START_HERE.md / .zh-CN.md      # Zero-context repository onboarding
+├── AGENT.md                       # Zero-install product-facing analysis protocol
+├── AGENTS.md / AGENTS.zh-CN.md    # Repository collaboration contract
+├── PROJECT_MANIFEST.yaml          # Machine-readable project/version map
+├── PROJECT_STATUS.md              # Current development state
+├── ROADMAP.md                     # Completed and candidate milestones
 ├── skills/discourse-structure/    # Portable standards-compatible Agent Skill
 ├── schemas/                       # Graph + unit-alignment schemas
 ├── src/discourse_atlas/           # Validation, PDF ingestion, alignment, evaluation CLI
@@ -112,7 +117,7 @@ Canonical schema:
 https://raw.githubusercontent.com/ChongLiuPhil/discourse-atlas/main/schemas/discourse-graph.schema.json
 ```
 
-The optional `main_claim` field is backward compatible; the graph schema remains at `0.1.0`, so existing v0.1–v0.9 analysis files remain valid.
+New analyses use graph schema **`0.2.0`**. The CLI also supports the terminal legacy **`0.1.0` compatibility profile** for existing analyses. Versioned schemas are immutable; see `docs/versioning.md` and `docs/compatibility.md`.
 
 ## Interactive reader
 
@@ -234,10 +239,11 @@ See `benchmark/README.md`, `docs/alignment.md`, `docs/alignment-workbench.md`, a
 - **v0.8** — deterministic PDF text-layer ingestion and provenance manifest.
 - **v0.9** — zero-install remote agent protocol, claim-aware schema/Skill, and claim-first macro-to-micro viewer.
 - **v1.0** — Hosted Interactive Atlas on GitHub Pages with repository-subpath-safe production assets and automated deployment.
+- **v1.1** — repository collaboration contract, zero-context onboarding, immutable graph schema `0.2.0`, compatibility/version governance, Decision Records, citation metadata, and repository consistency checks.
 
-## Post-v1.0 research directions
+## Post-v1.1 research directions
 
-The v1.0 research core supports zero-install AI use, a hosted browser atlas, and local research tooling. Further work is extension/research rather than required setup:
+The v1.1 project combines the v1.0 research core with explicit collaboration and compatibility governance. Further work is extension/research rather than required setup:
 
 - more reviewed public-domain or permission-compatible long-form philosophy corpora;
 - OCR only as an explicit provenance-preserving adapter;
@@ -250,7 +256,7 @@ Discourse Atlas is not intended to replace close reading, claim one uniquely cor
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Release history is recorded in [CHANGELOG.md](CHANGELOG.md).
+Repository maintainers and AI agents should start with [START_HERE.md](START_HERE.md) and [AGENTS.md](AGENTS.md). See [CONTRIBUTING.md](CONTRIBUTING.md), [GOVERNANCE.md](GOVERNANCE.md), and [ROADMAP.md](ROADMAP.md). Release history is recorded in [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 

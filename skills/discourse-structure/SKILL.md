@@ -22,7 +22,7 @@ The default presentation is **macro-to-micro**: first make the whole work intell
 
 Produce both:
 
-- `analysis.json`, conforming to `../../schemas/discourse-graph.schema.json` when that schema is available to the agent; and
+- `analysis.json`, conforming to `../../schemas/discourse-graph.schema.json` when that schema is available to the agent; new output should declare graph `schema_version: "0.2.0"`; and
 - `analysis.md`, a readable reconstruction with global architecture, hierarchy, main claims, functions, major dependencies, evidence, and uncertainty.
 
 If file output is unavailable, emit the JSON and Markdown in clearly separated sections.

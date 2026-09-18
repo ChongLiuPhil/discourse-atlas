@@ -1,38 +1,33 @@
 # Contributing to Discourse Atlas
 
-Discourse Atlas is specification-first. Changes to the ontology or schema can affect every downstream analysis, so please keep proposals explicit and testable.
+Discourse Atlas is specification-first research software. Start with `START_HERE.md`, `PROJECT_MANIFEST.yaml`, and `AGENTS.md`.
 
-## Good first contributions
+## Change classes
 
-- Add a small, legally redistributable example text and a hand-reviewed analysis.
-- Improve relation definitions and counterexamples.
-- Add schema validation tests.
-- Improve Mermaid / DOT exports.
-- Propose evaluation criteria for structural fidelity.
+Mark one or more: semantics/protocol, schema, Python/CLI, web/viewer, benchmark/evaluation, documentation, release/infrastructure, governance.
 
 ## Development
 
-```bash
-python -m pip install -e '.[dev]'
-pytest
-```
+Python development uses `python -m pip install -e '.[dev]'`, `pytest`, and `python scripts/check_repository_consistency.py`.
 
-## Ontology changes
+Web development uses `npm install`, `npm test`, and `npm run build` in `apps/web`.
 
-For a new relation type, explain:
+## Semantic and ontology changes
 
-1. what it means;
-2. edge direction;
-3. how it differs from existing relations;
-4. at least one positive example;
-5. at least one tempting false positive.
+For a new or changed relation, explain meaning, direction, difference from existing relations, a positive example, a tempting false positive, and compatibility impact. Update the canonical relation ontology first, then synchronize the remote protocol, Skill, tests/examples, and affected schema/evaluation logic.
 
-Prefer a small stable ontology over a large ambiguous one.
+## Schema changes
+
+Follow `docs/versioning.md` and `docs/compatibility.md`. Update the immutable versioned schema, latest alias, packaged resource, validator dispatch, maintained fixtures, compatibility tests/docs, and manifest as applicable. Do not change the accepted document set while retaining the same version.
+
+## Benchmark contributions
+
+Use legally redistributable/public-domain sources, record provenance, keep reference interpretations reviewable, and do not modify gold/reference structure merely to improve a score.
+
+## Bilingual entry documents
+
+Substantive changes to README, START_HERE, or AGENTS should update their Chinese mirror in the same work cycle. Most technical documentation remains English-canonical.
 
 ## Pull requests
 
-Keep PRs focused. Schema changes should update:
-
-- `schemas/discourse-graph.schema.json`
-- `skills/discourse-structure/references/relation-ontology.md` when relevant
-- examples/tests that demonstrate the change
+Keep PRs focused and complete the PR template. Explain compatibility/version impact, not only implementation details.

@@ -29,9 +29,9 @@ Long works should be analyzed recursively:
 
 This avoids asking a model to hold an entire book-level dependency graph in one undifferentiated pass.
 
-## Future interactive viewer
+## Interactive Atlas architecture
 
-Recommended pipeline:
+Current pipeline:
 
 ```text
 source text
@@ -47,7 +47,7 @@ ELK layout
 React Flow interactive graph
 ```
 
-The viewer should provide at least three zoom levels: work, chapter/part, and local argument map. Important edges should expose their explanation, evidence anchors, confidence, and assertion level.
+The viewer uses progressive disclosure from work-level structure toward chapter/part and local argument maps. Important edges expose their explanation, evidence anchors, confidence, and assertion level.
 
 ## Interactive reader architecture
 
@@ -60,3 +60,10 @@ The viewer should provide at least three zoom levels: work, chapter/part, and lo
 The source pane maps both paragraph-based and line-based anchors to visible source blocks. Clicking a source block highlights linked nodes and evidence edges; selecting a node or edge scrolls the source pane to its first evidence anchor.
 
 Human edits change only canonical reconstruction fields (for example title, summary, structure origin, relation, explanation, confidence, and assertion level). Renderer coordinates and collapse state are intentionally excluded from exported JSON.
+
+
+## Normative authority and repository governance
+
+Architecture prose explains the design but does not override formal data contracts. JSON shape is governed by versioned schemas, relation semantics by the relation ontology, source-coordinate semantics by the source-anchor reference, and release compatibility by `docs/versioning.md` / `docs/compatibility.md`.
+
+Durable architectural choices are summarized under `docs/decisions/`. Repository maintenance rules are defined by `AGENTS.md`; `AGENT.md` remains the product-facing remote reconstruction protocol.

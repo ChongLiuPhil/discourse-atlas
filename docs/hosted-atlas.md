@@ -1,6 +1,6 @@
 # Hosted Interactive Atlas
 
-Discourse Atlas v1.0 publishes the browser reader and alignment workbench as a repository-scoped GitHub Pages site:
+Since Discourse Atlas v1.0, the browser reader and alignment workbench are published as a repository-scoped GitHub Pages site:
 
 <https://chongliuphil.github.io/discourse-atlas/>
 
