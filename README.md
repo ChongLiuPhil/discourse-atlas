@@ -1,5 +1,11 @@
 # Discourse Atlas
 
+<!-- bilingual-home-intro -->
+> **English:** An open-source protocol and toolkit for reconstructing the hierarchical argumentative structure of complex texts, from whole-work architecture to local argument relations.
+>
+> **中文：** 一个开源协议与工具集，用于重建复杂文本的层级论证结构，从整部作品的总体架构一直分析到局部论证之间的关系。
+<!-- /bilingual-home-intro -->
+
 [![CI](https://github.com/ChongLiuPhil/discourse-atlas/actions/workflows/ci.yml/badge.svg)](https://github.com/ChongLiuPhil/discourse-atlas/actions/workflows/ci.yml)
 [![Pages](https://github.com/ChongLiuPhil/discourse-atlas/actions/workflows/pages.yml/badge.svg)](https://github.com/ChongLiuPhil/discourse-atlas/actions/workflows/pages.yml)
 
