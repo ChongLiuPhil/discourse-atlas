@@ -13,12 +13,14 @@
 在进行实质性仓库修改之前，先读取：
 
 1. `PROJECT_MANIFEST.yaml`
-2. `PROJECT_STATUS.md`
-3. `AGENTS.md`
-4. `ROADMAP.md`
-5. 与当前请求相关的 canonical 文件
-6. 涉及 schema、protocol 或 release 时读取 `docs/versioning.md` 与 `docs/compatibility.md`
-7. `docs/decisions/` 中相关的 Decision Record
+2. `PROJECT_CONTEXT_INTERFACE.yaml`
+3. `PROJECT_STATUS.md`
+4. `AGENTS.md`
+5. `ROADMAP.md`
+6. 先给任务分类，再按 route 选择性读取 `required_refs`
+7. 与当前请求相关的 canonical 文件
+8. 涉及 schema、protocol 或 release 时读取 `docs/versioning.md` 与 `docs/compatibility.md`
+9. `docs/decisions/` 中相关的 Decision Record
 
 仓库是权威项目状态。聊天记录、模型记忆和旧摘要都只是临时上下文。
 
@@ -26,7 +28,9 @@
 
 一个请求可以属于多个类别：**SEMANTICS**、**SCHEMA**、**IMPLEMENTATION**、**WEB**、**BENCHMARK**、**DOCS**、**RELEASE**、**GOVERNANCE**。
 
-写入前必须重新读取目标文件最新版本。语义或 schema 变更还必须读取对应 ontology/schema 与 Decision Record。
+`PROJECT_CONTEXT_INTERFACE.yaml` 定义每个 route 必须/可选读取的仓库引用。只读取当前任务真正需要的内容，不把整个仓库复制进会话上下文。
+
+写入前必须重新读取目标文件最新版本。仓库写入后，先前缓存的受影响文件摘录立即视为 stale。语义或 schema 变更还必须读取对应 ontology/schema 与 Decision Record。
 
 ## 完成标准
 

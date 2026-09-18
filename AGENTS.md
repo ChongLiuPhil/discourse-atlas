@@ -6,7 +6,13 @@ This file governs humans and AI agents maintaining the **Discourse Atlas reposit
 
 ## Repository-backed state
 
-GitHub is the authoritative project state. Chat history, account memory, hidden scratchpads, local summaries, and earlier agent reports are non-authoritative. Before high-impact changes or writes, read the latest target files, `PROJECT_MANIFEST.yaml`, and `PROJECT_STATUS.md`.
+GitHub is the authoritative project state. Chat history, account memory, hidden scratchpads, local summaries, and earlier agent reports are non-authoritative. `PROJECT_MANIFEST.yaml` locates canonical resources; `PROJECT_CONTEXT_INTERFACE.yaml` controls selective retrieval. Before high-impact changes or writes, read the latest target files and the route-required repository state.
+
+## Context routing and cache
+
+Classify work as **SEMANTICS**, **SCHEMA**, **IMPLEMENTATION**, **WEB**, **BENCHMARK**, **DOCS**, **RELEASE**, or **GOVERNANCE**, then resolve the route in `PROJECT_CONTEXT_INTERFACE.yaml`.
+
+Retrieve only the minimum canonical state needed for the task. Session excerpts are non-authoritative cache. Read latest before high-impact actions and writes; after a write, treat touched excerpts as stale and refetch affected dependencies when later reasoning still relies on them. Prefer Git commit/blob SHAs or equivalent revision tokens when coordinating concurrent work.
 
 ## Product protocol vs repository contract
 
@@ -54,6 +60,8 @@ Keep PRs focused. State change class, rationale, canonical sources, schema/ontol
 
 ## AI proposals
 
-AI agents may propose architecture and semantics, but proposals become durable project decisions only through repository changes and normal review. Long-lived architectural choices should receive a Decision Record when appropriate.
+AI agents may propose architecture and semantics, but a polished proposal is not a maintainer decision. For changes to relation semantics, reconstruction methodology, persisted schema contracts, benchmark reference interpretations, or governance authority, the PR must identify decision authority as an existing documented decision, explicit maintainer authorization, or `AI-PROPOSED / awaiting maintainer decision`. An unresolved AI proposal must not be merged as though it were approved.
+
+Long-lived architectural choices should receive a Decision Record when appropriate.
 
 This lightweight governance layer borrows repository-backed continuity principles from HARC without importing HARC's full research-memory architecture.

@@ -1,0 +1,142 @@
+project_context_interface:
+  version: "0.1.0"
+  mode: "repository-backed"
+  authoritative_store: "github"
+
+  control_plane:
+    manifest: "PROJECT_MANIFEST.yaml"
+    status_ref: "canonical.project_status"
+    agent_contract_ref: "entry_points.repository_agent_contract.canonical"
+
+  context_policy:
+    retrieval: "selective-on-demand"
+    cache_authority: "none"
+    cache_scope: "current-task-only"
+    read_latest_before_high_impact_action: true
+    read_latest_before_write: true
+    invalidate_touched_cache_after_write: true
+    write_through_repository: true
+    refresh_after_repository_change: "affected-dependencies-only"
+
+  revision_policy:
+    preferred_tokens:
+      - "git_commit_sha"
+      - "git_blob_sha"
+      - "etag_or_equivalent_revision"
+    stale_after_write: true
+    conflict_state: "REVISION-CONFLICT"
+
+  task_routes:
+    SEMANTICS:
+      required_refs:
+        - "entry_points.remote_analysis_protocol"
+        - "entry_points.installed_skill"
+        - "canonical.relation_ontology"
+        - "canonical.segmentation_rules"
+        - "canonical.source_anchors"
+        - "canonical.decisions"
+      optional_refs:
+        - "quality.benchmark"
+        - "canonical.evaluation"
+    SCHEMA:
+      required_refs:
+        - "versions.discourse_graph_schema.versioned"
+        - "versions.discourse_graph_schema.legacy_0_1_profile"
+        - "canonical.versioning"
+        - "canonical.compatibility"
+        - "implementation.cli"
+        - "quality.python_tests"
+        - "canonical.decisions"
+      optional_refs:
+        - "quality.benchmark"
+    IMPLEMENTATION:
+      required_refs:
+        - "applications.python_package"
+        - "implementation.cli"
+        - "quality.python_tests"
+        - "canonical.architecture"
+      optional_refs:
+        - "canonical.compatibility"
+        - "quality.benchmark"
+    WEB:
+      required_refs:
+        - "applications.web_app"
+        - "canonical.hosted_atlas_docs"
+        - "canonical.architecture"
+        - "quality.pages"
+      optional_refs:
+        - "quality.benchmark"
+    BENCHMARK:
+      required_refs:
+        - "quality.benchmark"
+        - "canonical.evaluation"
+        - "canonical.compatibility"
+      optional_refs:
+        - "entry_points.installed_skill"
+    DOCS:
+      required_refs:
+        - "entry_points.human_readme.canonical"
+        - "entry_points.repository_onboarding.canonical"
+        - "entry_points.repository_agent_contract.canonical"
+        - "canonical.project_status"
+      optional_refs:
+        - "canonical.architecture"
+        - "canonical.decisions"
+    RELEASE:
+      required_refs:
+        - "canonical.release_process"
+        - "canonical.versioning"
+        - "canonical.compatibility"
+        - "canonical.project_status"
+        - "canonical.roadmap"
+        - "canonical.changelog"
+        - "canonical.citation"
+        - "quality.ci"
+        - "quality.pages"
+      optional_refs:
+        - "canonical.security"
+    GOVERNANCE:
+      required_refs:
+        - "entry_points.repository_onboarding.canonical"
+        - "entry_points.repository_agent_contract.canonical"
+        - "collaboration.context_interface"
+        - "canonical.governance"
+        - "canonical.project_status"
+        - "canonical.decisions"
+        - "quality.repository_consistency_check"
+      optional_refs:
+        - "canonical.roadmap"
+
+  decision_policy:
+    human_decision_required_for:
+      - "new_or_changed_relation_semantics"
+      - "new_or_changed_reconstruction_methodology"
+      - "persisted_schema_contract_change"
+      - "benchmark_reference_interpretation_change"
+      - "governance_authority_change"
+    ai_may_prepare_without_new_human_decision:
+      - "analysis"
+      - "draft_implementation"
+      - "tests"
+      - "documentation"
+      - "pull_request"
+    proposal_state: "AI-PROPOSED"
+    accepted_state: "MAINTAINER-DECIDED"
+
+  trust_boundary:
+    normative_sources:
+      - "manifest-declared version-controlled repository files"
+    non_authoritative_by_default:
+      - "chat_history"
+      - "model_memory"
+      - "local_summary"
+      - "issue_comment"
+      - "pull_request_comment"
+      - "external_web"
+
+  failure_states:
+    - "CONTEXT-STALE"
+    - "REVISION-CONFLICT"
+    - "MANIFEST-MISMATCH"
+    - "ROUTE-UNRESOLVED"
+    - "DECISION-AUTHORITY-UNRESOLVED"

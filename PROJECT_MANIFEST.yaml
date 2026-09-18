@@ -17,6 +17,9 @@ entry_points:
   remote_analysis_protocol: "AGENT.md"
   installed_skill: "skills/discourse-structure/SKILL.md"
 
+collaboration:
+  context_interface: "PROJECT_CONTEXT_INTERFACE.yaml"
+
 versions:
   remote_agent_protocol: "1.1.0"
   discourse_graph_schema:
@@ -40,6 +43,18 @@ canonical:
   project_status: "PROJECT_STATUS.md"
   roadmap: "ROADMAP.md"
   decisions: "docs/decisions/"
+  release_process: "docs/release-process.md"
+  security: "SECURITY.md"
+  citation: "CITATION.cff"
+  changelog: "CHANGELOG.md"
+  hosted_atlas_docs: "docs/hosted-atlas.md"
+  evaluation: "docs/evaluation.md"
+
+implementation:
+  cli: "src/discourse_atlas/cli.py"
+  validation: "src/discourse_atlas/validation.py"
+  evaluation: "src/discourse_atlas/evaluation.py"
+  alignment: "src/discourse_atlas/alignment.py"
 
 applications:
   python_package: "src/discourse_atlas/"

@@ -13,12 +13,14 @@ This is the zero-context entry point for maintainers and AI agents working **on 
 Before substantive repository changes, read:
 
 1. `PROJECT_MANIFEST.yaml`
-2. `PROJECT_STATUS.md`
-3. `AGENTS.md`
-4. `ROADMAP.md`
-5. the canonical files relevant to the requested change
-6. `docs/versioning.md` and `docs/compatibility.md` for schema/protocol/release work
-7. relevant Decision Records under `docs/decisions/`
+2. `PROJECT_CONTEXT_INTERFACE.yaml`
+3. `PROJECT_STATUS.md`
+4. `AGENTS.md`
+5. `ROADMAP.md`
+6. classify the task route and selectively read its `required_refs`
+7. the canonical files relevant to the requested change
+8. `docs/versioning.md` and `docs/compatibility.md` for schema/protocol/release work
+9. relevant Decision Records under `docs/decisions/`
 
 The repository is authoritative project state. Chat history, model memory, and earlier summaries are transient context.
 
@@ -26,7 +28,9 @@ The repository is authoritative project state. Chat history, model memory, and e
 
 Use one or more routes: **SEMANTICS**, **SCHEMA**, **IMPLEMENTATION**, **WEB**, **BENCHMARK**, **DOCS**, **RELEASE**, or **GOVERNANCE**.
 
-Before writing, refetch the latest target files. For semantic or schema changes, also read the governing ontology/schema and relevant Decision Records.
+`PROJECT_CONTEXT_INTERFACE.yaml` defines the required/optional repository references for each route. Retrieve only what the task needs; do not copy the whole repository into session context.
+
+Before writing, refetch the latest target files. After a repository write, earlier excerpts of touched files are stale. For semantic or schema changes, also read the governing ontology/schema and relevant Decision Records.
 
 ## Completion criterion
 
