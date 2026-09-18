@@ -138,7 +138,9 @@ require(legacy_repo['properties']['schema_version']['const'] == legacy_graph_sch
 
 alignment_alias = json.loads(read(alignment['latest_alias']))
 alignment_versioned = json.loads(read(alignment['versioned']))
-require(alignment_alias == alignment_versioned, 'alignment schema copies differ')
+alignment_alias_contract = {key: value for key, value in alignment_alias.items() if key != '$id'}
+alignment_versioned_contract = {key: value for key, value in alignment_versioned.items() if key != '$id'}
+require(alignment_alias_contract == alignment_versioned_contract, 'alignment schema contracts differ beyond $id')
 require(alignment_alias['properties']['alignment_version']['const'] == alignment_schema, 'alignment schema version')
 
 # All maintained graph fixtures should use the current graph schema.
