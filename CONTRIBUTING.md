@@ -10,7 +10,7 @@ Mark one or more: semantics/protocol, schema, Python/CLI, web/viewer, benchmark/
 
 Python development uses `python -m pip install -e '.[dev]'`, `pytest`, and `python scripts/check_repository_consistency.py`.
 
-Web development uses `npm install`, `npm test`, and `npm run build` in `apps/web`.
+Web development uses `npm ci`, `npm test`, and `npm run build` in `apps/web`. Use `npm install` only when intentionally updating dependency declarations/lock state.
 
 ## Semantic and ontology changes
 

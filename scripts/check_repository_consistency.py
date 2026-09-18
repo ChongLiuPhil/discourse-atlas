@@ -31,6 +31,7 @@ REQUIRED_PATHS = [
     "docs/decisions/0003-relation-ontology.md", "docs/decisions/0004-schema-versioning.md",
     "schemas/discourse-graph/0.2.0.schema.json", "schemas/discourse-graph/0.1.0-legacy.schema.json",
     "schemas/node-alignment/0.1.0.schema.json",
+    "apps/web/package-lock.json",
 ]
 
 
@@ -48,7 +49,11 @@ for path in REQUIRED_PATHS:
 
 require(f'version = "{RELEASE_VERSION}"' in read("pyproject.toml"), "pyproject release version")
 require(f'__version__ = "{RELEASE_VERSION}"' in read("src/discourse_atlas/__init__.py"), "Python package version")
-require(json.loads(read("apps/web/package.json"))["version"] == RELEASE_VERSION, "web package version")
+web_package = json.loads(read("apps/web/package.json"))
+web_lock = json.loads(read("apps/web/package-lock.json"))
+require(web_package["version"] == RELEASE_VERSION, "web package version")
+require(web_lock["version"] == RELEASE_VERSION, "web lockfile version")
+require(web_lock["packages"][""]["version"] == RELEASE_VERSION, "web lockfile root package version")
 require(f'version: "{RELEASE_VERSION}"' in read("CITATION.cff"), "citation version")
 require(f'release_version: "{RELEASE_VERSION}"' in read("PROJECT_MANIFEST.yaml"), "manifest release version")
 require(f"Protocol version: **{PROTOCOL_VERSION}**" in read("AGENT.md"), "Agent protocol version")
@@ -80,6 +85,8 @@ for path in ("README.md", "README.zh-CN.md"):
     require("0.2.0" in text, f"{path} current schema status")
 
 require("Future interactive viewer" not in read("docs/architecture.md"), "architecture still calls viewer future")
+require("npm ci --no-audit --no-fund" in read(".github/workflows/ci.yml"), "CI does not use npm ci")
+require("npm ci --no-audit --no-fund" in read(".github/workflows/pages.yml"), "Pages does not use npm ci")
 require("AGENT.md" in read("START_HERE.md") and "AGENTS.md" in read("START_HERE.md"), "English onboarding role distinction")
 require("AGENT.md" in read("START_HERE.zh-CN.md") and "AGENTS.md" in read("START_HERE.zh-CN.md"), "Chinese onboarding role distinction")
 

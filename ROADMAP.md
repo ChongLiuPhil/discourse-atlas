@@ -19,11 +19,11 @@ GitHub Pages deployment with repository-subpath-safe production assets and autom
 - [x] establish independent version domains and compatibility policy;
 - [x] move current graph schema to immutable `0.2.0` while supporting legacy `0.1.0`;
 - [x] expand contribution, PR, security, release, and architecture documentation;
-- [x] add repository consistency checks.
+- [x] add repository consistency checks;
+- [x] commit the web npm lockfile and use `npm ci` in CI/Pages.
 
 ## Candidate v1.2 work
 
-- commit an npm lockfile and move CI/Pages installs to `npm ci`;
 - generate self-contained `AGENT.md` from smaller canonical protocol components and verify zero drift;
 - define a deep-linkable Agent → Hosted Atlas handoff format;
 - add more reviewed public-domain or permission-compatible long-form philosophy corpora;

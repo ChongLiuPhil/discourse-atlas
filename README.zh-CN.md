@@ -142,7 +142,7 @@ https://raw.githubusercontent.com/ChongLiuPhil/discourse-atlas/main/schemas/disc
 
 ```bash
 cd apps/web
-npm install
+npm ci
 npm run dev
 ```
 
