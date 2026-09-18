@@ -9,6 +9,7 @@ All notable project changes are recorded here. Discourse Atlas remains research 
 - Bilingual zero-context `START_HERE` onboarding, project manifest/status/roadmap/governance, citation metadata, release documentation, and Decision Records.
 - Immutable graph schema `0.2.0` plus a terminal legacy `0.1.0` compatibility profile.
 - Automated repository consistency checks.
+- Reproducible web dependency lockfile (`apps/web/package-lock.json`).
 
 ### Changed
 - Toolkit and web package versions advance to `1.1.0`.
@@ -16,6 +17,7 @@ All notable project changes are recorded here. Discourse Atlas remains research 
 - Maintained examples, Skill example, benchmark annotations, and reference graphs migrate to graph schema `0.2.0`.
 - CLI validation dispatches by declared graph schema version and supports both `0.1.0` and `0.2.0`.
 - Contribution, PR, security, architecture, and hosted-atlas documentation now reflect the v1.x project surface and trust boundary.
+- CI and Pages now install web dependencies with `npm ci` from the committed lockfile.
 
 ### Governance
 - English is the technical canonical language; README, START_HERE, and AGENTS are synchronized bilingual entry pairs.

@@ -29,7 +29,7 @@ The Vite production base is `/discourse-atlas/`, matching the repository-scoped 
 
 ```bash
 cd apps/web
-npm install --no-audit --no-fund
+npm ci --no-audit --no-fund
 npm test
 npm run build
 npm run preview

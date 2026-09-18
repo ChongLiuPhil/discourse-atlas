@@ -22,10 +22,12 @@ Requires Node.js 20.19+ or 22.12+ (Vite 8 requirement).
 
 ```bash
 cd apps/web
-npm install
+npm ci
 npm test
 npm run dev
 ```
+
+Use `npm install` instead of `npm ci` only when intentionally changing dependency declarations/lock state.
 
 `npm run prepare:data` copies the canonical mini-essay example from the repository root into `public/`; the web app does not maintain a second hand-edited example.
 

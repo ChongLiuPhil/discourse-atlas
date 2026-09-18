@@ -27,11 +27,11 @@ The v1.0 product surface is stable enough that the current priority is repositor
 - added CLI dispatch for graph schema `0.1.0` and `0.2.0`;
 - migrated maintained graph fixtures to `0.2.0`;
 - expanded contribution, PR, security, and architecture documentation;
+- committed the web npm lockfile and switched CI/Pages to `npm ci`;
 - added automated repository-consistency checks.
 
 ## Known non-blocking debt
 
-- The web package pins direct dependency versions but does not yet commit an npm lockfile; transitive dependency locking and a switch from `npm install` to `npm ci` remain follow-up work.
 - `AGENT.md` and the modular Skill still intentionally duplicate methodology text; generating the remote protocol from canonical components is a later refactor.
 - Release tags/GitHub Releases are not yet automated.
 
