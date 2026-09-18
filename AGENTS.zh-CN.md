@@ -6,7 +6,13 @@
 
 ## 仓库作为权威状态
 
-GitHub 仓库是项目状态的权威来源。聊天历史、账号记忆、隐藏 scratchpad、本地摘要以及旧 Agent 报告都不是 canonical state。高影响修改或写入前，应重新读取最新目标文件、`PROJECT_MANIFEST.yaml` 与 `PROJECT_STATUS.md`。
+GitHub 仓库是项目状态的权威来源。聊天历史、账号记忆、隐藏 scratchpad、本地摘要以及旧 Agent 报告都不是 canonical state。`PROJECT_MANIFEST.yaml` 用于定位 canonical resources；`PROJECT_CONTEXT_INTERFACE.yaml` 用于控制选择性检索。高影响修改或写入前，应重新读取最新目标文件以及当前 route 要求的仓库状态。
+
+## Context routing 与缓存
+
+先把工作分类为 **SEMANTICS**、**SCHEMA**、**IMPLEMENTATION**、**WEB**、**BENCHMARK**、**DOCS**、**RELEASE** 或 **GOVERNANCE**，然后在 `PROJECT_CONTEXT_INTERFACE.yaml` 中解析对应 route。
+
+只读取当前任务需要的最小 canonical state。会话中的文件摘录只是非权威缓存。高影响动作和写入前读取最新版本；写入后，受影响文件的旧摘录立即视为 stale，后续推理若仍依赖这些文件，应重新获取受影响依赖。并行协作时优先使用 Git commit/blob SHA 或等价 revision token。
 
 ## 产品协议与仓库契约分离
 
@@ -54,6 +60,8 @@ PR 应保持聚焦，并说明 change class、rationale、canonical source、sch
 
 ## AI 提议
 
-AI Agent 可以提出架构与语义方案，但只有通过仓库修改与正常审查，提议才成为持久项目决定。长期架构选择在适当时应创建 Decision Record。
+AI Agent 可以提出架构与语义方案，但表达完整的 proposal 并不等于 maintainer decision。涉及 relation semantics、reconstruction methodology、持久化 schema contract、benchmark reference interpretation 或 governance authority 的变更，PR 必须把 decision authority 标记为既有文档化决定、maintainer 明确授权，或 `AI-PROPOSED / awaiting maintainer decision`。未解决的 AI proposal 不得被当成已批准决定合并。
+
+长期架构选择在适当时应创建 Decision Record。
 
 本治理层借鉴 HARC 的 repository-backed continuity 原则，但不复制 HARC 的完整研究记忆架构。

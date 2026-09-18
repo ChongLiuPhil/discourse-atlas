@@ -4,14 +4,14 @@ Describe the text-analysis, schema, ontology, visualization, evaluation, compati
 
 ## Change class
 
-- [ ] Semantics / protocol
-- [ ] Schema
-- [ ] Python / CLI
-- [ ] Web / viewer
-- [ ] Benchmark / evaluation
-- [ ] Documentation
-- [ ] Release / infrastructure
-- [ ] Governance
+- [ ] SEMANTICS — semantics / protocol
+- [ ] SCHEMA — persisted data contracts
+- [ ] IMPLEMENTATION — Python / CLI
+- [ ] WEB — viewer / deployment
+- [ ] BENCHMARK — evaluation / reference data
+- [ ] DOCS — explanatory documentation
+- [ ] RELEASE — version / infrastructure
+- [ ] GOVERNANCE — collaboration rules / authority
 
 ## Proposed change
 

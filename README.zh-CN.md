@@ -9,7 +9,7 @@
 
 它面向哲学、随笔、学术论文、理论著作、法律推理、政策报告以及其他复杂文本。在这些文本中，理解**哪些部分支持、要求、细化、挑战或回应哪些其他部分**，与理解各部分分别说了什么同样重要。
 
-> 状态：**v1.1.0 collaboration-and-governance research release。** v1.0 的托管产品能力保持不变；v1.1 新增 repository-backed 接管入口、明确的 canonical authority、不可变 schema 版本、兼容性规则、Decision Records、release governance 与自动 repository consistency checks。
+> 状态：**v1.1.1 collaboration control-plane release。** v1.0 的托管产品能力保持不变；v1.1.1 进一步把协作框架硬化为 Manifest 驱动的一致性检查、task-route 选择性检索、operational resume、显式 decision authority 与双语结构 parity checks。
 
 托管版 Interactive Atlas：
 
@@ -89,6 +89,7 @@ discourse-atlas/
 ├── AGENT.md                       # 面向使用者的零安装分析协议
 ├── AGENTS.md / AGENTS.zh-CN.md    # 仓库协作契约
 ├── PROJECT_MANIFEST.yaml          # 项目/版本机器可读映射
+├── PROJECT_CONTEXT_INTERFACE.yaml # Task routing + 仓库上下文策略
 ├── PROJECT_STATUS.md              # 当前开发状态
 ├── ROADMAP.md                     # 已完成与候选里程碑
 ├── skills/discourse-structure/    # 便携、符合标准的 Agent Skill
@@ -241,6 +242,7 @@ benchmark 包含跨体裁的合成案例，以及一个公共领域的 John Stua
 - **v0.9** — 零安装远程 Agent 协议、支持主张字段的 schema/Skill，以及以主张为中心的宏观到微观查看器。
 - **v1.0** — 部署到 GitHub Pages 的 Hosted Interactive Atlas，包含对子路径安全的生产资源与自动部署。
 - **v1.1** — 仓库协作契约、零上下文接管、不可变 graph schema `0.2.0`、兼容性/版本治理、Decision Records、引用元数据与 repository consistency checks。
+- **v1.1.1** — Manifest 驱动的协作 control plane、选择性 context routing、decision-authority 状态、operational resume 与双语结构 parity checks。
 
 ## v1.1 之后的研究方向
 

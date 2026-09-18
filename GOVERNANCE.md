@@ -20,6 +20,17 @@ Changes to accepted JSON shape require a new schema version when the accepted do
 
 Durable architectural choices should receive a short Decision Record under `docs/decisions/`.
 
+## Decision authority
+
+Every substantive PR should distinguish implementation work from decision authority. Use one of these states:
+
+- **Routine implementation** — no new semantic, schema-contract, benchmark-reference, or governance-authority decision.
+- **Documented maintainer decision** — implements an existing accepted Decision Record or other canonical maintainer decision.
+- **Explicit maintainer authorization** — a maintainer has explicitly authorized the new decision represented by the PR.
+- **AI-PROPOSED / awaiting maintainer decision** — implementation or analysis may be prepared, but the decision is not yet approved and must not be merged as approved.
+
+Changes to relation semantics, reconstruction methodology, persisted schema contracts, benchmark reference interpretations, or governance authority require maintainer decision authority. AI may prepare a proposal, tests, implementation, documentation, and a PR without converting the proposal into approval.
+
 ## Review expectations
 
 A reviewer should be able to determine the problem, governing canonical source, semantic/schema impact, compatibility impact, evidence/tests, and synchronized docs/fixtures.

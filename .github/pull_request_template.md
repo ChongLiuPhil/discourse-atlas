@@ -2,16 +2,25 @@
 
 ## Change class
 
-- [ ] Semantics / protocol
-- [ ] Schema
-- [ ] Python / CLI
-- [ ] Web / viewer
-- [ ] Benchmark / evaluation
-- [ ] Documentation
-- [ ] Release / infrastructure
-- [ ] Governance
+- [ ] SEMANTICS — semantics / protocol
+- [ ] SCHEMA — persisted data contracts
+- [ ] IMPLEMENTATION — Python / CLI
+- [ ] WEB — viewer / deployment
+- [ ] BENCHMARK — evaluation / reference data
+- [ ] DOCS — explanatory documentation
+- [ ] RELEASE — version / infrastructure
+- [ ] GOVERNANCE — collaboration rules / authority
 
 ## Why this change
+
+## Decision authority
+
+- [ ] Routine implementation — no new semantic/schema/governance decision
+- [ ] Implements an existing documented maintainer decision
+- [ ] New decision explicitly authorized by a maintainer
+- [ ] AI-PROPOSED — awaiting maintainer decision; do not merge as approved
+
+For semantic, persisted-schema-contract, benchmark-reference, or governance-authority changes, identify the Decision Record or explicit maintainer authorization.
 
 ## Canonical sources affected
 
