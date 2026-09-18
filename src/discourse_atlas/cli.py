@@ -29,13 +29,31 @@ def _load_json(path: str | Path) -> dict:
         return json.load(f)
 
 
-def _schema() -> dict:
-    repo_schema = _repo_root() / "schemas" / "discourse-graph.schema.json"
+CURRENT_GRAPH_SCHEMA_VERSION = "0.2.0"
+LEGACY_GRAPH_SCHEMA_VERSION = "0.1.0"
+
+
+def _schema_for_version(version: object) -> dict | None:
+    if version == CURRENT_GRAPH_SCHEMA_VERSION:
+        repo_schema = _repo_root() / "schemas" / "discourse-graph" / "0.2.0.schema.json"
+        packaged_name = "discourse-graph.schema.json"
+    elif version == LEGACY_GRAPH_SCHEMA_VERSION:
+        repo_schema = _repo_root() / "schemas" / "discourse-graph" / "0.1.0-legacy.schema.json"
+        packaged_name = "discourse-graph-0.1.0-legacy.schema.json"
+    else:
+        return None
+
     if repo_schema.exists():
         return _load_json(repo_schema)
-    packaged = resources.files("discourse_atlas.resources").joinpath("discourse-graph.schema.json")
+    packaged = resources.files("discourse_atlas.resources").joinpath(packaged_name)
     with packaged.open("r", encoding="utf-8") as f:
         return json.load(f)
+
+
+def _schema() -> dict:
+    schema = _schema_for_version(CURRENT_GRAPH_SCHEMA_VERSION)
+    assert schema is not None
+    return schema
 
 
 def _alignment_schema() -> dict:
@@ -48,7 +66,15 @@ def _alignment_schema() -> dict:
 
 
 def validate_document(document: dict) -> list[str]:
-    validator = Draft202012Validator(_schema())
+    version = document.get("schema_version")
+    schema = _schema_for_version(version)
+    if schema is None:
+        return [
+            f"schema_version: unsupported or missing version {version!r}; "
+            f"supported versions are {LEGACY_GRAPH_SCHEMA_VERSION} and {CURRENT_GRAPH_SCHEMA_VERSION}"
+        ]
+
+    validator = Draft202012Validator(schema)
     schema_errors = sorted(validator.iter_errors(document), key=lambda e: list(e.path))
     errors = [f"{'/'.join(map(str, e.path)) or '<root>'}: {e.message}" for e in schema_errors]
     if not schema_errors:

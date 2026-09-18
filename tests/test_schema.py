@@ -18,8 +18,33 @@ def test_example_is_valid():
 
 def test_packaged_schema_matches_repository_schema():
     repository_schema = ROOT / "schemas" / "discourse-graph.schema.json"
+    versioned_schema = ROOT / "schemas" / "discourse-graph" / "0.2.0.schema.json"
     packaged_schema = ROOT / "src" / "discourse_atlas" / "resources" / "discourse-graph.schema.json"
+    assert repository_schema.read_text(encoding="utf-8") == versioned_schema.read_text(encoding="utf-8")
     assert repository_schema.read_text(encoding="utf-8") == packaged_schema.read_text(encoding="utf-8")
+
+
+def test_legacy_schema_profile_matches_packaged_resource():
+    repository_schema = ROOT / "schemas" / "discourse-graph" / "0.1.0-legacy.schema.json"
+    packaged_schema = ROOT / "src" / "discourse_atlas" / "resources" / "discourse-graph-0.1.0-legacy.schema.json"
+    assert repository_schema.read_text(encoding="utf-8") == packaged_schema.read_text(encoding="utf-8")
+
+
+def test_example_uses_current_graph_schema_version():
+    assert load_example()["schema_version"] == "0.2.0"
+
+
+def test_legacy_0_1_compatibility_profile_is_supported():
+    doc = load_example()
+    doc["schema_version"] = "0.1.0"
+    assert validate_document(doc) == []
+
+
+def test_unknown_schema_version_is_rejected():
+    doc = load_example()
+    doc["schema_version"] = "9.9.9"
+    errors = validate_document(doc)
+    assert any("unsupported or missing version" in error for error in errors)
 
 
 def test_main_claim_is_optional_but_must_be_nonempty_when_present():

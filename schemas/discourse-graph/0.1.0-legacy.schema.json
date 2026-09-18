@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/ChongLiuPhil/discourse-atlas/main/schemas/discourse-graph/0.2.0.schema.json",
+  "$id": "https://raw.githubusercontent.com/ChongLiuPhil/discourse-atlas/main/schemas/discourse-graph/0.1.0-legacy.schema.json",
   "title": "Discourse Atlas Graph",
   "type": "object",
   "required": ["schema_version", "document", "nodes", "edges", "anchors"],
   "properties": {
-    "schema_version": {"const": "0.2.0"},
+    "schema_version": {"const": "0.1.0"},
     "document": {
       "type": "object",
       "required": ["title", "structure_policy"],
