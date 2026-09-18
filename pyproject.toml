@@ -19,7 +19,7 @@ classifiers = [
 
 [project.optional-dependencies]
 pdf = ["pypdf>=6.16,<7"]
-dev = ["pytest>=8.3,<10", "pypdf>=6.16,<7"]
+dev = ["pytest>=8.3,<10", "pypdf>=6.16,<7", "PyYAML>=6.0,<7"]
 
 [project.scripts]
 discourse-atlas = "discourse_atlas.cli:main"
