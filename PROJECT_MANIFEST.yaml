@@ -49,6 +49,8 @@ canonical:
   changelog: "CHANGELOG.md"
   hosted_atlas_docs: "docs/hosted-atlas.md"
   evaluation: "docs/evaluation.md"
+  portfolio_project_metadata: "project.yaml"
+  portfolio_website_metadata: "website.yaml"
 
 implementation:
   cli: "src/discourse_atlas/cli.py"
