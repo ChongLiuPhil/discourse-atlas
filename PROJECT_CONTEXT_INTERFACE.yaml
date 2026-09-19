@@ -106,6 +106,8 @@ project_context_interface:
         - "quality.repository_consistency_check"
       optional_refs:
         - "canonical.roadmap"
+        - "canonical.portfolio_project_metadata"
+        - "canonical.portfolio_website_metadata"
 
   decision_policy:
     human_decision_required_for:

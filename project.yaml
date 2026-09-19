@@ -1,0 +1,50 @@
+schema_version: 1
+id: discourse-atlas
+repository: ChongLiuPhil/discourse-atlas
+
+title:
+  zh: "Discourse Atlas"
+  en: "Discourse Atlas"
+
+kind: research-tool
+status: active
+started: null
+
+areas:
+  - research-methodology
+
+topics:
+  - discourse-structure
+  - argument-mapping
+  - text-analysis
+  - ai-assisted-analysis
+
+source_of_truth:
+  overview_en: README.md
+  overview_zh: README.zh-CN.md
+  manifest: PROJECT_MANIFEST.yaml
+  context_interface: PROJECT_CONTEXT_INTERFACE.yaml
+  project_status: PROJECT_STATUS.md
+  agent_contract_en: AGENTS.md
+  agent_contract_zh: AGENTS.zh-CN.md
+  remote_analysis_protocol: AGENT.md
+  canonical_graph_schema: schemas/discourse-graph.schema.json
+  web_app: apps/web/
+  bibliography: null
+  notes: null
+
+website:
+  metadata: website.yaml
+  default_publish: false
+  bilingual_homepage_required: true
+  readme_default_language: en
+  readme_english: README.md
+  readme_chinese: README.zh-CN.md
+  language_default: auto
+  language_fallback: en
+
+notes: >
+  Academic Vault Tier A portfolio interface. Existing repository-native control files
+  remain authoritative for collaboration, versioning, schema, release, and handoff state.
+  project.yaml and website.yaml are portfolio/publication metadata interfaces only and
+  do not replace PROJECT_MANIFEST.yaml, PROJECT_CONTEXT_INTERFACE.yaml, or PROJECT_STATUS.md.
