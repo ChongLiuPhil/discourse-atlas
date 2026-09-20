@@ -1,0 +1,57 @@
+schema_version: 1
+publish: false
+
+project_id: discourse-atlas
+
+language:
+  default: auto
+  fallback: en
+  supported:
+    - en
+    - zh
+  detect_from_browser: true
+
+title:
+  zh: "Discourse Atlas"
+  en: "Discourse Atlas"
+
+status:
+  zh: "v1.1.1：公开协议与工具集；Hosted Interactive Atlas 已在 GitHub Pages 运行。"
+  en: "v1.1.1: public protocol and toolkit; the Hosted Interactive Atlas is live on GitHub Pages."
+
+summary:
+  zh: >
+    一个用于重建复杂文本层级论证结构的开源协议与工具集，区分文本包含层级与论证依赖关系，
+    支持证据锚点、结构对齐、评估、人工修正，以及可交互的 Hosted Atlas。
+  en: >
+    An open-source protocol and toolkit for reconstructing the hierarchical argumentative
+    structure of complex texts, separating containment hierarchy from discourse dependencies
+    while supporting evidence anchors, alignment, evaluation, human correction, and an
+    interactive Hosted Atlas.
+
+areas:
+  - research-methodology
+
+featured: false
+
+links:
+  - href: "https://github.com/ChongLiuPhil/discourse-atlas"
+    label:
+      zh: "GitHub 仓库"
+      en: "GitHub repository"
+  - href: "https://chongliuphil.github.io/discourse-atlas/"
+    label:
+      zh: "Hosted Interactive Atlas"
+      en: "Hosted Interactive Atlas"
+  - href: "https://raw.githubusercontent.com/ChongLiuPhil/discourse-atlas/main/AGENT.md"
+    label:
+      zh: "零安装 Agent 协议"
+      en: "Zero-install Agent protocol"
+
+publication_notes: >
+  The project is already public and is recorded as a legacy PUBLISHED item in the
+  Academic Vault publication queue. publish=false here intentionally does not revoke
+  that existing public state; it means this file alone does not authorize a new or
+  changed academic-homepage publication. Future homepage changes still require the
+  applicable Vault publication-approval route. Do not include private or unapproved
+  material in homepage metadata.
