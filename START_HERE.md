@@ -37,3 +37,8 @@ Before writing, refetch the latest target files. After a repository write, earli
 A change is complete only when affected canonical sources, dependent implementation/docs/examples, compatibility/version statements, and tests are synchronized.
 
 English is the technical canonical language for repository governance. Chinese README, START_HERE, and AGENTS files are synchronized onboarding mirrors.
+
+
+## Current Inquiry Publishing Stack adapter
+
+AHICP is a thin adapter over the repository-native product control plane. `PROJECT_MANIFEST.yaml`, `PROJECT_CONTEXT_INTERFACE.yaml`, `PROJECT_STATUS.md`, schemas, semantic references, release docs, and Decision Records remain authoritative. PPF maps the already-public GitHub Pages Hosted Atlas. `website.yaml publish=false` only blocks a new or changed Academic Vault/homepage publication; it does not revoke the existing Hosted Atlas.
