@@ -76,6 +76,11 @@ def external_urls(text: str) -> set[str]:
 
 manifest = load_yaml(MANIFEST_PATH)
 context = load_yaml(CONTEXT_INTERFACE_PATH)['project_context_interface']
+ahicp_manifest = load_yaml('AHICP_MANIFEST.yaml')
+stack = load_yaml('project-stack.yaml')
+stack_lock = load_yaml('project-stack.lock.yaml')
+publishing = load_yaml('publishing.yaml')
+website = load_yaml('website.yaml')
 
 release_version = manifest['project']['release_version']
 protocol_version = manifest['versions']['remote_agent_protocol']
@@ -194,5 +199,68 @@ require('AI-PROPOSED' in pr_template, 'PR template missing AI proposal state')
 require('Future interactive viewer' not in read('docs/architecture.md'), 'architecture still calls viewer future')
 require('npm ci --no-audit --no-fund' in read('.github/workflows/ci.yml'), 'CI does not use npm ci')
 require('npm ci --no-audit --no-fund' in read('.github/workflows/pages.yml'), 'Pages does not use npm ci')
+
+# Inquiry Publishing Stack v2: stable composition/template revisions remain
+# distinct from the newer semantic framework revisions adopted by this project.
+require(stack.get('schema') == 'inquiry-publishing-stack/v2', 'project stack schema')
+require(stack_lock.get('schema') == 'inquiry-publishing-stack-lock/v2', 'project stack lock schema')
+require(stack.get('project', {}).get('id') == 'discourse-atlas', 'project stack id')
+require(stack.get('profile') == 'full-research-publication', 'project stack composition profile')
+
+template_pins = {
+    'AHICP': '02d0b3c02ca23073c760b6e0f761a468e0235a1c',
+    'PPF': '9a6005de85f032095e36eea03fda317e73126538',
+    'Vault': '592c6e2e938f995b7b3e7df07a72f7f1e2c50c5a',
+    'Starter': '05857086e240cbd269eae91af8419ea0921c01fa',
+}
+adopted_pins = {
+    'AHICP': 'ed5a60b1016497472072db108072ace59bcdb65d',
+    'PPF': 'e660b48fb216c28c8faa1f0fe2d0816401e1de2c',
+    'Vault': '79d64b12275a5cc7c09236b144bf4213fa7afc5e',
+}
+
+components = stack['components']
+require(components['governance']['template_source_commit'] == template_pins['AHICP'], 'AHICP template pin')
+require(components['governance']['project_adopted_commit'] == adopted_pins['AHICP'], 'AHICP adopted pin')
+require(components['publishing']['template_source_commit'] == template_pins['PPF'], 'PPF template pin')
+require(components['publishing']['project_adopted_commit'] == adopted_pins['PPF'], 'PPF adopted pin')
+require(components['portfolio_interface']['template_source_commit'] == template_pins['Vault'], 'Vault template pin')
+require(components['portfolio_interface']['project_adopted_commit'] == adopted_pins['Vault'], 'Vault adopted pin')
+require(stack['starter']['adopted_commit'] == template_pins['Starter'], 'Starter source revision')
+require(stack_lock['resolved'] == {
+    'ahicp': template_pins['AHICP'],
+    'ppf': template_pins['PPF'],
+    'vault_interface': template_pins['Vault'],
+    'starter': template_pins['Starter'],
+}, 'Stack lock does not match stable composition revisions')
+
+ahicp = ahicp_manifest['ahicp']
+require(ahicp['template_source_commit'] == template_pins['AHICP'], 'AHICP manifest template pin')
+require(ahicp['adopted_protocol_commit'] == adopted_pins['AHICP'], 'AHICP manifest adopted pin')
+require(ahicp['compatibility']['project_native_manifest'] == 'PROJECT_MANIFEST.yaml', 'AHICP adapter native manifest')
+require(ahicp['compatibility']['project_native_context_interface'] == 'PROJECT_CONTEXT_INTERFACE.yaml', 'AHICP adapter native context interface')
+
+web = publishing['publication']['web']
+deployment = publishing['deployment']['web']
+require(web['enabled'] is True, 'Hosted Atlas publication must remain enabled')
+require(web['authorization_state'] == 'authorized', 'Hosted Atlas public authorization drift')
+require(web['visibility'] == 'public', 'Hosted Atlas visibility drift')
+require(deployment['provider'] == 'github-pages', 'Hosted Atlas provider drift')
+require(deployment['integration_state'] == 'PRODUCTION_ACTIVE', 'Hosted Atlas integration state drift')
+require(deployment['production_url'] == 'https://chongliuphil.github.io/discourse-atlas/', 'Hosted Atlas production URL drift')
+require(deployment['auto_deploy_on_main'] is True, 'Hosted Atlas main auto-deploy drift')
+require(deployment['endpoint_verification'] is True, 'Hosted Atlas endpoint verification drift')
+require(publishing['release']['require_explicit_release'] is True, 'toolkit release must remain explicit')
+require(publishing['release']['continuous_web_is_release'] is False, 'Pages deployment must remain distinct from toolkit release semantics')
+
+require(website.get('publish') is False, 'Academic Vault/homepage publication boundary must remain publish=false')
+website_notes = str(website.get('publication_notes', ''))
+require('does not revoke' in website_notes, 'website metadata must preserve existing Hosted Atlas publication nuance')
+
+pages = read('.github/workflows/pages.yml')
+require('actions/deploy-pages@v4' in pages, 'Pages deployment action drift')
+require('https://chongliuphil.github.io/discourse-atlas/' in pages, 'Pages verification URL drift')
+require((ROOT / 'docs/decisions/0006-inquiry-publishing-stack-adapter.md').exists(), 'Decision 0006 missing')
+require('0006-inquiry-publishing-stack-adapter.md' in read('docs/decisions/README.md'), 'Decision 0006 not indexed')
 
 print('repository consistency: OK')
