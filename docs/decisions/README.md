@@ -7,6 +7,7 @@ Decision Records capture durable architectural choices that are easy to lose in 
 - [0003 — Small explicit relation ontology](0003-relation-ontology.md)
 - [0004 — Immutable schema versioning](0004-schema-versioning.md)
 - [0005 — Repository-backed collaboration control plane](0005-repository-control-plane.md)
+- [0006 — Inquiry Publishing Stack as a product-governance adapter](0006-inquiry-publishing-stack-adapter.md)
 
 Records explain why a constraint exists; they do not replace the schema, ontology, or protocol itself.
 
