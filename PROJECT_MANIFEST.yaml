@@ -16,9 +16,13 @@ entry_points:
     mirror: "AGENTS.zh-CN.md"
   remote_analysis_protocol: "AGENT.md"
   installed_skill: "skills/discourse-structure/SKILL.md"
+  stack_adoption: "AHICP_ADOPTION.md"
 
 collaboration:
   context_interface: "PROJECT_CONTEXT_INTERFACE.yaml"
+  ahicp_manifest: "AHICP_MANIFEST.yaml"
+  ahicp_context_adapter: "AHICP_CONTEXT_INTERFACE.yaml"
+  session_context_bootstrap: "SESSION_CONTEXT_BOOTSTRAP.md"
 
 versions:
   remote_agent_protocol: "1.1.0"
@@ -48,6 +52,9 @@ canonical:
   citation: "CITATION.cff"
   changelog: "CHANGELOG.md"
   hosted_atlas_docs: "docs/hosted-atlas.md"
+  project_stack: "project-stack.yaml"
+  project_stack_lock: "project-stack.lock.yaml"
+  publishing_contract: "publishing.yaml"
   evaluation: "docs/evaluation.md"
   portfolio_project_metadata: "project.yaml"
   portfolio_website_metadata: "website.yaml"
