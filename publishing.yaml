@@ -1,0 +1,58 @@
+schema: ppf/v0.1
+framework:
+  source: ChongLiuPhil/Personal-Publishing-Framework
+  adopted_version: 0.1.1-draft
+  adopted_commit: e660b48fb216c28c8faa1f0fe2d0816401e1de2c
+
+project:
+  id: discourse-atlas
+  type: public-research-software
+  title: "Discourse Atlas"
+
+source:
+  canonical: git
+  branch: main
+  visibility: public
+
+publication:
+  web:
+    format: html
+    mode: continuous
+    enabled: true
+    authorization_state: authorized
+    visibility: public
+    access:
+      mode: public
+      implementation: github-pages
+
+deployment:
+  web:
+    provider: github-pages
+    enabled: true
+    status: active-public-production
+    current_provider: github-pages
+    target_provider: github-pages
+    production_url: "https://chongliuphil.github.io/discourse-atlas/"
+    integration_state: PRODUCTION_ACTIVE
+    authorization_state: AUTHORIZED
+    cutover_state: ACTIVE
+    source: github-actions
+    workflow: ".github/workflows/pages.yml"
+    auto_deploy_on_main: true
+    endpoint_verification: true
+
+release:
+  require_explicit_release: true
+  continuous_web_is_release: false
+  release_policy_ref: "docs/release-process.md"
+  note: "Pages deployment is public production delivery, but toolkit/protocol/schema release versions remain independently governed."
+
+portfolio:
+  academic_homepage:
+    metadata: "website.yaml"
+    publish_flag: false
+    meaning: "No new/changed Academic Vault homepage publication is authorized by website.yaml alone; this does not revoke existing Hosted Atlas publication."
+
+archive:
+  preserve_source: true
+  preserve_release_artifacts: true
