@@ -2,6 +2,13 @@
 
 All notable project changes are recorded here. Discourse Atlas remains research software; the toolkit release is `1.1.1`, the current graph schema is `0.2.0`, and graph `0.1.0` remains supported through a frozen legacy compatibility profile.
 
+## Unreleased
+
+### Governance
+- Adopt current Inquiry Publishing Stack through a thin AHICP adapter over the existing product control plane.
+- Add a PPF lifecycle contract for the already-public GitHub Pages Hosted Atlas without changing provider, public authorization, toolkit release version, Agent protocol version, or schema versions.
+- Record Decision 0006 and validate Stack v2 template/adopted revision semantics through repository consistency CI.
+
 ## 1.1.1 — 2026-09-18
 
 ### Added
