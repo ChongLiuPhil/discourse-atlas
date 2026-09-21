@@ -93,6 +93,7 @@ project_context_interface:
         - "canonical.citation"
         - "quality.ci"
         - "quality.pages"
+        - "canonical.publishing_contract"
       optional_refs:
         - "canonical.security"
     GOVERNANCE:
@@ -103,6 +104,12 @@ project_context_interface:
         - "canonical.governance"
         - "canonical.project_status"
         - "canonical.decisions"
+        - "entry_points.stack_adoption"
+        - "collaboration.ahicp_manifest"
+        - "collaboration.ahicp_context_adapter"
+        - "canonical.project_stack"
+        - "canonical.project_stack_lock"
+        - "canonical.publishing_contract"
         - "quality.repository_consistency_check"
       optional_refs:
         - "canonical.roadmap"

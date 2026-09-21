@@ -33,6 +33,14 @@ The v1.1 collaboration baseline is now hardened into an executable repository co
 - made `PROJECT_MANIFEST.yaml` the expected-version/path source for governance CI;
 - added operational resume fields, decision-authority states, and bilingual structural parity checks.
 
+## Inquiry Publishing Stack adapter
+
+- AHICP is active through a thin project-native product-governance adapter.
+- `PROJECT_MANIFEST.yaml`, `PROJECT_CONTEXT_INTERFACE.yaml`, `PROJECT_STATUS.md`, schemas, semantic references, and Decision Records remain authoritative.
+- PPF maps the existing public GitHub Pages Hosted Atlas; no provider or authorization change is introduced.
+- `website.yaml publish=false` continues to govern new/changed Academic Vault homepage publication, not the already-live Hosted Atlas.
+- Stack adoption does not change toolkit release 1.1.1, Agent protocol 1.1.0, graph schema 0.2.0, or alignment schema 0.1.0.
+
 ## Operational state
 
 ### Current objective

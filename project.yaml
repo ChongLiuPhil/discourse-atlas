@@ -25,6 +25,10 @@ source_of_truth:
   manifest: PROJECT_MANIFEST.yaml
   context_interface: PROJECT_CONTEXT_INTERFACE.yaml
   project_status: PROJECT_STATUS.md
+  ahicp_manifest: AHICP_MANIFEST.yaml
+  ahicp_context_adapter: AHICP_CONTEXT_INTERFACE.yaml
+  project_stack: project-stack.yaml
+  publishing_contract: publishing.yaml
   agent_contract_en: AGENTS.md
   agent_contract_zh: AGENTS.zh-CN.md
   remote_analysis_protocol: AGENT.md

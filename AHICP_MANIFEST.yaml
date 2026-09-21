@@ -1,0 +1,64 @@
+ahicp:
+  protocol_name: "AI-Assisted Human Inquiry and Creation Protocol"
+  adopted_protocol_version: "0.3.0-draft"
+  adopted_protocol_commit: "ed5a60b1016497472072db108072ace59bcdb65d"
+  template_profile: "research-lite"
+  template_version: "0.3.1-draft"
+  template_source_commit: "02d0b3c02ca23073c760b6e0f761a468e0235a1c"
+  repository: "ChongLiuPhil/discourse-atlas"
+  canonical_language: "en"
+  mirror_language: "zh-CN"
+
+  compatibility:
+    project_native_manifest: "PROJECT_MANIFEST.yaml"
+    project_native_context_interface: "PROJECT_CONTEXT_INTERFACE.yaml"
+    project_native_status: "PROJECT_STATUS.md"
+    project_native_decisions: "docs/decisions/"
+    rule: "AHICP is a thin protocol adapter over the existing repository-native product governance; it does not create duplicate semantic, schema, release, or working-memory authorities."
+
+  profile_deviations:
+    - id: "AHICP-DA-DEV-001"
+      role: "authority"
+      local_rule: "No single research Content Core is created. Canonical authority remains distributed by product domain across Manifest-declared schemas, ontology, protocol, implementation, status, release docs, and Decision Records."
+      human_basis: "Decision Record 0005 plus explicit maintainer authorization for the 2026-09-21 Stack audit."
+    - id: "AHICP-DA-DEV-002"
+      role: "working-memory"
+      local_rule: "PROJECT_STATUS.md remains the operational resume state; the project does not adopt the full research Working Memory tree."
+      human_basis: "Decision Record 0005."
+    - id: "AHICP-DA-DEV-003"
+      role: "language"
+      local_rule: "English remains technical canonical; Chinese remains synchronized only for designated bilingual entry documents."
+      human_basis: "Existing repository governance."
+
+  bootstrap:
+    start_here:
+      canonical: "START_HERE.md"
+      mirror: "START_HERE.zh-CN.md"
+    context_interface: "AHICP_CONTEXT_INTERFACE.yaml"
+    session_context_bootstrap: "SESSION_CONTEXT_BOOTSTRAP.md"
+    agent_contract:
+      canonical: "AGENTS.md"
+      mirror: "AGENTS.zh-CN.md"
+
+  state:
+    manifest: "PROJECT_MANIFEST.yaml"
+    project_native_context_interface: "PROJECT_CONTEXT_INTERFACE.yaml"
+    project_status: "PROJECT_STATUS.md"
+    governance: "GOVERNANCE.md"
+    decisions: "docs/decisions/"
+    relation_ontology: "skills/discourse-structure/references/relation-ontology.md"
+    remote_protocol: "AGENT.md"
+    versioning: "docs/versioning.md"
+    compatibility: "docs/compatibility.md"
+    release_process: "docs/release-process.md"
+    web_app: "apps/web/"
+    pages_workflow: ".github/workflows/pages.yml"
+
+  invariants:
+    - "Repository state outranks chat or model memory."
+    - "PROJECT_MANIFEST.yaml and PROJECT_CONTEXT_INTERFACE.yaml remain the routing/control-plane authorities."
+    - "Semantic/schema/governance authority changes require maintainer decision authority."
+    - "AHICP adoption does not redefine relation ontology, graph schema, Agent protocol, benchmark references, or release versions."
+    - "GitHub Pages remains the authorized public Hosted Atlas provider."
+    - "website.yaml publish=false remains the Academic Vault/homepage-change boundary and does not revoke the existing public Hosted Atlas."
+    - "Toolkit release semantics remain governed by docs/release-process.md and are distinct from routine Pages deployment."

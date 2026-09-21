@@ -65,3 +65,10 @@ AI Agent 可以提出架构与语义方案，但表达完整的 proposal 并不�
 长期架构选择在适当时应创建 Decision Record。
 
 本治理层借鉴 HARC 的 repository-backed continuity 原则，但不复制 HARC 的完整研究记忆架构。
+
+
+## 当前 Inquiry Publishing Stack adapter
+
+AHICP 是当前协议入口，但仓库路由与 decision policy 仍委托给既有的 `PROJECT_MANIFEST.yaml` / `PROJECT_CONTEXT_INTERFACE.yaml` control plane。不得为了模板对称新增重复的研究型 Content Core、Form Core、Framework Status、Argument Map 或完整 Working Memory 结构。
+
+PPF 记录现有公开 GitHub Pages 生命周期。Hosted Atlas 已经获得授权并处于 production-active 状态。`website.yaml publish=false` 是独立的 Academic Vault / 学术主页变更边界。Toolkit / protocol / schema release 仍由 `docs/release-process.md` 及各自独立版本域管理。

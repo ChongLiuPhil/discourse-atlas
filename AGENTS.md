@@ -65,3 +65,10 @@ AI agents may propose architecture and semantics, but a polished proposal is not
 Long-lived architectural choices should receive a Decision Record when appropriate.
 
 This lightweight governance layer borrows repository-backed continuity principles from HARC without importing HARC's full research-memory architecture.
+
+
+## Current Inquiry Publishing Stack adapter
+
+AHICP is the current protocol entry, but it delegates repository routing and decision policy to the existing `PROJECT_MANIFEST.yaml` / `PROJECT_CONTEXT_INTERFACE.yaml` control plane. Do not create duplicate research Content Core, Form Core, Framework Status, Argument Map, or full Working Memory structures for template symmetry.
+
+PPF records the existing public GitHub Pages lifecycle. The Hosted Atlas is already authorized and production-active. `website.yaml publish=false` is a separate Academic Vault/homepage-change boundary. Toolkit/protocol/schema releases remain governed by `docs/release-process.md` and their independent version domains.

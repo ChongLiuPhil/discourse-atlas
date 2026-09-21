@@ -1,0 +1,38 @@
+ahicp_context_interface:
+  version: "0.1-draft"
+  mode: "adapter-to-project-native-context-interface"
+  authoritative_store: "github"
+  canonical_language: "en"
+
+  control_plane:
+    manifest: "AHICP_MANIFEST.yaml"
+    project_native_manifest: "PROJECT_MANIFEST.yaml"
+    project_native_context_interface: "PROJECT_CONTEXT_INTERFACE.yaml"
+    project_status: "PROJECT_STATUS.md"
+    authoritative_session_copy: false
+
+  context_policy:
+    retrieval: "delegate-to-PROJECT_CONTEXT_INTERFACE.yaml"
+    cache_authority: "none"
+    read_latest_before_high_impact_action: true
+    read_latest_before_write: true
+    invalidate_touched_cache_after_write: true
+    write_through_repository: true
+
+  task_routing:
+    rule: "Use PROJECT_CONTEXT_INTERFACE.yaml routes as canonical."
+    governance_route: "GOVERNANCE"
+    publication_route: "RELEASE"
+    web_route: "WEB"
+
+  decision_policy:
+    rule: "Use PROJECT_CONTEXT_INTERFACE.yaml decision_policy as canonical."
+    proposal_state: "AI-PROPOSED"
+    accepted_state: "MAINTAINER-DECIDED"
+
+  failure_states:
+    - "CONTEXT-STALE"
+    - "REVISION-CONFLICT"
+    - "MANIFEST-MISMATCH"
+    - "DECISION-AUTHORITY-UNRESOLVED"
+    - "PUBLICATION-STATE-DRIFT"
