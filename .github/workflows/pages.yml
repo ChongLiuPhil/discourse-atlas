@@ -3,8 +3,17 @@ name: Deploy Pages
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - "project.infrastructure.json"
+      - "docs/CLOUDFLARE_ROLLOUT_PLAN.md"
+      - ".github/workflows/cloudflare-plan-check.yml"
+      - ".github/workflows/pages.yml"
   pull_request:
     branches: [main]
+    paths-ignore:
+      - "project.infrastructure.json"
+      - "docs/CLOUDFLARE_ROLLOUT_PLAN.md"
+      - ".github/workflows/cloudflare-plan-check.yml"
   workflow_dispatch:
 
 permissions:
